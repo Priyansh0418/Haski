@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+pydantic>=2.0.0
+pydantic-settings
+python-dotenv
+passlib[bcrypt]
+python-jose[cryptography]
+boto3
+python-multipart
+Pillow
+alembic
+requests

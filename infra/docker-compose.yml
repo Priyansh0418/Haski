@@ -1,0 +1,62 @@
+version: "3.8"
+services:
+  backend:
+    build: ../../backend
+    container_name: haski_backend
+    env_file:
+      - ../../.env
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../../backend:/app
+    networks:
+      - haski-net
+
+  frontend:
+    build: ../../frontend
+    container_name: haski_frontend
+    env_file:
+      - ../../.env
+    ports:
+      - "5173:5173"
+    volumes:
+      - ../../frontend:/app
+    networks:
+      - haski-net
+
+  db:
+    image: postgres:13
+    container_name: haski_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-haski}
+      POSTGRES_USER: ${POSTGRES_USER:-haski}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-haski}
+    volumes:
+      - haski_db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - haski-net
+
+  minio:
+    image: minio/minio:latest
+    container_name: haski_minio
+    command: server /data
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
+    ports:
+      - "9000:9000"
+    volumes:
+      - haski_minio_data:/data
+    networks:
+      - haski-net
+
+volumes:
+  haski_db_data:
+  haski_minio_data:
+
+networks:
+  haski-net:
+    driver: bridge
