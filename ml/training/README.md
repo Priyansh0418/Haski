@@ -20,7 +20,7 @@ ml/training/
 ├── augmentations.py          # Data augmentation transforms
 ├── train_classifier.py       # Skin type classification training
 ├── eval_classifier.py        # Model evaluation & metrics
-├── train_detector.py         # (Coming soon) Object detection training
+├── train_detector.md         # YOLOv8 object detection guide
 └── export.py                 # (Coming soon) Model export (ONNX, TFLite)
 ```
 
@@ -217,15 +217,15 @@ python eval_classifier.py \
 
 ### CLI Arguments
 
-| Argument | Default | Description |
-|----------|---------|-------------|
-| `--model` | **required** | Path to model weights (.pth) |
-| `--data-dir` | **required** | Test data directory |
-| `--class-mapping` | auto-detect | Path to class_mapping.json |
-| `--output` | `ml/exports` | Output directory for results |
-| `--device` | `auto` | `cuda` or `cpu` |
-| `--batch-size` | `32` | Batch size |
-| `--num-workers` | `4` | DataLoader workers |
+| Argument          | Default      | Description                  |
+| ----------------- | ------------ | ---------------------------- |
+| `--model`         | **required** | Path to model weights (.pth) |
+| `--data-dir`      | **required** | Test data directory          |
+| `--class-mapping` | auto-detect  | Path to class_mapping.json   |
+| `--output`        | `ml/exports` | Output directory for results |
+| `--device`        | `auto`       | `cuda` or `cpu`              |
+| `--batch-size`    | `32`         | Batch size                   |
+| `--num-workers`   | `4`          | DataLoader workers           |
 
 ### Output Files
 
@@ -243,6 +243,7 @@ ml/exports/
 ### Metrics File Format
 
 `classifier_eval.json`:
+
 ```json
 {
   "accuracy": 0.92,
@@ -278,26 +279,32 @@ ml/exports/
 **Accuracy**: Overall correctness (TP+TN) / Total
 
 **Precision**: Of predicted positives, how many are correct? TP / (TP+FP)
+
 - High precision = fewer false positives
 - Important when false positives are costly
 
 **Recall**: Of actual positives, how many did we catch? TP / (TP+FN)
+
 - High recall = fewer false negatives
 - Important when false negatives are costly
 
 **F1 Score**: Harmonic mean of precision and recall
+
 - Balanced metric when both are important
 - F1 = 2 × (Precision × Recall) / (Precision + Recall)
 
 **Macro Average**: Simple average of per-class metrics
+
 - Treats all classes equally regardless of sample count
 - Good for imbalanced datasets
 
 **Weighted Average**: Weighted by support (number of samples)
+
 - Accounts for class imbalance
 - Better for real-world scenarios
 
 **Confusion Matrix**: Shows which classes are confused
+
 - Diagonal = correct predictions
 - Off-diagonal = misclassifications
 - Helps identify problematic class pairs
@@ -594,6 +601,51 @@ python train_classifier.py --data-dir ./data --device cuda
    python train_classifier.py --data-dir ./data --patience 30
    ```
 
+## Training Object Detectors
+
+For comprehensive YOLOv8 object detection training guide, see **[`train_detector.md`](./train_detector.md)**.
+
+### Quick Start
+
+```bash
+# Install YOLOv8
+pip install ultralytics
+
+# Train detector (with prepared dataset)
+yolo task=detect mode=train \
+  model=yolov8n.pt \
+  data=ml/data/detection/data.yaml \
+  epochs=100 \
+  imgsz=640 \
+  batch=16 \
+  project=ml/exports/detector
+
+# Validate
+yolo task=detect mode=val \
+  model=ml/exports/detector/detect/weights/best.pt \
+  data=ml/data/detection/data.yaml
+
+# Predict
+yolo task=detect mode=predict \
+  model=ml/exports/detector/detect/weights/best.pt \
+  source=test_image.jpg
+```
+
+### Key Topics in `train_detector.md`
+
+- ✅ YOLOv8 dataset structure and format
+- ✅ YOLO annotation format (normalized coordinates)
+- ✅ data.yaml configuration
+- ✅ Complete training command examples
+- ✅ Model size comparisons (nano to extra-large)
+- ✅ Augmentation strategies
+- ✅ Transfer learning best practices
+- ✅ Training output interpretation
+- ✅ Validation and inference
+- ✅ Model export (ONNX, TFLite, CoreML)
+- ✅ Hyperparameter tuning guide
+- ✅ Troubleshooting section
+
 ## Performance Benchmarks
 
 On NVIDIA V100 GPU (typical hardware):
@@ -620,6 +672,8 @@ On NVIDIA V100 GPU (typical hardware):
 
 ---
 
-**Status**: ✅ Classifier training implemented  
-**Next**: Detector training, model evaluation, export utilities  
+**Status**: ✅ Classifier & detector training documented  
+**Classification**: ✅ Training, evaluation, augmentation  
+**Detection**: ✅ YOLOv8 guide with complete workflow  
+**Next**: Model export utilities, backend integration  
 **Last Updated**: 2025-10-24
