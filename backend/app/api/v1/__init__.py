@@ -29,5 +29,8 @@ router.include_router(recommend.router, prefix="/recommend", tags=["recommend"])
 from . import feedback  # noqa: E402,F401
 
 router.include_router(feedback.router, prefix="/feedback", tags=["feedback"])
+from . import products  # noqa: E402,F401
+
+router.include_router(products.router, prefix="/products", tags=["products"])
 
 __all__ = ["router"]
