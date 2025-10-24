@@ -10,13 +10,28 @@ from ...models.db_models import Photo, Analysis
 from .profile import get_demo_user
 from ...services.storage import save_image
 from ...services.ml_infer import analyze_image_local
+from ...core.security import get_current_user
+
+# File upload constraints
+MAX_FILE_SIZE = 10 * 1024 * 1024  # 10 MB
+ALLOWED_MIME_TYPES = {"image/jpeg", "image/png", "image/gif", "image/webp"}
 
 router = APIRouter()
 
 
 @router.post("/photo", status_code=status.HTTP_201_CREATED)
-def analyze_photo(image: UploadFile = File(...), db: Session = Depends(get_db)):
-    """Save uploaded image, run local analysis, persist Analysis, and return the analysis JSON."""
+def analyze_photo(image: UploadFile = File(...), db: Session = Depends(get_db), user_id: int = Depends(get_current_user)):
+    """Save uploaded image, run local analysis, persist Analysis, and return the analysis JSON.
+    
+    Requires valid JWT token in Authorization header.
+    """
+    # Validate file type
+    if image.content_type not in ALLOWED_MIME_TYPES:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid file type. Allowed types: {', '.join(ALLOWED_MIME_TYPES)}"
+        )
+    
     try:
         contents = image.file.read()
     except Exception:
@@ -24,6 +39,13 @@ def analyze_photo(image: UploadFile = File(...), db: Session = Depends(get_db)):
 
     if not contents:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Empty file uploaded")
+
+    # Validate file size
+    if len(contents) > MAX_FILE_SIZE:
+        raise HTTPException(
+            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            detail=f"File size exceeds maximum allowed size of {MAX_FILE_SIZE / (1024*1024):.1f} MB"
+        )
 
     # Save the image (local or S3 depending on env)
     try:
@@ -65,17 +87,15 @@ def analyze_photo(image: UploadFile = File(...), db: Session = Depends(get_db)):
         except Exception:
             pass
 
-    # Persist Photo and Analysis records
-    user = get_demo_user(db)
-
-    photo = Photo(user_id=user.id, filename=(image.filename or meta.get("key") or "upload"), s3_key=meta.get("key"))
+    # Persist Photo and Analysis records using authenticated user
+    photo = Photo(user_id=user_id, filename=(image.filename or meta.get("key") or "upload"), s3_key=meta.get("key"))
     db.add(photo)
     db.commit()
     db.refresh(photo)
 
     # Map analysis_result to Analysis model fields
     analysis = Analysis(
-        user_id=user.id,
+        user_id=user_id,
         photo_id=photo.id,
         skin_type=analysis_result.get("skin_type"),
         hair_type=analysis_result.get("hair_type"),

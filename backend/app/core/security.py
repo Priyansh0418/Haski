@@ -3,7 +3,10 @@ from datetime import datetime, timedelta
 from typing import Optional
 import hashlib
 
-from jose import jwt
+from jose import jwt, JWTError
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPBearer, HTTPAuthCredentials
+from sqlalchemy.orm import Session
 
 from .config import settings
 
@@ -44,3 +47,42 @@ def decode_access_token(token: str) -> dict:
     alg = getattr(settings, "jwt_algorithm", "HS256")
     return jwt.decode(token, key, algorithms=[alg])
 
+
+# JWT Bearer scheme for FastAPI
+security = HTTPBearer()
+
+
+async def get_current_user(credentials: HTTPAuthCredentials = Depends(security), db: Session = Depends(None)) -> int:
+    """
+    Dependency that validates JWT token from Authorization header and returns user ID.
+    
+    Usage:
+        @app.get("/protected")
+        def protected_route(user_id: int = Depends(get_current_user)):
+            ...
+    """
+    token = credentials.credentials
+    
+    try:
+        payload = decode_access_token(token)
+        user_id: str = payload.get("sub")
+        if user_id is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid token: missing user ID",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+    except JWTError as e:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f"Invalid token: {str(e)}",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    return int(user_id)
