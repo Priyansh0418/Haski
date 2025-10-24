@@ -26,5 +26,8 @@ router.include_router(analyze.router, prefix="/analyze", tags=["analyze"])
 from . import recommend  # noqa: E402,F401
 
 router.include_router(recommend.router, prefix="/recommend", tags=["recommend"])
+from . import feedback  # noqa: E402,F401
+
+router.include_router(feedback.router, prefix="/feedback", tags=["feedback"])
 
 __all__ = ["router"]
