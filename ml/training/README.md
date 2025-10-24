@@ -7,6 +7,7 @@ Complete transfer learning and model training utilities for Haski skin analysis.
 ## Overview
 
 This module provides production-ready training scripts for:
+
 - **Skin Type Classification** (ResNet50 / EfficientNet-B0)
 - **Condition Detection** (YOLOv8)
 - **Data Augmentation** (comprehensive transforms)
@@ -18,8 +19,8 @@ This module provides production-ready training scripts for:
 ml/training/
 ├── augmentations.py          # Data augmentation transforms
 ├── train_classifier.py       # Skin type classification training
+├── eval_classifier.py        # Model evaluation & metrics
 ├── train_detector.py         # (Coming soon) Object detection training
-├── evaluate.py               # (Coming soon) Model evaluation
 └── export.py                 # (Coming soon) Model export (ONNX, TFLite)
 ```
 
@@ -43,6 +44,7 @@ pip install torch-cuda  # For CUDA support
 Prepare your dataset in one of these formats:
 
 **Option 1: Class Folders (Auto-splits train/val)**
+
 ```
 data/
 ├── normal/
@@ -57,6 +59,7 @@ data/
 ```
 
 **Option 2: Pre-split Train/Val**
+
 ```
 data/
 ├── train/
@@ -118,19 +121,19 @@ python train_classifier.py --data-dir ./data --patience 20
 
 ### CLI Arguments
 
-| Argument | Default | Description |
-|----------|---------|-------------|
-| `--data-dir` | **required** | Dataset directory |
-| `--model` | `efficientnet_b0` | `efficientnet_b0` or `resnet50` |
-| `--epochs` | `50` | Number of training epochs |
-| `--batch-size` | `32` | Batch size |
-| `--lr` | `0.001` | Learning rate |
-| `--weight-decay` | `1e-4` | L2 regularization |
-| `--output` | `ml/exports` | Output directory |
-| `--device` | `auto` | `cuda` or `cpu` |
-| `--num-workers` | `4` | DataLoader workers |
-| `--patience` | `10` | Early stopping patience |
-| `--val-split` | `0.2` | Validation split if no val folder |
+| Argument         | Default           | Description                       |
+| ---------------- | ----------------- | --------------------------------- |
+| `--data-dir`     | **required**      | Dataset directory                 |
+| `--model`        | `efficientnet_b0` | `efficientnet_b0` or `resnet50`   |
+| `--epochs`       | `50`              | Number of training epochs         |
+| `--batch-size`   | `32`              | Batch size                        |
+| `--lr`           | `0.001`           | Learning rate                     |
+| `--weight-decay` | `1e-4`            | L2 regularization                 |
+| `--output`       | `ml/exports`      | Output directory                  |
+| `--device`       | `auto`            | `cuda` or `cpu`                   |
+| `--num-workers`  | `4`               | DataLoader workers                |
+| `--patience`     | `10`              | Early stopping patience           |
+| `--val-split`    | `0.2`             | Validation split if no val folder |
 
 ## Output Files
 
@@ -151,6 +154,7 @@ ml/exports/
 ### Metrics File Format
 
 `classifier_metrics.json`:
+
 ```json
 {
   "train_loss": [2.45, 1.98, 1.23, ...],
@@ -170,6 +174,133 @@ ml/exports/
   "num_epochs_trained": 50
 }
 ```
+
+## Evaluating Trained Models
+
+### Basic Evaluation
+
+```bash
+cd ml/training
+
+# Evaluate with test split
+python eval_classifier.py \
+  --model ../exports/skin_classifier.pth \
+  --data-dir ./data
+
+# Evaluate with best model
+python eval_classifier.py \
+  --model ../exports/skin_classifier_best.pth \
+  --data-dir ./data/test
+```
+
+### Advanced Options
+
+```bash
+# Specify output directory
+python eval_classifier.py \
+  --model ../exports/skin_classifier.pth \
+  --data-dir ./data \
+  --output ../exports
+
+# Use CPU for evaluation
+python eval_classifier.py \
+  --model ../exports/skin_classifier.pth \
+  --data-dir ./data \
+  --device cpu
+
+# Custom batch size
+python eval_classifier.py \
+  --model ../exports/skin_classifier.pth \
+  --data-dir ./data \
+  --batch-size 64
+```
+
+### CLI Arguments
+
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `--model` | **required** | Path to model weights (.pth) |
+| `--data-dir` | **required** | Test data directory |
+| `--class-mapping` | auto-detect | Path to class_mapping.json |
+| `--output` | `ml/exports` | Output directory for results |
+| `--device` | `auto` | `cuda` or `cpu` |
+| `--batch-size` | `32` | Batch size |
+| `--num-workers` | `4` | DataLoader workers |
+
+### Output Files
+
+After evaluation, find these files in `ml/exports/`:
+
+```
+ml/exports/
+├── classifier_eval.json               # Detailed metrics (JSON)
+├── confusion_matrix.png               # Confusion matrix heatmap
+├── f1_scores.png                      # Per-class F1 scores
+├── metrics_comparison.png             # Precision/Recall/F1 comparison
+└── classifier_eval_report.txt         # Human-readable report
+```
+
+### Metrics File Format
+
+`classifier_eval.json`:
+```json
+{
+  "accuracy": 0.92,
+  "precision_macro": 0.90,
+  "recall_macro": 0.88,
+  "f1_macro": 0.89,
+  "precision_weighted": 0.91,
+  "recall_weighted": 0.92,
+  "f1_weighted": 0.91,
+  "per_class_metrics": {
+    "normal": {
+      "precision": 0.95,
+      "recall": 0.93,
+      "f1": 0.94,
+      "support": 150
+    },
+    "dry": {
+      "precision": 0.88,
+      "recall": 0.85,
+      "f1": 0.86,
+      "support": 120
+    }
+  },
+  "confusion_matrix": [[140, 8, 2], ...],
+  "total_samples": 500,
+  "correct_predictions": 460,
+  "classification_report": {...}
+}
+```
+
+### Understanding Metrics
+
+**Accuracy**: Overall correctness (TP+TN) / Total
+
+**Precision**: Of predicted positives, how many are correct? TP / (TP+FP)
+- High precision = fewer false positives
+- Important when false positives are costly
+
+**Recall**: Of actual positives, how many did we catch? TP / (TP+FN)
+- High recall = fewer false negatives
+- Important when false negatives are costly
+
+**F1 Score**: Harmonic mean of precision and recall
+- Balanced metric when both are important
+- F1 = 2 × (Precision × Recall) / (Precision + Recall)
+
+**Macro Average**: Simple average of per-class metrics
+- Treats all classes equally regardless of sample count
+- Good for imbalanced datasets
+
+**Weighted Average**: Weighted by support (number of samples)
+- Accounts for class imbalance
+- Better for real-world scenarios
+
+**Confusion Matrix**: Shows which classes are confused
+- Diagonal = correct predictions
+- Off-diagonal = misclassifications
+- Helps identify problematic class pairs
 
 ## Data Augmentation
 
@@ -193,6 +324,7 @@ python augmentations.py info
 ### Augmentation Details
 
 **Training Transforms** (aggressive):
+
 - RandomResizedCrop(224) - crop with 0.8-1.0 scale
 - ColorJitter - brightness/contrast/saturation/hue
 - RandomHorizontalFlip (50%)
@@ -203,6 +335,7 @@ python augmentations.py info
 - Normalize (ImageNet mean/std)
 
 **Validation Transforms** (minimal):
+
 - Resize(256)
 - CenterCrop(224)
 - Normalize (ImageNet mean/std)
@@ -215,19 +348,19 @@ Edit `AugmentationConfig` in `augmentations.py`:
 class AugmentationConfig:
     INPUT_SIZE = 224
     RESIZE_SIZE = 256
-    
+
     # Color augmentation
     COLOR_JITTER_BRIGHTNESS = 0.2
     COLOR_JITTER_CONTRAST = 0.2
     COLOR_JITTER_SATURATION = 0.2
     COLOR_JITTER_HUE = 0.1
-    
+
     # Geometric augmentation
     RANDOM_ROTATION_DEGREES = 15
     RANDOM_AFFINE_DEGREES = 10
     RANDOM_AFFINE_TRANSLATE = (0.1, 0.1)
     RANDOM_AFFINE_SCALE = (0.8, 1.2)
-    
+
     # Blur
     GAUSSIAN_BLUR_KERNEL_SIZE = 5
     GAUSSIAN_BLUR_SIGMA = (0.1, 2.0)
@@ -300,11 +433,13 @@ python train_classifier.py \
 ### Convergence Monitoring
 
 Training logs show:
+
 - Loss: Should steadily decrease
 - Accuracy: Should steadily increase
 - Validation should track training (overfitting check)
 
 Example good training:
+
 ```
 Epoch 1/50 [Train] | loss: 2.31, acc: 0.25
 Epoch 1/50 [Val]   | loss: 2.15, acc: 0.35
@@ -443,11 +578,13 @@ python train_classifier.py --data-dir ./data --device cuda
 ### Model Not Improving
 
 1. **Check data quality**
+
    ```bash
    python ml/data/prepare_dataset.py validate --input-dir ./data
    ```
 
 2. **Check augmentation**
+
    ```bash
    python augmentations.py preview --image sample.jpg --output preview/
    ```
@@ -461,10 +598,10 @@ python train_classifier.py --data-dir ./data --device cuda
 
 On NVIDIA V100 GPU (typical hardware):
 
-| Model | Input Size | Batch 32 | Epoch Time | Throughput |
-|-------|-----------|----------|-----------|-----------|
-| EfficientNet-B0 | 224×224 | 32 | ~45s | 712 img/s |
-| ResNet50 | 224×224 | 32 | ~60s | 533 img/s |
+| Model           | Input Size | Batch 32 | Epoch Time | Throughput |
+| --------------- | ---------- | -------- | ---------- | ---------- |
+| EfficientNet-B0 | 224×224    | 32       | ~45s       | 712 img/s  |
+| ResNet50        | 224×224    | 32       | ~60s       | 533 img/s  |
 
 ## Next Steps
 
