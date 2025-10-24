@@ -1,6 +1,6 @@
 # Recommender Rules Configuration
 # Format: Condition matching + Product recommendations + Routine guidance + Safety escalations
-# 
+#
 # Rule Structure:
 #   - id: unique rule identifier (r001, r002, etc.)
 #   - name: human-readable rule name
@@ -30,9 +30,9 @@ rules:
           - congestion
     actions:
       recommend_products_external_ids:
-        - ordinary_sa_001      # Salicylic Acid 2% Solution
-        - ordinary_niacinamide_001  # Niacinamide 10% + Zinc 1%
-        - lrp_sunscreen_001    # Anthelios SPF 60 (non-comedogenic)
+        - ordinary_sa_001 # Salicylic Acid 2% Solution
+        - ordinary_niacinamide_001 # Niacinamide 10% + Zinc 1%
+        - lrp_sunscreen_001 # Anthelios SPF 60 (non-comedogenic)
       recommend_products_tags:
         - exfoliating
         - oil-control
@@ -76,10 +76,10 @@ rules:
           - dry_patches
     actions:
       recommend_products_external_ids:
-        - cerave_cleanser_001      # Hydrating Facial Cleanser
-        - vanicream_moisturizer_001  # Moisturizing Cream
-        - hadalabo_toner_001       # Hydrating Toner
-        - mac_mask_001             # Deep Hydrating Sheet Mask
+        - cerave_cleanser_001 # Hydrating Facial Cleanser
+        - vanicream_moisturizer_001 # Moisturizing Cream
+        - hadalabo_toner_001 # Hydrating Toner
+        - mac_mask_001 # Deep Hydrating Sheet Mask
       recommend_products_tags:
         - hydrating
         - barrier-repair
@@ -122,10 +122,10 @@ rules:
           - facial_redness
     actions:
       recommend_products_external_ids:
-        - cerave_cleanser_001       # Hydrating Facial Cleanser
+        - cerave_cleanser_001 # Hydrating Facial Cleanser
         - vanicream_moisturizer_001 # Moisturizing Cream
-        - ordinary_niacinamide_001  # Niacinamide (anti-inflammatory)
-        - lrp_sunscreen_001         # Anthelios SPF 60
+        - ordinary_niacinamide_001 # Niacinamide (anti-inflammatory)
+        - lrp_sunscreen_001 # Anthelios SPF 60
       recommend_products_tags:
         - gentle
         - calming
@@ -167,10 +167,10 @@ rules:
           - age_spots
     actions:
       recommend_products_external_ids:
-        - cerave_cleanser_001       # Hydrating Facial Cleanser
-        - ordinary_retinol_001      # Retinol 0.2%
-        - hadalabo_toner_001        # Hydrating Toner
-        - lrp_sunscreen_001         # Anthelios SPF 60
+        - cerave_cleanser_001 # Hydrating Facial Cleanser
+        - ordinary_retinol_001 # Retinol 0.2%
+        - hadalabo_toner_001 # Hydrating Toner
+        - lrp_sunscreen_001 # Anthelios SPF 60
       recommend_products_tags:
         - retinol
         - anti-aging
@@ -214,7 +214,7 @@ rules:
           - frizz
     actions:
       recommend_products_external_ids:
-        - sheamoisture_shampoo_001  # Sulfate-Free Hydrating Shampoo
+        - sheamoisture_shampoo_001 # Sulfate-Free Hydrating Shampoo
       recommend_products_tags:
         - sulfate-free
         - hydrating
@@ -256,9 +256,9 @@ rules:
           - tight_feeling
     actions:
       recommend_products_external_ids:
-        - hadalabo_toner_001        # Hydrating Toner (lightweight, layerable)
-        - ordinary_niacinamide_001  # Niacinamide (oil control + hydration)
-        - lrp_sunscreen_001         # Non-comedogenic sunscreen
+        - hadalabo_toner_001 # Hydrating Toner (lightweight, layerable)
+        - ordinary_niacinamide_001 # Niacinamide (oil control + hydration)
+        - lrp_sunscreen_001 # Non-comedogenic sunscreen
       recommend_products_tags:
         - hydrating
         - lightweight
@@ -299,8 +299,8 @@ rules:
           - sebaceous_filaments
     actions:
       recommend_products_external_ids:
-        - ordinary_sa_001           # Salicylic Acid 2% (BHA for pores)
-        - ordinary_niacinamide_001  # Niacinamide (pore-minimizing)
+        - ordinary_sa_001 # Salicylic Acid 2% (BHA for pores)
+        - ordinary_niacinamide_001 # Niacinamide (pore-minimizing)
       recommend_products_tags:
         - exfoliating
         - pore-cleansing
@@ -332,7 +332,7 @@ rules:
   - id: r008
     name: "Severe Acne or Suspected Infection - Medical Escalation"
     description: "Severe acne (cystic), signs of infection, or rapid spread"
-    priority: 0  # Highest priority
+    priority: 0 # Highest priority
     conditions:
       - conditions_contains:
           - severe_acne
@@ -368,9 +368,9 @@ rules:
           - barrier_damaged
     actions:
       recommend_products_external_ids:
-        - cerave_cleanser_001       # Hydrating Cleanser
+        - cerave_cleanser_001 # Hydrating Cleanser
         - vanicream_moisturizer_001 # Barrier repair cream
-        - lrp_sunscreen_001         # Protective SPF (critical post-treatment)
+        - lrp_sunscreen_001 # Protective SPF (critical post-treatment)
       recommend_products_tags:
         - gentle
         - barrier-repair
