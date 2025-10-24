@@ -23,5 +23,8 @@ router.include_router(photos.router, prefix="/photos", tags=["photos"])
 from . import analyze  # noqa: E402,F401
 
 router.include_router(analyze.router, prefix="/analyze", tags=["analyze"])
+from . import recommend  # noqa: E402,F401
+
+router.include_router(recommend.router, prefix="/recommend", tags=["recommend"])
 
 __all__ = ["router"]
