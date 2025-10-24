@@ -108,3 +108,6 @@ Add a focused MVP to validate core value quickly. Keep it small, privacy-first, 
   - Allow users to delete saved photos and export/delete their account data.
 
 This MVP will let you validate user demand, iterate on model accuracy, and build the UI flows required for more advanced recommendations.
+## Changelog
+
+- 2025-10-24: Updated README — clarified quickstart and added a changelog entry.
