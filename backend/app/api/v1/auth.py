@@ -50,15 +50,3 @@ def login(form_data: LoginRequest, db: Session = Depends(get_db)):
 
     token = security.create_access_token(subject=user.id)
     return {"access_token": token, "token_type": "bearer"}
-from fastapi import APIRouter, Depends
-from app.core.security import create_access_token
-from app.schemas.pydantic_schemas import Token
-
-router = APIRouter()
-
-
-@router.post('/login', response_model=Token)
-def login():
-    # Stubbed authentication; replace with DB lookup + password verify
-    access_token = create_access_token(subject="anonymous")
-    return {"access_token": access_token, "token_type": "bearer"}
