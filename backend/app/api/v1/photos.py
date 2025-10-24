@@ -1,10 +1,10 @@
 from fastapi import APIRouter, UploadFile, File, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.db import get_db
-from app.models.db_models import Photo
-from app.api.v1.profile import get_demo_user
-from app.services.storage import save_image
+from ...db import get_db
+from ...models.db_models import Photo
+from .profile import get_demo_user
+from ...services.storage import save_image
 
 router = APIRouter()
 
@@ -36,7 +36,4 @@ def upload_photo(image: UploadFile = File(...), db: Session = Depends(get_db)):
     db.refresh(photo)
 
     return {"photo_id": photo.id, "image_url": meta.get("url")}
-from fastapi import APIRouter, UploadFile, File, Depends
-from app.services.storage import upload_to_s3
-from app.db.session import get_db
 

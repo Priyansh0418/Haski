@@ -5,8 +5,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from app.db import get_db
-from app.models.db_models import User, Profile
+from ...db import get_db
+from ...models.db_models import User, Profile
 
 router = APIRouter()
 
@@ -110,14 +110,3 @@ def update_profile(payload: ProfileIn, db: Session = Depends(get_db)):
     db.refresh(profile)
 
     return {"id": profile.id, "user_id": profile.user_id}
-from fastapi import APIRouter, Depends
-from app.schemas.pydantic_schemas import Profile
-from app.db.session import get_db
-
-router = APIRouter()
-
-
-@router.get("/me", response_model=Profile)
-def read_profile(db=Depends(get_db)):
-    # TODO: load real user from DB using session
-    return {"username": "anon", "age": None, "gender": None, "skin_type": None, "hair_type": None}

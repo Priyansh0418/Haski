@@ -1,21 +1,32 @@
 import os
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 # DB & models
-from app.db.session import engine
-from app.db.base import Base
+from .db.session import engine
+from .db.base import Base
 
 # ensure models are imported so they are registered on Base
-import app.models.db_models  # noqa: F401
+from .models import db_models  # noqa: F401
 
-from app.api.v1 import router as api_v1_router
+from .api.v1 import router as api_v1_router
 
 
 APP_TITLE = "SkinHairAI API"
 APP_VERSION = "0.1"
 
-app = FastAPI(title=APP_TITLE, version=APP_VERSION)
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup
+    Base.metadata.create_all(bind=engine)
+    yield
+    # Shutdown
+    pass
+
+
+app = FastAPI(title=APP_TITLE, version=APP_VERSION, lifespan=lifespan)
 
 
 @app.get("/")
@@ -44,13 +55,9 @@ app.add_middleware(
 app.include_router(api_v1_router, prefix="/api/v1")
 
 
-@app.on_event("startup")
-def on_startup():
-    # create DB tables if they don't exist (dev convenience)
-    Base.metadata.create_all(bind=engine)
-
-
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run("app.main:app", host="0.0.0.0", port=int(os.getenv("PORT", 8000)), log_level="info")
+    # run the FastAPI app instance directly so module/package imports resolve
+    uvicorn.run(app, host="0.0.0.0", port=int(os.getenv("PORT", 8000)), log_level="info")
+

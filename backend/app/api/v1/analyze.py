@@ -5,11 +5,11 @@ import os
 import tempfile
 import urllib.request
 
-from app.db import get_db
-from app.models.db_models import Photo, Analysis
-from app.api.v1.profile import get_demo_user
-from app.services.storage import save_image
-from app.services.ml_infer import analyze_image_local
+from ...db import get_db
+from ...models.db_models import Photo, Analysis
+from .profile import get_demo_user
+from ...services.storage import save_image
+from ...services.ml_infer import analyze_image_local
 
 router = APIRouter()
 
@@ -91,7 +91,4 @@ def analyze_photo(image: UploadFile = File(...), db: Session = Depends(get_db)):
     out = dict(analysis_result)
     out.update({"id": analysis.id, "photo_id": photo.id})
     return out
-from fastapi import APIRouter, UploadFile, File
-from app.services.ml_infer import analyze_image
-from app.schemas.pydantic_schemas import AnalysisResponse
 
