@@ -5,7 +5,7 @@ import hashlib
 
 from jose import jwt, JWTError
 from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPBearer, HTTPAuthCredentials
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 
 from .config import settings
@@ -52,7 +52,7 @@ def decode_access_token(token: str) -> dict:
 security = HTTPBearer()
 
 
-async def get_current_user(credentials: HTTPAuthCredentials = Depends(security), db: Session = Depends(None)) -> int:
+async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)) -> int:
     """
     Dependency that validates JWT token from Authorization header and returns user ID.
     
