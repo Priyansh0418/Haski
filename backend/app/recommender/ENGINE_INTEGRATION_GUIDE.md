@@ -53,6 +53,7 @@ Main class that manages rule loading and application.
 **Methods:**
 
 #### `__init__(rules_path: Optional[str] = None)`
+
 Initialize and load YAML rules.
 
 ```python
@@ -64,15 +65,18 @@ engine = RuleEngine(rules_path="/custom/path/rules.yaml")
 ```
 
 **Raises:**
+
 - `FileNotFoundError`: If rules.yaml not found
 - `yaml.YAMLError`: If YAML parsing fails
 
 #### `apply_rules(analysis: Dict, profile: Dict) -> Tuple[Dict, List[str]]`
+
 Apply all matching rules to user data.
 
 **Args:**
 
 `analysis`: User skin/hair analysis
+
 ```python
 {
     "skin_type": "oily|dry|combination|sensitive|normal",
@@ -85,6 +89,7 @@ Apply all matching rules to user data.
 ```
 
 `profile`: User profile with medical/lifestyle flags
+
 ```python
 {
     "age": 25,
@@ -102,6 +107,7 @@ Apply all matching rules to user data.
 `Tuple[recommendation_dict, applied_rules_list]`
 
 **recommendation_dict structure:**
+
 ```python
 {
     "routines": [
@@ -157,11 +163,13 @@ Apply all matching rules to user data.
 ```
 
 **applied_rules_list:** List of rule IDs that matched
+
 ```python
 ["r001", "r007"]
 ```
 
 #### `get_rules_summary() -> List[Dict]`
+
 Get summary of all loaded rules (for documentation).
 
 ```python
@@ -179,6 +187,7 @@ Validates user input data before passing to engine.
 **Static Methods:**
 
 #### `validate_analysis(analysis: Dict) -> Tuple[bool, Optional[str]]`
+
 Validate analysis data structure.
 
 ```python
@@ -192,6 +201,7 @@ if not is_valid:
 ```
 
 #### `validate_profile(profile: Dict) -> Tuple[bool, Optional[str]]`
+
 Validate profile data structure.
 
 ```python
@@ -224,23 +234,23 @@ async def get_recommendation(
     db: Session = Depends(get_db)
 ):
     """Generate personalized recommendation based on analysis and profile."""
-    
+
     # Validate input
     is_valid_analysis, error_analysis = AnalysisValidator.validate_analysis(request.analysis)
     if not is_valid_analysis:
         raise HTTPException(status_code=400, detail=error_analysis)
-    
+
     is_valid_profile, error_profile = AnalysisValidator.validate_profile(request.profile)
     if not is_valid_profile:
         raise HTTPException(status_code=400, detail=error_profile)
-    
+
     try:
         # Apply rules
         recommendation, applied_rules = engine.apply_rules(
             analysis=request.analysis,
             profile=request.profile
         )
-        
+
         # Log applied rules to database
         for rule_id in applied_rules:
             rule_log = RuleLog(
@@ -250,9 +260,9 @@ async def get_recommendation(
                 details={"matched": True}
             )
             db.add(rule_log)
-        
+
         db.commit()
-        
+
         # Format response
         return RecommendationResponse(
             recommendation_id=f"rec_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
@@ -260,7 +270,7 @@ async def get_recommendation(
             applied_rules=applied_rules,
             generated_at=datetime.utcnow()
         )
-    
+
     except Exception as e:
         logger.error(f"Error generating recommendation: {e}")
         raise HTTPException(status_code=500, detail="Failed to generate recommendation")
@@ -269,63 +279,72 @@ async def get_recommendation(
 ## Condition Matching Reference
 
 ### Exact Match Conditions
+
 ```yaml
 conditions:
-  - skin_type: oily  # Matches if user.skin_type == "oily"
-  - hair_type: curly  # Matches if user.hair_type == "curly"
+  - skin_type: oily # Matches if user.skin_type == "oily"
+  - hair_type: curly # Matches if user.hair_type == "curly"
 ```
 
 ### Multiple Options (OR Logic)
+
 ```yaml
 conditions:
-  - skin_type: [oily, combination]  # Matches if either oily OR combination
+  - skin_type: [oily, combination] # Matches if either oily OR combination
   - hair_type: [curly, wavy]
 ```
 
 ### Contains Condition (ALL Must Be Present)
+
 ```yaml
 conditions:
-  - conditions_contains: [acne, blackheads]  # Matches if user has BOTH acne AND blackheads
+  - conditions_contains: [acne, blackheads] # Matches if user has BOTH acne AND blackheads
 ```
 
 ### Range Condition
+
 ```yaml
 conditions:
-  - age_range: [18, 65]  # Matches if 18 <= user.age <= 65
+  - age_range: [18, 65] # Matches if 18 <= user.age <= 65
 ```
 
 ### Multiple Conditions (AND Logic)
+
 ```yaml
 conditions:
-  - skin_type: oily  # AND
-  - conditions_contains: [acne]  # AND
+  - skin_type: oily # AND
+  - conditions_contains: [acne] # AND
   - age_range: [15, 50]
 ```
+
 ALL conditions must pass for rule to match.
 
 ## Contraindication Reference
 
 ### Supported Contraindications
+
 ```yaml
 avoid_if:
-  - pregnancy           # Skip if user.pregnancy_status == True
-  - breastfeeding       # Skip if user.breastfeeding_status == True
-  - very_sensitive      # Skip if user.skin_sensitivity == "very_sensitive"
-  - active_infection    # Skip if user.active_infection == True
-  - allergies           # Skip if user allergies overlap with rule ingredients
-  - none                # No contraindications
+  - pregnancy # Skip if user.pregnancy_status == True
+  - breastfeeding # Skip if user.breastfeeding_status == True
+  - very_sensitive # Skip if user.skin_sensitivity == "very_sensitive"
+  - active_infection # Skip if user.active_infection == True
+  - allergies # Skip if user allergies overlap with rule ingredients
+  - none # No contraindications
 ```
 
 ### Example: Rule Contraindicated by Pregnancy
+
 ```yaml
 - id: r004
   name: "Retinol Anti-Aging"
   avoid_if:
-    - pregnancy        # Retinol not safe during pregnancy
-    - breastfeeding    # Not safe during breastfeeding
+    - pregnancy # Retinol not safe during pregnancy
+    - breastfeeding # Not safe during breastfeeding
 ```
 
 User profile:
+
 ```python
 profile = {"pregnancy_status": True, ...}
 ```
@@ -335,6 +354,7 @@ Result: Rule r004 will NOT be applied.
 ## Escalation Levels
 
 Escalation severity (highest to lowest):
+
 1. **emergency** - Immediate 911 or ER referral
 2. **urgent** - See dermatologist immediately
 3. **caution** - Recommend professional consultation
@@ -344,21 +364,27 @@ Escalation severity (highest to lowest):
 ### Escalation Examples
 
 **Urgent (r008 - Severe Acne):**
+
 ```yaml
 escalation: "URGENT - See dermatologist immediately. Likely requires prescription..."
 ```
+
 → Engine extracts as `level: "urgent"`
 
 **Caution (r002 - Eczema):**
+
 ```yaml
 escalation: "If rash worsens, consult dermatologist"
 ```
+
 → Engine extracts as `level: "caution"`
 
 **None:**
+
 ```yaml
 escalation: none
 ```
+
 → Engine sets `level: "none"` (no escalation returned)
 
 ## Testing
@@ -379,16 +405,19 @@ pytest backend/app/recommender/test_engine.py --cov=backend.app.recommender.engi
 ## Performance Considerations
 
 ### Rule Matching Speed
+
 - Typically **< 50ms** for full rule evaluation (9 rules)
 - Linear with number of rules
 - Constant time per condition check
 
 ### Memory Usage
+
 - Rules YAML loaded once at initialization
 - ~20KB for 9 rules
 - Recommendation dict ~5-10KB per user
 
 ### Optimization Tips
+
 1. **Cache engine instance** - Initialize once, reuse for all requests
 2. **Validate input early** - Fail fast on invalid data
 3. **Log matched rules** - Asynchronously for analytics
@@ -419,8 +448,8 @@ Example:
   actions:
     recommend_products_external_ids: [...]
     recommend_products_tags: [...]
-    routine: {...}
-    diet_recommendations: {...}
+    routine: { ... }
+    diet_recommendations: { ... }
     warnings: [...]
   escalation: none
   avoid_if: [pregnancy]
@@ -442,6 +471,7 @@ recommendation, rules = engine.apply_rules(analysis, profile)
 ```
 
 **Sample output:**
+
 ```
 INFO:Loaded 9 rules from /path/to/rules.yaml
 INFO:Rule r001 matched
@@ -479,6 +509,7 @@ for analysis, profile in test_cases:
 ## Troubleshooting
 
 ### "Rules file not found"
+
 **Solution:** Verify `rules.yaml` exists in `backend/app/recommender/`
 
 ```python
@@ -489,6 +520,7 @@ print(f"Exists: {p.exists()}")
 ```
 
 ### "Failed to parse YAML"
+
 **Solution:** Check YAML syntax (indentation, colons, etc.)
 
 ```bash
@@ -497,6 +529,7 @@ python -m yaml backend/app/recommender/rules.yaml
 ```
 
 ### "No rules matched"
+
 **Solution:** Verify conditions are correctly formatted
 
 ```python
