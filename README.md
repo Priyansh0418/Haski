@@ -33,6 +33,34 @@ Notes:
 
 - If you prefer to run services locally without Docker, see the individual `frontend/` and `backend/` README snippets under their folders.
 
+## Local development (virtualenv)
+
+If you prefer to run the backend locally without Docker, use a Python virtual environment. Create it once and then activate it in your shell.
+
+Windows (PowerShell):
+
+```powershell
+python -m venv .venv
+. .\scripts\activate-venv.ps1   # dot-source the helper so activation persists in this session
+```
+
+Bash / WSL / Git Bash:
+
+```bash
+python -m venv .venv
+source ./.venv/bin/activate       # or: source ./scripts/activate-venv.sh
+```
+
+After activation, install backend deps and run the app:
+
+```bash
+pip install -r backend/requirements.txt
+pip install "pydantic[email]"
+cd backend
+python -m app.main                # or: ..\\.venv\\Scripts\\python -m uvicorn app.main:app --reload
+```
+
+
 ## Folder structure (high-level)
 
 HASKI/
@@ -110,4 +138,4 @@ Add a focused MVP to validate core value quickly. Keep it small, privacy-first, 
 This MVP will let you validate user demand, iterate on model accuracy, and build the UI flows required for more advanced recommendations.
 ## Changelog
 
-- 2025-10-24: Updated README — clarified quickstart and added a changelog entry.
+- 2025-10-24: Updated README ï¿½ clarified quickstart and added a changelog entry.
