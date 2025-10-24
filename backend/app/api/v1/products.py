@@ -18,7 +18,7 @@ Handles:
 import logging
 from typing import Optional, List, Dict, Any
 from datetime import datetime
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Path, status
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from sqlalchemy import or_, func
@@ -394,7 +394,7 @@ def list_products(
 
 @router.get("/{product_id}", response_model=ProductResponse)
 def get_product(
-    product_id: int = Query(..., description="Product ID"),
+    product_id: int = Path(..., description="Product ID"),
     db: Session = Depends(get_db)
 ) -> ProductResponse:
     """

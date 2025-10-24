@@ -68,7 +68,7 @@ class Product(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     
     # Relationships
-    rule_logs = relationship("RuleLog", back_populates="product")
+    rule_logs = relationship("RuleLog")
     
     def __repr__(self):
         return f"<Product(id={self.id}, name='{self.name}', brand='{self.brand}', price=${self.price_usd/100 if self.price_usd else 'N/A'})>"
@@ -110,7 +110,7 @@ class RuleLog(Base):
     id = Column(Integer, primary_key=True, index=True)
     
     # Foreign Keys
-    analysis_id = Column(Integer, ForeignKey("analysis.id"), nullable=False, index=True)
+    analysis_id = Column(Integer, ForeignKey("analyses.id"), nullable=False, index=True)
     product_id = Column(Integer, ForeignKey("products.id"), nullable=True, index=True)
     
     # Rule Information
@@ -137,8 +137,8 @@ class RuleLog(Base):
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)
     
     # Relationships
-    analysis = relationship("Analysis", back_populates="rule_logs")
-    product = relationship("Product", back_populates="rule_logs")
+    analysis = relationship("Analysis")
+    product = relationship("Product")
     
     def __repr__(self):
         return f"<RuleLog(id={self.id}, rule_id='{self.rule_id}', applied={self.applied}, analysis_id={self.analysis_id})>"
@@ -175,7 +175,7 @@ class RecommendationRecord(Base):
     
     # Foreign Keys
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
-    analysis_id = Column(Integer, ForeignKey("analysis.id"), nullable=False, index=True)
+    analysis_id = Column(Integer, ForeignKey("analyses.id"), nullable=False, index=True)
     
     # Recommendation Tracking
     recommendation_id = Column(String(100), nullable=False, unique=True, index=True)
@@ -218,9 +218,9 @@ class RecommendationRecord(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     
     # Relationships
-    user = relationship("User", back_populates="recommendations")
-    analysis = relationship("Analysis", back_populates="recommendations")
-    feedbacks = relationship("RecommendationFeedback", back_populates="recommendation")
+    user = relationship("User")
+    analysis = relationship("Analysis")
+    feedbacks = relationship("RecommendationFeedback")
     
     def __repr__(self):
         return f"<RecommendationRecord(id={self.id}, recommendation_id='{self.recommendation_id}', user_id={self.user_id}, analysis_id={self.analysis_id})>"
@@ -263,7 +263,7 @@ class RecommendationFeedback(Base):
     
     # Foreign Keys
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
-    analysis_id = Column(Integer, ForeignKey("analysis.id"), nullable=False, index=True)
+    analysis_id = Column(Integer, ForeignKey("analyses.id"), nullable=False, index=True)
     recommendation_id = Column(Integer, ForeignKey("recommendation_records.id"), nullable=False, index=True)
     
     # User Ratings (1-5 scale, stored as integers for precision)
@@ -290,9 +290,9 @@ class RecommendationFeedback(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     
     # Relationships
-    user = relationship("User", back_populates="recommendation_feedbacks")
-    analysis = relationship("Analysis", back_populates="recommendation_feedbacks")
-    recommendation = relationship("RecommendationRecord", back_populates="feedbacks")
+    user = relationship("User")
+    analysis = relationship("Analysis")
+    recommendation = relationship("RecommendationRecord")
     
     def __repr__(self):
         return f"<RecommendationFeedback(id={self.id}, user_id={self.user_id}, helpful={self.helpful_rating}, satisfaction={self.product_satisfaction})>"

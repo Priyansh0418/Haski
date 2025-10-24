@@ -45,13 +45,13 @@ async def analyze_and_recommend(
         analysis=request.analysis,
         profile=request.profile
     )
-    
+
     # Get products
     product_ids = recommendation.get('products', [])
     products = db.query(Product).filter(
         Product.id.in_(product_ids)
     ).all()
-    
+
     return {
         "recommendations": [p.to_dict() for p in products],
         "applied_rules": applied_rules
@@ -79,13 +79,13 @@ async def analyze_and_recommend(
         analysis=request.analysis,
         profile=request.profile
     )
-    
+
     # Get products
     product_ids = recommendation.get('products', [])
     products = db.query(Product).filter(
         Product.id.in_(product_ids)
     ).all()
-    
+
     # NEW: Rank products
     user_profile = UserProfile(
         user_id=current_user.id,
@@ -95,14 +95,14 @@ async def analyze_and_recommend(
         hair_type=request.profile.get('hair_type'),
         conditions=request.analysis.get('conditions_detected')
     )
-    
+
     ranked_products = rank_products(
         products_list=products,
         user_profile=user_profile,
         db=db,
         k=5  # Return top 5 ranked products
     )
-    
+
     return {
         "recommendations": [r.to_dict() for r in ranked_products],
         "applied_rules": applied_rules,
@@ -139,7 +139,7 @@ class RankedProductResponse(BaseModel):
     recommended_for: List[str]
     rating: Optional[float]
     review_count: int
-    
+
     # Ranking fields
     rank: int
     ranking_score: float
@@ -166,6 +166,7 @@ class RecommendationResponseWithRanking(BaseModel):
 **File:** `backend/app/api/v1/recommend.py`
 
 **Pseudo-code:**
+
 ```python
 @router.post("/recommendations")
 async def get_recommendations(
@@ -178,26 +179,26 @@ async def get_recommendations(
         Analysis.id == analysis_id,
         Analysis.user_id == current_user.id
     ).first()
-    
+
     # 2. Get user profile
     profile_data = {
         'allergies': current_user.profile.allergies,
         'skin_type': current_user.profile.skin_type,
         'conditions': analysis.conditions
     }
-    
+
     # 3. Run recommendation engine
     engine = RuleEngine()
     recommendation, rules = engine.apply_rules(
         analysis=analysis.to_dict(),
         profile=profile_data
     )
-    
+
     # 4. Get products
     products = db.query(Product).filter(
         Product.id.in_(recommendation['products'])
     ).all()
-    
+
     # 5. RANK PRODUCTS ← NEW
     user_profile = UserProfile(
         user_id=current_user.id,
@@ -205,14 +206,14 @@ async def get_recommendations(
         conditions=profile_data['conditions'],
         skin_type=profile_data['skin_type']
     )
-    
+
     ranked = rank_products(
         products_list=products,
         user_profile=user_profile,
         db=db,
         k=5
     )
-    
+
     # 6. Return ranked products
     return {
         "recommendations": [r.to_dict() for r in ranked],
@@ -236,7 +237,7 @@ async def submit_feedback(
 ):
     """
     User rates a product from recommendation.
-    
+
     After storing feedback, re-rank remaining products
     to boost alternatives if user disliked recommendation.
     """
@@ -244,9 +245,9 @@ async def submit_feedback(
     recommendation = db.query(RecommendationRecord).filter_by(
         recommendation_id=recommendation_id
     ).first()
-    
+
     # ... store feedback logic ...
-    
+
     # NEW: Re-rank if user rated low
     if feedback.rating and feedback.rating <= 2:
         # Get remaining products from same recommendation
@@ -254,21 +255,21 @@ async def submit_feedback(
             recommendation,
             excluded_product_id=feedback.product_id
         )
-        
+
         # Re-rank with emphasis on alternatives
         user_profile = UserProfile(
             user_id=current_user.id,
             allergies=current_user.profile.allergies,
             conditions=recommendation.conditions_detected
         )
-        
+
         reranked = rank_products(
             remaining_products,
             user_profile,
             db=db,
             k=3
         )
-        
+
         return {
             "feedback_saved": True,
             "alternatives": [r.to_dict() for r in reranked]
@@ -298,23 +299,23 @@ async def browse_products(
         query = query.filter(Product.category == category)
     if min_rating:
         query = query.filter(Product.avg_rating >= min_rating * 100)
-    
+
     products = query.all()
-    
+
     # Rank for current user
     user_profile = UserProfile(
         user_id=current_user.id,
         allergies=current_user.profile.allergies,
         skin_type=current_user.profile.skin_type
     )
-    
+
     ranked = rank_products(
         products_list=products,
         user_profile=user_profile,
         db=db,
         k=20
     )
-    
+
     return {
         "products": [r.to_dict() for r in ranked],
         "total": len(ranked)
@@ -426,7 +427,7 @@ curl -X POST http://localhost:8000/api/v1/analyze-and-recommend \
         "name": "The Ordinary Niacinamide",
         "brand": "The Ordinary",
         "category": "serum",
-        "price_usd": 5.90,
+        "price_usd": 5.9,
         "tags": ["powerful", "budget-friendly"],
         "dermatologically_safe": false,
         "recommended_for": ["oily_skin", "large_pores"],
@@ -455,19 +456,14 @@ curl -X POST http://localhost:8000/api/v1/analyze-and-recommend \
         "review_count": 320
       },
       "ranking_score": 68.5,
-      "ranking_reasons": [
-        "Recommended for: acne"
-      ],
+      "ranking_reasons": ["Recommended for: acne"],
       "safety_issues": [
         "Ingredient: salicylic_acid",
         "Ingredient: benzoyl_peroxide"
       ]
     }
   ],
-  "applied_rules": [
-    "rule_oily_skin_basic",
-    "rule_acne_treatment"
-  ],
+  "applied_rules": ["rule_oily_skin_basic", "rule_acne_treatment"],
   "ranking_method": "rule-based",
   "total_products": 5,
   "top_k": 5
@@ -504,10 +500,10 @@ async def safe_rank_products(
         )
         logger.info(f"Successfully ranked {len(ranked)} products")
         return ranked
-    
+
     except Exception as e:
         logger.error(f"Ranking failed: {e}")
-        
+
         if fallback_to_unsorted:
             # Fallback: return unsorted products
             from backend.app.recommender.ranker import RankedProduct
@@ -548,15 +544,15 @@ def test_recommend_with_ranking(client, db, current_user):
         },
         headers={"Authorization": f"Bearer {get_token(current_user)}"}
     )
-    
+
     assert response.status_code == 200
     data = response.json()
-    
+
     # Verify ranking
     assert "recommendations" in data
     recs = data["recommendations"]
     assert len(recs) > 0
-    
+
     # Verify each recommendation has ranking fields
     for rec in recs:
         assert "rank" in rec
@@ -564,7 +560,7 @@ def test_recommend_with_ranking(client, db, current_user):
         assert "ranking_reasons" in rec
         assert rec["rank"] > 0
         assert 0 <= rec["ranking_score"] <= 100
-    
+
     # Verify ranked in descending score order
     scores = [r["ranking_score"] for r in recs]
     assert scores == sorted(scores, reverse=True)
@@ -583,16 +579,16 @@ from datetime import datetime, timedelta
 
 class RankerCache:
     """Cache ranking results for common queries"""
-    
+
     def __init__(self, ttl_minutes=5):
         self.cache = {}
         self.ttl = timedelta(minutes=ttl_minutes)
-    
+
     def _make_key(self, user_id, product_ids, allergies):
         """Create cache key from parameters"""
         key_str = f"{user_id}:{sorted(product_ids)}:{sorted(allergies or [])}"
         return hashlib.md5(key_str.encode()).hexdigest()
-    
+
     def get(self, user_id, product_ids, allergies):
         """Get cached ranking if available and fresh"""
         key = self._make_key(user_id, product_ids, allergies)
@@ -603,7 +599,7 @@ class RankerCache:
             else:
                 del self.cache[key]
         return None
-    
+
     def set(self, user_id, product_ids, allergies, result):
         """Cache ranking result"""
         key = self._make_key(user_id, product_ids, allergies)
@@ -627,7 +623,7 @@ from concurrent.futures import ThreadPoolExecutor
 def rank_products_for_users(users, products, db):
     """Rank same products for multiple users in parallel"""
     results = {}
-    
+
     with ThreadPoolExecutor(max_workers=4) as executor:
         futures = {}
         for user in users:
@@ -643,10 +639,10 @@ def rank_products_for_users(users, products, db):
                 db=db
             )
             futures[user.id] = future
-        
+
         for user_id, future in futures.items():
             results[user_id] = future.result()
-    
+
     return results
 ```
 
@@ -672,19 +668,19 @@ class RankingMetrics:
 def rank_with_metrics(products, profile, db=None, k=5) -> tuple:
     """Rank products and collect metrics"""
     start = time.time()
-    
+
     ranked = rank_products(
         products_list=products,
         user_profile=profile,
         db=db,
         k=k
     )
-    
+
     elapsed_ms = (time.time() - start) * 1000
-    
+
     scores = [r.score for r in ranked]
     allergen_filtered = sum(1 for r in ranked if r.safety_issues)
-    
+
     metrics = RankingMetrics(
         avg_score=sum(scores) / len(scores) if scores else 0,
         min_score=min(scores) if scores else 0,
@@ -693,7 +689,7 @@ def rank_with_metrics(products, profile, db=None, k=5) -> tuple:
         products_ranked=len(ranked),
         allergen_filtered_count=allergen_filtered
     )
-    
+
     return ranked, metrics
 
 # Usage
@@ -719,11 +715,13 @@ logger.info(f"Avg score: {metrics.avg_score:.1f}, Allergen issues: {metrics.alle
 - [ ] Collect user feedback on rankings
 
 **Files to modify:**
+
 1. `backend/app/api/v1/recommend.py` - Add ranking call
 2. `backend/app/recommender/schemas.py` - Add ranking response schemas
 3. `tests/test_recommend.py` - Add ranking tests
 
 **Expected outcome:**
+
 - Recommendations now ranked by relevance for user
 - Safety concerns flagged with explanations
 - Top-5 products returned with confidence

@@ -25,12 +25,14 @@ This package includes 4 comprehensive safety documents:
 ```
 
 **Implementation:**
+
 - Add to response schema (pydantic_schemas.py)
 - Include in every POST /api/v1/recommend response
 - NO exceptions - even for non-escalated cases
 - Display prominently on frontend
 
 **Verification:**
+
 ```bash
 curl ... | jq '.disclaimer'
 # Must output: "Informational only — not medical advice. Consult a healthcare professional for medical concerns."
@@ -61,12 +63,14 @@ curl ... | jq '.disclaimer'
 ```
 
 **Key Points:**
+
 - `high_priority: true` signals frontend to show urgent warning
 - Message MUST include "SEEK MEDICAL ATTENTION" or similar
 - HTTP status still 201 (success), but flagged urgent
 - Applies to: sudden_hair_loss, severe infections, severe rashes, etc.
 
 **Frontend Action:**
+
 - Show red warning banner
 - "Seek Medical Help" button prominent
 - Link to dermatologist finder or physician contact info
@@ -93,6 +97,7 @@ curl ... | jq '.disclaimer'
 ```
 
 **Allowed Products:**
+
 - ✅ Over-the-counter cleansers, moisturizers, serums
 - ✅ OTC acne treatments (benzoyl peroxide, salicylic acid)
 - ✅ OTC adapalene (Differin) - only OTC retinoid
@@ -100,6 +105,7 @@ curl ... | jq '.disclaimer'
 - ✅ Sunscreens, face masks
 
 **Prohibited Products:**
+
 - ❌ Prescription retinoids (tretinoin, tazarotene, isotretinoin)
 - ❌ Prescription antibiotics (doxycycline, clindamycin)
 - ❌ Prescription-strength corticosteroids
@@ -107,13 +113,15 @@ curl ... | jq '.disclaimer'
 - ❌ Any prescription medications
 
 **Database Check:**
+
 ```sql
 -- Should return 0:
-SELECT COUNT(*) FROM products 
+SELECT COUNT(*) FROM products
 WHERE otc_verified = false OR prescription_required = true;
 ```
 
 **API Response Check:**
+
 ```bash
 curl ... | jq '.products | map(select(.otc_verified == false or .prescription_required == true)) | length'
 # Must output: 0
@@ -137,6 +145,7 @@ curl ... | jq '.products | map(select(.otc_verified == false or .prescription_re
 ```
 
 **Backend Actions:**
+
 1. Store adverse_reactions in feedback database
 2. Flag product for admin review
 3. Create incident report
@@ -144,6 +153,7 @@ curl ... | jq '.products | map(select(.otc_verified == false or .prescription_re
 5. Avoid product + similar ingredients in future recommendations
 
 **Frontend Actions:**
+
 1. Include adverse_reactions field in feedback form
 2. Show checkboxes for common reactions (redness, itching, swelling, etc.)
 3. Allow free-text description
@@ -156,6 +166,7 @@ curl ... | jq '.products | map(select(.otc_verified == false or .prescription_re
 ## 📊 Implementation Checklist
 
 ### Backend
+
 - [ ] Add `disclaimer` field to RecommendationResponse schema
 - [ ] Add `high_priority: bool` to EscalationResponse schema
 - [ ] Add `otc_verified: bool` and `prescription_required: bool` to Product model
@@ -167,6 +178,7 @@ curl ... | jq '.products | map(select(.otc_verified == false or .prescription_re
 - [ ] All 4 unit tests passing
 
 ### Frontend
+
 - [ ] Display disclaimer on recommendation view
 - [ ] Show red warning banner for escalations
 - [ ] "Seek Medical Help" button links to dermatologist/physician info
@@ -174,12 +186,14 @@ curl ... | jq '.products | map(select(.otc_verified == false or .prescription_re
 - [ ] Test: Verify all 4 requirements visible in UI
 
 ### Testing
+
 - [ ] ACCEPTANCE_CRITERIA.md → All 6 safety tests pass
 - [ ] test_api.sh runs successfully
 - [ ] test_api.ps1 runs successfully
 - [ ] Postman collection updated
 
 ### Legal/Compliance
+
 - [ ] SAFETY_COMPLIANCE_CHECKLIST.md completed
 - [ ] All sections signed off by:
   - Dev Lead ✅
@@ -193,6 +207,7 @@ curl ... | jq '.products | map(select(.otc_verified == false or .prescription_re
 ## 🧪 Testing Commands
 
 ### Test Disclaimer
+
 ```bash
 curl -X POST http://localhost:8000/api/v1/recommend \
   -H "Content-Type: application/json" \
@@ -202,6 +217,7 @@ curl -X POST http://localhost:8000/api/v1/recommend \
 ```
 
 ### Test Escalation High Priority
+
 ```bash
 curl -X POST http://localhost:8000/api/v1/recommend \
   -H "Content-Type: application/json" \
@@ -211,6 +227,7 @@ curl -X POST http://localhost:8000/api/v1/recommend \
 ```
 
 ### Test OTC Products Only
+
 ```bash
 curl -X POST http://localhost:8000/api/v1/recommend \
   -H "Content-Type: application/json" \
@@ -221,6 +238,7 @@ curl -X POST http://localhost:8000/api/v1/recommend \
 ```
 
 ### Test Adverse Reactions
+
 ```bash
 curl -X POST http://localhost:8000/api/v1/feedback \
   -H "Content-Type: application/json" \
@@ -230,6 +248,7 @@ curl -X POST http://localhost:8000/api/v1/feedback \
 ```
 
 ### Run All Automated Tests
+
 ```bash
 # Bash (Linux/Mac)
 ./test_api.sh $TOKEN $ADMIN_TOKEN
@@ -242,14 +261,14 @@ curl -X POST http://localhost:8000/api/v1/feedback \
 
 ## 📈 Safety Test Coverage
 
-| Test | File | Status |
-|------|------|--------|
+| Test               | File                                   | Status      |
+| ------------------ | -------------------------------------- | ----------- |
 | Disclaimer Present | ACCEPTANCE_CRITERIA.md § Safety Test 1 | ⚠️ CRITICAL |
 | High Priority Flag | ACCEPTANCE_CRITERIA.md § Safety Test 2 | ⚠️ CRITICAL |
-| OTC Products Only | ACCEPTANCE_CRITERIA.md § Safety Test 3 | ⚠️ CRITICAL |
+| OTC Products Only  | ACCEPTANCE_CRITERIA.md § Safety Test 3 | ⚠️ CRITICAL |
 | Product Search OTC | ACCEPTANCE_CRITERIA.md § Safety Test 4 | ⚠️ CRITICAL |
-| Adverse Reactions | ACCEPTANCE_CRITERIA.md § Safety Test 5 | ⚠️ CRITICAL |
-| Error Handling | ACCEPTANCE_CRITERIA.md § Safety Test 6 | ⚠️ CRITICAL |
+| Adverse Reactions  | ACCEPTANCE_CRITERIA.md § Safety Test 5 | ⚠️ CRITICAL |
+| Error Handling     | ACCEPTANCE_CRITERIA.md § Safety Test 6 | ⚠️ CRITICAL |
 
 **All 6 tests MUST pass before production deployment.**
 
@@ -262,18 +281,21 @@ curl -X POST http://localhost:8000/api/v1/feedback \
 **Run before deploying to production:**
 
 1. ✅ Disclaimer in all responses
+
    ```bash
    # Run test script
    ./test_api.sh $TOKEN $ADMIN_TOKEN 2>&1 | grep -i disclaimer
    ```
 
 2. ✅ High priority flag set correctly
+
    ```bash
    # Manually verify escalation response
    curl ... | jq '.escalation.high_priority'
    ```
 
 3. ✅ Only OTC products returned
+
    ```bash
    # Verify product database
    psql -d haski_db -c "SELECT COUNT(*) FROM products WHERE otc_verified = false"
@@ -281,17 +303,20 @@ curl -X POST http://localhost:8000/api/v1/feedback \
    ```
 
 4. ✅ Adverse reactions tracked
+
    ```bash
    # Test feedback endpoint
    curl -X POST ... -d '{"adverse_reactions":["redness"]}'
    ```
 
 5. ✅ All unit tests passing
+
    ```bash
    pytest backend/tests/test_safety_requirements.py -v
    ```
 
 6. ✅ Acceptance tests passing
+
    ```bash
    bash test_api.sh $TOKEN $ADMIN_TOKEN
    ```
@@ -309,6 +334,7 @@ curl -X POST http://localhost:8000/api/v1/feedback \
 ### API Response Must Include
 
 **Every `/api/v1/recommend` response:**
+
 ```json
 {
   "disclaimer": "Informational only — not medical advice...",
@@ -342,6 +368,7 @@ curl -X POST http://localhost:8000/api/v1/feedback \
 ### Feedback Request Can Include
 
 **POST `/api/v1/feedback` body:**
+
 ```json
 {
   "recommendation_id": "rec_001",
@@ -359,15 +386,19 @@ curl -X POST http://localhost:8000/api/v1/feedback \
 ## 📞 Support & Questions
 
 ### For Backend Implementation
+
 See: `SAFETY_IMPLEMENTATION_GUIDE.md`
 
 ### For Testing & Validation
+
 See: `ACCEPTANCE_CRITERIA.md`
 
 ### For Pre-Deployment Checklist
+
 See: `SAFETY_COMPLIANCE_CHECKLIST.md`
 
 ### For API Reference
+
 See: `API_ENDPOINTS.md`
 
 ---
@@ -387,9 +418,9 @@ See: `API_ENDPOINTS.md`
 
 ## 📅 Version History
 
-| Version | Date | Changes | Author |
-|---------|------|---------|--------|
-| 1.0 | 2025-10-25 | Initial release: 4 mandatory safety requirements | [name] |
+| Version | Date       | Changes                                          | Author |
+| ------- | ---------- | ------------------------------------------------ | ------ |
+| 1.0     | 2025-10-25 | Initial release: 4 mandatory safety requirements | [name] |
 
 ---
 

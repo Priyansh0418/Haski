@@ -23,27 +23,32 @@ Successfully implemented a comprehensive **Products API endpoint** with advanced
 **Endpoints:**
 
 1. **GET `/products`** - List products with filtering & pagination
+
    - Filters: tag, ingredient, category, min_rating, max_price, dermatologically_safe, search
    - Sorting: rating (default), price, newest, name
    - Pagination: page (default 1), page_size (default 20, max 100)
    - Returns: PaginatedProductListResponse with total, page, page_size, total_pages
 
 2. **GET `/products/{id}`** - Get single product details
+
    - Path parameter: product_id (integer)
    - Returns: Complete ProductResponse with all fields
    - Error handling: 404 if product not found
 
 3. **POST `/products`** - Create new product (Admin only)
+
    - Authentication: JWT token required + admin email check
    - Accepts: ProductCreateRequest with validated fields
    - Returns: Created ProductResponse with ID (201 Created)
    - Validation: Duplicate external_id check, required field validation
 
 4. **GET `/products/search/tags`** - Utility endpoint
+
    - Returns: List of all unique product tags
    - Used for autocomplete UI dropdowns
 
 5. **GET `/products/search/ingredients`** - Utility endpoint
+
    - Returns: List of all unique ingredients in products
    - Used for ingredient filter autocomplete
 
@@ -83,6 +88,7 @@ Successfully implemented a comprehensive **Products API endpoint** with advanced
 **Test Classes:**
 
 1. **TestProductListing** (18 tests)
+
    - Empty results handling
    - Pagination (first, second, last page)
    - Single filter tests (tag, ingredient, category, rating, price, safety)
@@ -92,11 +98,13 @@ Successfully implemented a comprehensive **Products API endpoint** with advanced
    - Invalid parameter handling
 
 2. **TestProductDetails** (3 tests)
+
    - Product found (200 success)
    - Product not found (404 error)
    - All fields present in response
 
 3. **TestProductCreation** (7 tests)
+
    - Admin successful creation (201)
    - Non-admin forbidden (403)
    - Unauthenticated forbidden (403)
@@ -106,11 +114,13 @@ Successfully implemented a comprehensive **Products API endpoint** with advanced
    - Tags lowercase conversion
 
 4. **TestProductUtilities** (3 tests)
+
    - List available tags endpoint
    - List available ingredients endpoint
    - Get category statistics endpoint
 
 5. **TestEdgeCases** (5 tests)
+
    - Price conversion accuracy (cents to dollars)
    - Rating conversion accuracy (0-500 to 0-5)
    - Special characters in search
@@ -255,15 +265,15 @@ ADMIN_EMAILS = [
 
 ### Error Handling
 
-| Status | Scenario |
-|--------|----------|
-| 200 | GET successful |
-| 201 | POST successful |
-| 400 | Duplicate external_id, invalid filter values |
-| 403 | Not admin, not authenticated |
-| 404 | Product not found |
-| 422 | Validation error (missing fields, invalid types) |
-| 500 | Server error |
+| Status | Scenario                                         |
+| ------ | ------------------------------------------------ |
+| 200    | GET successful                                   |
+| 201    | POST successful                                  |
+| 400    | Duplicate external_id, invalid filter values     |
+| 403    | Not admin, not authenticated                     |
+| 404    | Product not found                                |
+| 422    | Validation error (missing fields, invalid types) |
+| 500    | Server error                                     |
 
 ---
 
@@ -342,11 +352,13 @@ pytest backend/app/api/v1/test_products.py --cov=backend.app.api.v1.products --c
 The products endpoint complements the existing recommendation system:
 
 1. **Recommendation Engine** (recommend.py)
+
    - Uses products from this API
    - Applies rules to select best products
    - Stores recommendations with product IDs
 
 2. **Feedback System** (feedback.py)
+
    - Users rate recommended products
    - Can now browse full product catalog
    - Enhanced product discovery
@@ -377,12 +389,12 @@ User rates products ← [feedback.py]
 
 ## Files Modified/Created
 
-| File | Status | Type | Lines |
-|------|--------|------|-------|
-| `backend/app/api/v1/products.py` | NEW | Implementation | 671 |
-| `backend/app/api/v1/test_products.py` | NEW | Tests | 550+ |
-| `backend/app/api/v1/PRODUCTS_API_DOCUMENTATION.md` | NEW | Docs | 450+ |
-| `backend/app/api/v1/__init__.py` | MODIFIED | Router reg | +2 |
+| File                                               | Status   | Type           | Lines |
+| -------------------------------------------------- | -------- | -------------- | ----- |
+| `backend/app/api/v1/products.py`                   | NEW      | Implementation | 671   |
+| `backend/app/api/v1/test_products.py`              | NEW      | Tests          | 550+  |
+| `backend/app/api/v1/PRODUCTS_API_DOCUMENTATION.md` | NEW      | Docs           | 450+  |
+| `backend/app/api/v1/__init__.py`                   | MODIFIED | Router reg     | +2    |
 
 **Total New Code:** 1,671+ lines
 
@@ -396,7 +408,7 @@ Author: Development Team
 Date: 2024-01-15
 
     Add products API endpoint with advanced filtering and pagination
-    
+
     Features:
     - GET /products - List products with tag, ingredient, category, rating, price filters
     - GET /products/{id} - Retrieve single product details
@@ -423,15 +435,18 @@ Date: 2024-01-15
 ### Current Limitations
 
 1. **Admin Role Implementation**
+
    - Uses hardcoded email addresses
    - No database field for admin role
    - **Fix:** Add `is_admin: bool` to User model
 
 2. **Product Image URLs**
+
    - No image field in current schema
    - **Enhancement:** Add image_url field to Product model
 
 3. **Product Reviews/Comments**
+
    - Only stores aggregated rating
    - **Enhancement:** Create separate Reviews table
 
@@ -459,6 +474,7 @@ Date: 2024-01-15
 ### Database Indexes
 
 **Existing Indexes:**
+
 - `products.id` (primary key)
 - `products.name` (indexed for search)
 - `products.brand` (indexed for filtering)
@@ -466,12 +482,14 @@ Date: 2024-01-15
 - `products.created_at` (indexed for sorting)
 
 **Query Optimization:**
+
 - Pagination uses OFFSET/LIMIT (efficient for small pages)
 - Filters applied before offset/limit
 - Sorting only on indexed fields
 - No N+1 queries
 
 **Potential Improvements:**
+
 - Add full-text search index for name/brand
 - Consider pagination with keyset (cursor-based) for large tables
 - Cache frequently accessed tags/ingredients
@@ -483,29 +501,34 @@ Date: 2024-01-15
 The Products API endpoint is production-ready with:
 
 ✅ **Complete Functionality**
+
 - Full CRUD operations (minus update/delete for now)
 - Advanced filtering and sorting
 - Pagination support
 
 ✅ **Comprehensive Testing**
+
 - 30+ test cases
 - Edge case coverage
 - Integration tests
 - All endpoints tested
 
 ✅ **Complete Documentation**
+
 - API reference with examples
 - Frontend integration code
 - Error handling guide
 - Deployment notes
 
 ✅ **Robust Implementation**
+
 - SQLite-compatible code
 - Proper error handling
 - Admin access control
 - Input validation
 
 ✅ **Git Integration**
+
 - Committed to main branch
 - Pushed to GitHub
 - Clean commit history

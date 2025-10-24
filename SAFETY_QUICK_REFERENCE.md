@@ -3,15 +3,18 @@
 ## 🚨 4 Mandatory Safety Requirements
 
 ### 1️⃣ Disclaimer in ALL Responses
+
 ```python
 # EVERY recommendation response MUST have:
 "disclaimer": "Informational only — not medical advice. Consult a healthcare professional for medical concerns."
 ```
+
 **Test:** `curl ... | jq '.disclaimer'`
 
 ---
 
 ### 2️⃣ High Priority Flag for Escalations
+
 ```python
 # When medical referral needed (see_dermatologist rule):
 "escalation": {
@@ -20,9 +23,11 @@
   "recommended_next_steps": [...]
 }
 ```
+
 **Test:** `curl ... | jq '.escalation.high_priority'` → must be `true`
 
 **Conditions that escalate:**
+
 - sudden_hair_loss
 - severe_skin_infection
 - severe_rash (>50% coverage)
@@ -31,6 +36,7 @@
 ---
 
 ### 3️⃣ OTC Products Only
+
 ```python
 # ALL products returned MUST have:
 {
@@ -40,12 +46,14 @@
 ```
 
 **Allowed:**
+
 - ✅ Cleansers, moisturizers, serums
 - ✅ Benzoyl peroxide, salicylic acid
 - ✅ OTC adapalene (Differin)
 - ✅ Supplements, sunscreens
 
 **Prohibited:**
+
 - ❌ Tretinoin, tazarotene, isotretinoin
 - ❌ Prescription antibiotics
 - ❌ Corticosteroids
@@ -56,6 +64,7 @@
 ---
 
 ### 4️⃣ Adverse Reactions Tracking
+
 ```python
 # Accept and store:
 {
@@ -76,6 +85,7 @@
 ## 📋 Implementation Checklist
 
 ### Backend Code
+
 ```python
 # 1. Schema
 class RecommendationResponse(BaseModel):
@@ -92,7 +102,7 @@ products = db.query(Product).filter(
 # 3. Feedback
 class FeedbackRequest(BaseModel):
     adverse_reactions: Optional[List[str]] = None
-    
+
 # 4. Handle
 if request.adverse_reactions:
     flag_product_for_review()
@@ -100,12 +110,14 @@ if request.adverse_reactions:
 ```
 
 ### Frontend Display
+
 - [ ] Show disclaimer prominently (before recommendations)
 - [ ] Show red warning banner for escalations
 - [ ] "Seek Medical Help" button with dermatologist info
 - [ ] Adverse reactions checkboxes in feedback form
 
 ### Testing
+
 ```bash
 # 1. Disclaimer
 curl ... | jq '.disclaimer | length > 0'
@@ -127,16 +139,19 @@ curl ... | jq '.adverse_reactions'
 **Run these 4 checks:**
 
 1. ✅ **Disclaimer Test**
+
    ```bash
    curl -X POST /api/v1/recommend ... | grep -q "not medical advice" && echo "PASS" || echo "FAIL"
    ```
 
 2. ✅ **Escalation Test**
+
    ```bash
    curl -X POST /api/v1/recommend ... | jq '.escalation.high_priority' | grep -q "true" && echo "PASS" || echo "FAIL"
    ```
 
 3. ✅ **OTC Test**
+
    ```bash
    curl ... | jq '.products | map(select(.otc_verified == false)) | length' | grep -q "0" && echo "PASS" || echo "FAIL"
    ```
@@ -152,26 +167,26 @@ curl ... | jq '.adverse_reactions'
 
 ## ⚠️ Common Mistakes
 
-| ❌ WRONG | ✅ CORRECT |
-|---------|-----------|
-| Disclaimer only on escalations | Disclaimer in ALL responses |
-| `high_priority: "true"` (string) | `high_priority: true` (boolean) |
-| Mix OTC + Rx products | OTC only, filter `otc_verified == true` |
-| Ignore adverse reactions | Store, flag, alert, avoid in future |
-| Generic error messages | "Informational only — not medical advice..." |
+| ❌ WRONG                          | ✅ CORRECT                                                     |
+| --------------------------------- | -------------------------------------------------------------- |
+| Disclaimer only on escalations    | Disclaimer in ALL responses                                    |
+| `high_priority: "true"` (string)  | `high_priority: true` (boolean)                                |
+| Mix OTC + Rx products             | OTC only, filter `otc_verified == true`                        |
+| Ignore adverse reactions          | Store, flag, alert, avoid in future                            |
+| Generic error messages            | "Informational only — not medical advice..."                   |
 | No medical guidance in escalation | "PLEASE SEEK IMMEDIATE MEDICAL ATTENTION FROM A DERMATOLOGIST" |
 
 ---
 
 ## 📞 Quick Links
 
-| Document | Purpose |
-|----------|---------|
-| `API_ENDPOINTS.md` | Complete API reference with examples |
-| `ACCEPTANCE_CRITERIA.md` | 6 safety tests to pass |
-| `SAFETY_COMPLIANCE_CHECKLIST.md` | Pre-deployment sign-off |
-| `SAFETY_IMPLEMENTATION_GUIDE.md` | Code examples & implementation |
-| `SAFETY_REMINDERS_SUMMARY.md` | Comprehensive guide |
+| Document                         | Purpose                              |
+| -------------------------------- | ------------------------------------ |
+| `API_ENDPOINTS.md`               | Complete API reference with examples |
+| `ACCEPTANCE_CRITERIA.md`         | 6 safety tests to pass               |
+| `SAFETY_COMPLIANCE_CHECKLIST.md` | Pre-deployment sign-off              |
+| `SAFETY_IMPLEMENTATION_GUIDE.md` | Code examples & implementation       |
+| `SAFETY_REMINDERS_SUMMARY.md`    | Comprehensive guide                  |
 
 ---
 

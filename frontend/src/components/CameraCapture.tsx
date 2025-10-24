@@ -22,7 +22,11 @@ export default function CameraCapture({ onCapture }: Props) {
         });
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
-          await videoRef.current.play();
+          // Don't await play() - it can be interrupted. Just call it.
+          videoRef.current.play().catch((err) => {
+            console.warn("Video play() call interrupted or failed:", err);
+            // This is usually not critical - video will play automatically
+          });
         }
       } catch (err: any) {
         console.error("camera error", err);
@@ -130,6 +134,7 @@ export default function CameraCapture({ onCapture }: Props) {
           ref={videoRef}
           className="w-full h-auto object-cover"
           playsInline
+          autoPlay
           muted
         />
 
@@ -184,9 +189,4 @@ export default function CameraCapture({ onCapture }: Props) {
       )}
     </div>
   );
-}
-import React from "react";
-
-export default function CameraCapture() {
-  return <div>Camera</div>;
 }

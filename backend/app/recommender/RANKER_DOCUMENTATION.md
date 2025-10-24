@@ -6,7 +6,8 @@ The **ranker.py** module provides a lightweight, rule-based product ranking syst
 
 **Location:** `backend/app/recommender/ranker.py`
 
-**Purpose:** 
+**Purpose:**
+
 - Accept recommended products from the recommendation engine
 - Rank them by relevance and safety for the specific user
 - Return top-k products with explanations for each ranking
@@ -52,12 +53,13 @@ class UserProfile:
     skin_type: Optional[str] = None
     hair_type: Optional[str] = None
     conditions: Optional[List[str]] = None
-    
+
     def get_allergies_set(self) -> set:
         """Convert allergies to lowercase set for matching"""
 ```
 
 **Usage:**
+
 ```python
 profile = UserProfile(
     user_id=123,
@@ -79,7 +81,7 @@ class RankedProduct:
     rank: int                 # 1, 2, 3, ...
     reasons: List[str]        # Why ranked here
     safety_issues: List[str]  # Allergen warnings
-    
+
     def to_dict(self):        # Convert to API response
 ```
 
@@ -89,7 +91,7 @@ Static utility class for allergen detection.
 
 ```python
 class AllergySafetyFilter:
-    
+
     @staticmethod
     def filter_safe_products(
         products: List[Any],
@@ -98,18 +100,18 @@ class AllergySafetyFilter:
     ) -> Tuple[List[Any], Dict[int, List[str]]]:
         """
         Filter products by allergen content.
-        
+
         Returns:
             (safe_products, products_with_issues)
-        
+
         In strict_mode=False (default):
             - Keeps products with allergen concerns
             - Records the concerns for warnings
-        
+
         In strict_mode=True:
             - Excludes products with allergen concerns
         """
-    
+
     @staticmethod
     def has_allergen_concern(
         product: Any,
@@ -119,6 +121,7 @@ class AllergySafetyFilter:
 ```
 
 **Detection Methods:**
+
 1. **Ingredient matching** - Check if allergen appears in ingredients list
 2. **Tag matching** - Check if allergen appears in product tags
 3. **Avoid-for matching** - Check if allergen is in avoid_for recommendations
@@ -129,11 +132,11 @@ Static utility class for safety and quality scoring.
 
 ```python
 class DermatologicalRanker:
-    
+
     DERMATOLOGICAL_WEIGHT = 0.25
     RATING_WEIGHT = 0.20
     REVIEW_COUNT_WEIGHT = 0.10
-    
+
     @staticmethod
     def score_dermatological_safety(product: Any) -> float:
         """
@@ -142,7 +145,7 @@ class DermatologicalRanker:
         - Recommended_for conditions (+10-20)
         - Avoid_for conditions (-20)
         """
-    
+
     @staticmethod
     def score_product_quality(product: Any) -> float:
         """
@@ -150,13 +153,14 @@ class DermatologicalRanker:
         - Average rating (0-500 scale, e.g., 450 = 4.5 stars)
         - Review count (diminishing returns after 50 reviews)
         """
-    
+
     @staticmethod
     def calculate_total_safety_score(product: Any) -> float:
         """Combined safety + quality score (0-100)"""
 ```
 
 **Scoring Breakdown:**
+
 - **Dermatological Safe + Well Recommended:** 100-120
 - **Dermatological Safe + Few Recommendations:** 80-100
 - **Not Tested + Some Recommendations:** 40-60
@@ -168,7 +172,7 @@ Utility class for feedback-based scoring.
 
 ```python
 class FeedbackScorer:
-    
+
     @staticmethod
     def get_product_feedback_stats(
         db: Session,
@@ -177,7 +181,7 @@ class FeedbackScorer:
     ) -> Dict[str, Any]:
         """
         Query feedback history for a product.
-        
+
         Returns:
             {
                 'avg_rating': float (0-5),
@@ -187,12 +191,12 @@ class FeedbackScorer:
                 'user_rating': Optional[int]
             }
         """
-    
+
     @staticmethod
     def score_from_feedback(feedback_stats: Dict) -> float:
         """
         Convert feedback stats to score (0-100).
-        
+
         Scoring:
             - Rating: (avg_rating / 5) × 20 (max 100)
             - Helpful: (helpful_count / total) × 30 (max 30)
@@ -206,10 +210,10 @@ Main orchestrating class that combines all components.
 
 ```python
 class RankerEngine:
-    
+
     def __init__(self, db: Session = None):
         """Initialize with optional database session for feedback queries"""
-    
+
     def rank_products(
         self,
         products_list: List[Any],
@@ -219,7 +223,7 @@ class RankerEngine:
     ) -> List[RankedProduct]:
         """
         Rank products and return top k.
-        
+
         Algorithm:
         1. Filter by allergies (strict)
         2. Score each product (composite score)
@@ -273,7 +277,7 @@ def rank_products(
 ) -> List[RankedProduct]:
     """
     Main ranking function.
-    
+
     Typical usage:
         ranked = rank_products(
             products_list=products,
@@ -376,12 +380,14 @@ ranked = rank_products(products, user_profile, db=db, k=5)
 **What it measures:** Whether the product is clinically tested and suitable.
 
 **Scoring:**
+
 - ✅ Dermatologically tested: +100 points
 - ❌ Not tested: +40 points
 - +10-20 points per recommended condition
 - -20 points if avoid_for many conditions
 
 **Examples:**
+
 - CeraVe (dermatologist brand, safe for sensitive): 100+
 - The Ordinary Retinol (not dermatologically tested, powerful): 60-80
 
@@ -390,6 +396,7 @@ ranked = rank_products(products, user_profile, db=db, k=5)
 **What it measures:** Product popularity and user satisfaction.
 
 **Scoring:**
+
 - Average rating (0-500 scale, e.g., 450 = 4.5 stars): weighted by review count
 - Review count: diminishing returns after 50 reviews
 - Products with 4.5+ stars and 100+ reviews: 80-100
@@ -403,6 +410,7 @@ ranked = rank_products(products, user_profile, db=db, k=5)
 **What it measures:** How users in the community rated this product.
 
 **Scoring:**
+
 - **No feedback:** Neutral (50)
 - **High feedback (4+ stars, 50%+ helpful):** 70-100
 - **Low feedback (2- stars, 20% helpful):** 10-40
@@ -415,6 +423,7 @@ ranked = rank_products(products, user_profile, db=db, k=5)
 **What it measures:** How well the product targets the user's detected conditions.
 
 **Scoring:**
+
 - **Perfect match (all conditions covered):** 100
 - **Partial match (some conditions):** 60-90
 - **No specific recommendation:** 40
@@ -429,6 +438,7 @@ ranked = rank_products(products, user_profile, db=db, k=5)
 The system detects allergies through three mechanisms:
 
 **1. Ingredient Matching**
+
 ```python
 User allergy: "benzoyl_peroxide"
 Product ingredients: ["water", "benzoyl_peroxide", "glycerin"]
@@ -436,6 +446,7 @@ Result: ⚠️ Match found
 ```
 
 **2. Tag Matching**
+
 ```python
 User allergy: "acne-fighting"
 Product tags: ["gentle", "acne-fighting", "moisturizing"]
@@ -443,6 +454,7 @@ Result: ⚠️ Match found
 ```
 
 **3. Avoid-For Matching**
+
 ```python
 User allergy: "sensitive"
 Product avoid_for: ["very_sensitive", "pregnancy"]
@@ -452,12 +464,14 @@ Result: ⚠️ Partial match
 ### Strict vs. Non-Strict Mode
 
 **Default (strict_mode=False):**
+
 - Keeps products with allergen concerns
 - Adds allergen warnings to RankedProduct.safety_issues
 - Products ranked lower (0.9× score multiplier)
 - Useful for: Giving user full visibility and choice
 
 **Strict Mode (strict_mode=True):**
+
 - Excludes products with allergen concerns entirely
 - Returns only completely safe products
 - Useful for: Users with severe allergies
@@ -474,6 +488,7 @@ Result: ⚠️ Partial match
 ### Optimization Strategies
 
 1. **Caching Feedback Stats**
+
    ```python
    # Cache feedback for products queried recently
    feedback_cache = {}
@@ -483,6 +498,7 @@ Result: ⚠️ Partial match
    ```
 
 2. **Batch Database Queries**
+
    ```python
    # Query all feedback at once, not per-product
    feedback = db.query(RecommendationFeedback).filter(
@@ -505,6 +521,7 @@ pytest backend/app/recommender/test_ranker.py -v
 ```
 
 **Test Coverage:**
+
 - ✅ UserProfile (allergies parsing, case sensitivity)
 - ✅ AllergySafetyFilter (ingredient, tag, avoid_for detection)
 - ✅ DermatologicalRanker (safety and quality scoring)
@@ -514,6 +531,7 @@ pytest backend/app/recommender/test_ranker.py -v
 - ✅ Integration tests (end-to-end workflows)
 
 **Example Test:**
+
 ```python
 def test_rank_by_allergies():
     profile = UserProfile(
@@ -521,7 +539,7 @@ def test_rank_by_allergies():
         allergies=["benzoyl_peroxide"]
     )
     ranked = rank_products(sample_products, profile, k=5)
-    
+
     # Product with benzoyl_peroxide should have warning
     assert any(r.safety_issues for r in ranked if "benzoyl_peroxide" in r.product.ingredients)
 ```
@@ -538,18 +556,18 @@ Replace rule-based ranking with machine learning:
 class ContextualBanditRanker:
     """
     ML-based ranking using Thompson sampling or UCB.
-    
+
     Features:
     - User context: age, skin_type, conditions, allergies
     - Product context: ingredients, tags, price, rating
     - Action: rank position (1-10)
     - Reward: user feedback (click, view, add-to-cart, purchase)
-    
+
     Learning:
     - Train on user interactions
     - Posterior sampling for exploration/exploitation
     - A/B test vs. rule-based baseline
-    
+
     Implementation steps:
     1. Track user interactions in database
     2. Create feature vectors (product + user)
@@ -561,12 +579,14 @@ class ContextualBanditRanker:
 ```
 
 **ML Ranking Advantages:**
+
 - Personalized ranking per user type
 - Automatically learns patterns from user feedback
 - A/B testing capability
 - Continuous improvement
 
 **Implementation Roadmap:**
+
 1. **Phase 1:** Track user interactions (clicks, purchases)
 2. **Phase 2:** Create feature engineering pipeline
 3. **Phase 3:** Train contextual bandit model

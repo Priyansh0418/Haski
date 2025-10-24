@@ -17,6 +17,7 @@ Generate personalized recommendations.
 Two methods supported:
 
 #### Method 1: Using Existing Analysis (recommended)
+
 ```json
 {
   "method": "analysis_id",
@@ -29,6 +30,7 @@ Two methods supported:
 ```
 
 **Parameters:**
+
 - `method` (string, required): Must be `"analysis_id"`
 - `analysis_id` (integer, required): ID of existing Analysis record from database
 - `include_diet` (boolean, optional): Include dietary recommendations (default: true)
@@ -37,11 +39,13 @@ Two methods supported:
 - `include_lifestyle` (boolean, optional): Include lifestyle tips (default: true)
 
 **Advantages:**
+
 - Uses real analysis from image processing
 - Links to user history
 - Can be reused for multiple recommendations
 
 #### Method 2: Direct Analysis Data
+
 ```json
 {
   "method": "direct_analysis",
@@ -65,6 +69,7 @@ Two methods supported:
 ```
 
 **Parameters:**
+
 - `method` (string, required): Must be `"direct_analysis"`
 - `skin_type` (string, required): One of: `oily`, `dry`, `combination`, `sensitive`, `normal`
 - `hair_type` (string, optional): One of: `straight`, `wavy`, `curly`, `coily`
@@ -80,6 +85,7 @@ Two methods supported:
 - `budget` (string, optional): One of: `low`, `medium`, `high`
 
 **Advantages:**
+
 - Ad-hoc recommendations
 - No database lookup required
 - Fast generation
@@ -93,14 +99,17 @@ Retrieve a previously saved recommendation.
 **Authentication:** Required
 
 **Path Parameters:**
+
 - `recommendation_id` (string): ID of recommendation to retrieve
 
 **Example:**
+
 ```bash
 GET /api/v1/recommendations/rec_20251024_143000
 ```
 
 **Response:**
+
 ```json
 {
   "recommendation_id": "rec_20251024_143000",
@@ -126,15 +135,18 @@ List user's recent recommendations.
 **Authentication:** Required
 
 **Query Parameters:**
+
 - `limit` (integer, optional): Number of recommendations to return (default: 10, max: 50)
 - `offset` (integer, optional): Offset for pagination (default: 0)
 
 **Example:**
+
 ```bash
 GET /api/v1/recommendations?limit=20&offset=0
 ```
 
 **Response:**
+
 ```json
 {
   "total": 42,
@@ -163,7 +175,7 @@ GET /api/v1/recommendations?limit=20&offset=0
 {
   "recommendation_id": "rec_20251024_143000",
   "created_at": "2025-10-24T14:30:00.123456",
-  
+
   "routines": [
     {
       "step": "morning",
@@ -181,7 +193,7 @@ GET /api/v1/recommendations?limit=20&offset=0
       "source_rules": ["r001", "r007"]
     }
   ],
-  
+
   "diet_recommendations": [
     {
       "action": "increase",
@@ -203,7 +215,7 @@ GET /api/v1/recommendations?limit=20&offset=0
       "source_rules": ["r001"]
     }
   ],
-  
+
   "recommended_products": [
     {
       "id": 2,
@@ -211,7 +223,7 @@ GET /api/v1/recommendations?limit=20&offset=0
       "brand": "The Ordinary",
       "external_id": "ordinary_sa_001",
       "category": "treatment",
-      "price": 5.90,
+      "price": 5.9,
       "url": "https://theordinary.deciem.com/...",
       "tags": ["exfoliating", "BHA", "acne-fighting"],
       "rating": 4.3,
@@ -226,7 +238,7 @@ GET /api/v1/recommendations?limit=20&offset=0
       "brand": "The Ordinary",
       "external_id": "ordinary_niacinamide_001",
       "category": "serum",
-      "price": 5.90,
+      "price": 5.9,
       "url": "https://theordinary.deciem.com/...",
       "tags": ["pore-minimizing", "oil-control"],
       "rating": 4.4,
@@ -241,7 +253,7 @@ GET /api/v1/recommendations?limit=20&offset=0
       "brand": "La Roche-Posay",
       "external_id": "lrp_sunscreen_001",
       "category": "sunscreen",
-      "price": 34.00,
+      "price": 34.0,
       "url": "https://www.laroche-posay.com/...",
       "tags": ["broad-spectrum", "non-comedogenic"],
       "rating": 4.4,
@@ -251,20 +263,23 @@ GET /api/v1/recommendations?limit=20&offset=0
       "source_rules": ["r001"]
     }
   ],
-  
+
   "product_count": 3,
-  
-  "escalation": null,  // or escalation object if present
-  
+
+  "escalation": null, // or escalation object if present
+
   "applied_rules": ["r001", "r007"],
   "rules_count": 2,
-  
+
   "metadata": {
     "total_rules_checked": 9,
     "rules_matched": 2,
     "generated_at": "2025-10-24T14:30:00.123456",
     "product_tags_searched": [
-      "exfoliating", "oil-control", "pore-cleansing", "acne-fighting"
+      "exfoliating",
+      "oil-control",
+      "pore-cleansing",
+      "acne-fighting"
     ],
     "tags_count": 4
   }
@@ -279,24 +294,25 @@ When escalation is present, the response includes:
 {
   "recommendation_id": "rec_...",
   "created_at": "...",
-  
+
   "routines": [...],
   "diet_recommendations": [...],
   "recommended_products": [...],
-  
+
   "escalation": {
     "level": "urgent",
     "message": "URGENT - See dermatologist immediately. Likely requires prescription oral antibiotics or isotretinoin.",
     "see_dermatologist": true,
     "high_priority": true
   },
-  
+
   "applied_rules": ["r008"],
   "metadata": {...}
 }
 ```
 
 **Escalation Levels:**
+
 - `urgent`: Immediate dermatologist consultation needed
 - `caution`: Recommend professional consultation
 - `warning`: Note for awareness
@@ -311,6 +327,7 @@ When escalation is present, the response includes:
 ## Error Responses
 
 ### 400 Bad Request
+
 ```json
 {
   "detail": "Invalid analysis data: Invalid skin_type: invalid_type"
@@ -318,6 +335,7 @@ When escalation is present, the response includes:
 ```
 
 **Common causes:**
+
 - Invalid `skin_type` value
 - Missing required fields
 - Invalid `conditions_detected` format
@@ -325,6 +343,7 @@ When escalation is present, the response includes:
 ---
 
 ### 401 Unauthorized
+
 ```json
 {
   "detail": "Not authenticated"
@@ -332,6 +351,7 @@ When escalation is present, the response includes:
 ```
 
 **Solution:** Include valid JWT token in Authorization header
+
 ```
 Authorization: Bearer <token>
 ```
@@ -339,6 +359,7 @@ Authorization: Bearer <token>
 ---
 
 ### 404 Not Found
+
 ```json
 {
   "detail": "Analysis 99999 not found"
@@ -350,6 +371,7 @@ Authorization: Bearer <token>
 ---
 
 ### 500 Internal Server Error
+
 ```json
 {
   "detail": "Failed to generate recommendation"
@@ -357,6 +379,7 @@ Authorization: Bearer <token>
 ```
 
 **Causes:**
+
 - Rule engine initialization failed
 - Database connection error
 - Unhandled exception in recommendation generation
@@ -380,6 +403,7 @@ curl -X POST http://localhost:8000/api/v1/recommend \
 ```
 
 **Flow:**
+
 1. Load Analysis #123 from database
 2. Load user's Profile
 3. Apply rules (r001 - Oily + Acne, r007 - Blackheads + Pores)
@@ -408,6 +432,7 @@ curl -X POST http://localhost:8000/api/v1/recommend \
 ```
 
 **Flow:**
+
 1. Validate provided analysis data
 2. Load user's Profile for allergies/pregnancy status
 3. Apply rules (r002 - Dry + Eczema)
@@ -441,18 +466,18 @@ curl -X GET "http://localhost:8000/api/v1/recommendations?limit=20&offset=0" \
 ```typescript
 // Generate recommendation
 async function generateRecommendation(analysisId: number) {
-  const response = await fetch('/api/v1/recommend', {
-    method: 'POST',
+  const response = await fetch("/api/v1/recommend", {
+    method: "POST",
     headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      method: 'analysis_id',
+      method: "analysis_id",
       analysis_id: analysisId,
       include_diet: true,
-      include_products: true
-    })
+      include_products: true,
+    }),
   });
 
   if (!response.ok) {
@@ -460,12 +485,12 @@ async function generateRecommendation(analysisId: number) {
   }
 
   const recommendation = await response.json();
-  
+
   // Check for escalation
   if (recommendation.escalation?.high_priority) {
     showUrgentAlert(recommendation.escalation.message);
   }
-  
+
   // Display recommendation
   displayRoutines(recommendation.routines);
   displayProducts(recommendation.recommended_products);
@@ -476,12 +501,12 @@ async function generateRecommendation(analysisId: number) {
 async function getRecommendation(recommendationId: string) {
   const response = await fetch(`/api/v1/recommendations/${recommendationId}`, {
     headers: {
-      'Authorization': `Bearer ${token}`
-    }
+      Authorization: `Bearer ${token}`,
+    },
   });
 
   if (!response.ok) {
-    throw new Error('Failed to retrieve recommendation');
+    throw new Error("Failed to retrieve recommendation");
   }
 
   return response.json();
@@ -491,12 +516,12 @@ async function getRecommendation(recommendationId: string) {
 async function listRecommendations(limit = 10) {
   const response = await fetch(`/api/v1/recommendations?limit=${limit}`, {
     headers: {
-      'Authorization': `Bearer ${token}`
-    }
+      Authorization: `Bearer ${token}`,
+    },
   });
 
   if (!response.ok) {
-    throw new Error('Failed to list recommendations');
+    throw new Error("Failed to list recommendations");
   }
 
   return response.json();
@@ -508,6 +533,7 @@ async function listRecommendations(limit = 10) {
 ## Database Schema
 
 ### RecommendationRecord Table
+
 ```sql
 CREATE TABLE recommendation_records (
   id INTEGER PRIMARY KEY,
@@ -525,6 +551,7 @@ CREATE TABLE recommendation_records (
 ```
 
 ### RuleLog Table
+
 ```sql
 CREATE TABLE rule_logs (
   id INTEGER PRIMARY KEY,
@@ -546,6 +573,7 @@ CREATE TABLE rule_logs (
 - **Total Response Time:** Typically 100-300ms
 
 **Optimization:**
+
 1. Engine initialized once at module load
 2. Use `analysis_id` method to avoid re-processing
 3. Product queries indexed by tags and external_id

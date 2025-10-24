@@ -41,12 +41,12 @@ for r in ranked:
 
 ## Scoring Components (What Matters)
 
-| Component | Weight | What It Measures |
-|-----------|--------|-----------------|
-| **Dermatological Safety** | 25% | Clinically tested, suitable for conditions |
-| **Product Quality** | 30% | Rating (0-5 stars) and review count |
-| **Feedback History** | 20% | How community rated this product |
-| **Condition Match** | 25% | How well targets user's detected conditions |
+| Component                 | Weight | What It Measures                            |
+| ------------------------- | ------ | ------------------------------------------- |
+| **Dermatological Safety** | 25%    | Clinically tested, suitable for conditions  |
+| **Product Quality**       | 30%    | Rating (0-5 stars) and review count         |
+| **Feedback History**      | 20%    | How community rated this product            |
+| **Condition Match**       | 25%    | How well targets user's detected conditions |
 
 **Final Score:** 0-100 (higher = better for this user)
 
@@ -225,16 +225,18 @@ ranked = rank_products(
 ## Performance Tips
 
 1. **Batch product fetching:**
+
    ```python
    # ❌ Slow: Query inside loop
    for id in product_ids:
        product = db.query(Product).get(id)
-   
+
    # ✅ Fast: Single batch query
    products = db.query(Product).filter(Product.id.in_(product_ids)).all()
    ```
 
 2. **Cache feedback stats:**
+
    ```python
    feedback_cache = {}
    for product in products:
@@ -265,6 +267,7 @@ pytest backend/app/recommender/test_ranker.py --cov=backend.app.recommender.rank
 ```
 
 **Test Statistics:**
+
 - 40+ tests
 - 500+ lines of test code
 - Covers: filtering, scoring, ranking, edge cases, integration
@@ -273,13 +276,13 @@ pytest backend/app/recommender/test_ranker.py --cov=backend.app.recommender.rank
 
 ## Troubleshooting
 
-| Issue | Cause | Solution |
-|-------|-------|----------|
-| All products get low scores | Wrong condition/allergy data | Verify user profile data is correct |
-| No allergen warnings | Ingredient name mismatch | Check ingredient list formatting |
-| Product X ranked last | Many allergen concerns or low rating | Check safety_issues and rating |
-| Database errors | Feedback table missing | Ensure RecommendationFeedback model exists |
-| Slow ranking | Too many products (100+) | Reduce product list, use strict filtering |
+| Issue                       | Cause                                | Solution                                   |
+| --------------------------- | ------------------------------------ | ------------------------------------------ |
+| All products get low scores | Wrong condition/allergy data         | Verify user profile data is correct        |
+| No allergen warnings        | Ingredient name mismatch             | Check ingredient list formatting           |
+| Product X ranked last       | Many allergen concerns or low rating | Check safety_issues and rating             |
+| Database errors             | Feedback table missing               | Ensure RecommendationFeedback model exists |
+| Slow ranking                | Too many products (100+)             | Reduce product list, use strict filtering  |
 
 ---
 
@@ -290,6 +293,7 @@ Currently: **Rule-based ranking** (deterministic, fast, interpretable)
 Future: **Contextual Bandit** (learns from user behavior, personalized)
 
 **Benefits:**
+
 - Personalized per user type
 - Learns best rankings automatically
 - A/B testing capability
@@ -301,12 +305,12 @@ Future: **Contextual Bandit** (learns from user behavior, personalized)
 
 ## Files
 
-| File | Purpose | Size |
-|------|---------|------|
-| `ranker.py` | Source code | 600+ lines |
-| `test_ranker.py` | Tests | 500+ lines |
-| `RANKER_DOCUMENTATION.md` | Full docs | 400+ lines |
-| `RANKER_QUICK_REFERENCE.md` | This file | 300 lines |
+| File                          | Purpose              | Size       |
+| ----------------------------- | -------------------- | ---------- |
+| `ranker.py`                   | Source code          | 600+ lines |
+| `test_ranker.py`              | Tests                | 500+ lines |
+| `RANKER_DOCUMENTATION.md`     | Full docs            | 400+ lines |
+| `RANKER_QUICK_REFERENCE.md`   | This file            | 300 lines  |
 | `RANKER_INTEGRATION_GUIDE.md` | Integration patterns | 350+ lines |
 
 ---
@@ -314,16 +318,19 @@ Future: **Contextual Bandit** (learns from user behavior, personalized)
 ## One-Minute Summary
 
 ✅ **What it does:**
+
 - Takes products from recommendation engine
 - Ranks them by safety and relevance for user
 - Returns top-5 with explanations
 
 ✅ **How to use:**
+
 ```python
 ranked = rank_products(products, UserProfile(user_id, allergies, skin_type, conditions), db=db, k=5)
 ```
 
 ✅ **Key features:**
+
 - Allergen filtering
 - Dermatological safety scoring
 - Product quality/ratings
@@ -331,6 +338,7 @@ ranked = rank_products(products, UserProfile(user_id, allergies, skin_type, cond
 - Condition matching
 
 ✅ **Performance:**
+
 - O(n log n) complexity
 - 50 products ranked in <100ms
 - Fully tested (40+ tests)

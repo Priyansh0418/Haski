@@ -43,18 +43,18 @@ Submit feedback on a recommendation.
 
 **Field Descriptions:**
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `recommendation_id` | string | Yes | ID of recommendation being reviewed |
-| `helpful_rating` | integer | No | 1-5: How helpful was the recommendation? |
-| `product_satisfaction` | integer | No | 1-5: How satisfied with recommended products? |
-| `routine_completion_pct` | integer | No | 0-100: What % of routine did you complete? |
-| `timeframe` | string | No | When providing feedback: `1_week`, `2_weeks`, `4_weeks`, `8_weeks` |
-| `feedback_text` | string | No | User comments on the recommendation |
-| `improvement_suggestions` | string | No | Suggestions for improving recommendations |
-| `adverse_reactions` | string | No | Any negative reactions experienced |
-| `would_recommend` | boolean | No | Would you recommend to friends? |
-| `product_ratings` | object | No | Individual product ratings (1-5) |
+| Field                     | Type    | Required | Description                                                        |
+| ------------------------- | ------- | -------- | ------------------------------------------------------------------ |
+| `recommendation_id`       | string  | Yes      | ID of recommendation being reviewed                                |
+| `helpful_rating`          | integer | No       | 1-5: How helpful was the recommendation?                           |
+| `product_satisfaction`    | integer | No       | 1-5: How satisfied with recommended products?                      |
+| `routine_completion_pct`  | integer | No       | 0-100: What % of routine did you complete?                         |
+| `timeframe`               | string  | No       | When providing feedback: `1_week`, `2_weeks`, `4_weeks`, `8_weeks` |
+| `feedback_text`           | string  | No       | User comments on the recommendation                                |
+| `improvement_suggestions` | string  | No       | Suggestions for improving recommendations                          |
+| `adverse_reactions`       | string  | No       | Any negative reactions experienced                                 |
+| `would_recommend`         | boolean | No       | Would you recommend to friends?                                    |
+| `product_ratings`         | object  | No       | Individual product ratings (1-5)                                   |
 
 **Response (201 Created):**
 
@@ -216,20 +216,20 @@ Authorization: Bearer <JWT_TOKEN>
 
 **Response Fields:**
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `total_feedbacks` | integer | Number of feedback submissions |
-| `avg_helpful_rating` | float | Average helpful rating (1-5) |
-| `avg_product_satisfaction` | float | Average product satisfaction (1-5) |
-| `avg_routine_completion_pct` | float | Average routine completion percentage |
-| `would_recommend_count` | integer | Number who would recommend |
-| `would_not_recommend_count` | integer | Number who would not recommend |
-| `adverse_reactions` | integer | Count of adverse reactions reported |
-| `helpful_feedbacks` | integer | Count of ratings 4-5 (helpful) |
-| `not_helpful_feedbacks` | integer | Count of ratings 1-2 (not helpful) |
-| `ratings_distribution` | object | Breakdown of 1-5 ratings |
-| `rules_applied` | array | Rules that generated recommendation (with details) |
-| `recommendation_metadata` | object | Original recommendation info |
+| Field                        | Type    | Description                                        |
+| ---------------------------- | ------- | -------------------------------------------------- |
+| `total_feedbacks`            | integer | Number of feedback submissions                     |
+| `avg_helpful_rating`         | float   | Average helpful rating (1-5)                       |
+| `avg_product_satisfaction`   | float   | Average product satisfaction (1-5)                 |
+| `avg_routine_completion_pct` | float   | Average routine completion percentage              |
+| `would_recommend_count`      | integer | Number who would recommend                         |
+| `would_not_recommend_count`  | integer | Number who would not recommend                     |
+| `adverse_reactions`          | integer | Count of adverse reactions reported                |
+| `helpful_feedbacks`          | integer | Count of ratings 4-5 (helpful)                     |
+| `not_helpful_feedbacks`      | integer | Count of ratings 1-2 (not helpful)                 |
+| `ratings_distribution`       | object  | Breakdown of 1-5 ratings                           |
+| `rules_applied`              | array   | Rules that generated recommendation (with details) |
+| `recommendation_metadata`    | object  | Original recommendation info                       |
 
 ---
 
@@ -292,46 +292,56 @@ The feedback system automatically calculates insights based on submitted data.
 ### Satisfaction Levels
 
 **High Satisfaction**
+
 - Trigger: `helpful_rating >= 4`
 - Action: Recommendation is working well
 
 **Medium Satisfaction**
+
 - Trigger: `helpful_rating == 3`
 - Action: Recommendation acceptable but could improve
 
 **Low Satisfaction**
+
 - Trigger: `helpful_rating <= 2`
 - Action: Flag for review, adjust rules
 
 ### Routine Adherence
 
 **Excellent**
+
 - Trigger: `routine_completion_pct >= 80`
 - Meaning: User completing most of routine
 
 **Good**
+
 - Trigger: `routine_completion_pct >= 60`
 - Meaning: User completing majority
 
 **Fair**
+
 - Trigger: `routine_completion_pct >= 40`
 - Meaning: User completing half
 
 **Poor**
+
 - Trigger: `routine_completion_pct < 40`
 - Meaning: Routine too complex or not applicable
 
 ### Product Quality Assessment
 
 **High Quality**
+
 - Trigger: `product_satisfaction >= 4`
 - Meaning: Products are well-matched
 
 **Acceptable**
+
 - Trigger: `product_satisfaction == 3`
 - Meaning: Products are okay
 
 **Needs Improvement**
+
 - Trigger: `product_satisfaction <= 2`
 - Meaning: Different products should be recommended
 
@@ -364,22 +374,22 @@ CREATE TABLE recommendation_feedbacks (
   user_id INTEGER NOT NULL,
   analysis_id INTEGER NOT NULL,
   recommendation_id INTEGER NOT NULL,
-  
+
   -- Ratings (1-5 scale)
   helpful_rating INTEGER,                -- 1-5: not helpful to very helpful
   product_satisfaction INTEGER,          -- 1-5: not satisfied to very satisfied
   routine_completion_pct INTEGER,        -- 0-100: % of routine completed
-  
+
   -- Feedback
   timeframe VARCHAR(50),                 -- 1_week, 2_weeks, 4_weeks, 8_weeks
   feedback_text TEXT,                    -- User comments
   improvement_suggestions TEXT,          -- Suggestions
   adverse_reactions TEXT,                -- Any negative reactions
-  
+
   -- Behavior
   would_recommend BOOLEAN,               -- Would recommend to friends?
   product_ratings JSON,                  -- {cleanser: 5, treatment: 4, ...}
-  
+
   -- Timestamps
   created_at DATETIME NOT NULL,
   updated_at DATETIME NOT NULL
@@ -432,6 +442,7 @@ curl -X POST http://localhost:8000/api/v1/feedback/feedback \
 ```
 
 **Response includes:**
+
 - Feedback confirmation with ID
 - Updated aggregate statistics
 - Insights (high satisfaction, excellent adherence, etc.)
@@ -452,6 +463,7 @@ curl -X POST http://localhost:8000/api/v1/feedback/feedback \
 ```
 
 **Response includes:**
+
 - Adverse reaction escalation (HIGH priority)
 - Recommendation to review ingredients
 - Flag for manual review
@@ -464,6 +476,7 @@ curl -X GET http://localhost:8000/api/v1/feedback/feedback/rec_20251024_001/stat
 ```
 
 **Shows:**
+
 - 10 total feedbacks
 - 4.2 average helpful rating
 - 82% average routine completion
@@ -479,6 +492,7 @@ curl -X GET http://localhost:8000/api/v1/feedback/feedbacks/user/5/summary \
 ```
 
 **Shows:**
+
 - 42 total recommendations
 - 35 feedbacks given
 - 4.1 overall average rating
@@ -492,7 +506,7 @@ curl -X GET http://localhost:8000/api/v1/feedback/feedbacks/user/5/summary \
 ### React Component Example
 
 ```typescript
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 interface FeedbackFormProps {
   recommendationId: string;
@@ -503,12 +517,12 @@ interface FeedbackFormProps {
 export const FeedbackForm: React.FC<FeedbackFormProps> = ({
   recommendationId,
   token,
-  onSuccess
+  onSuccess,
 }) => {
   const [rating, setRating] = useState<number>(5);
   const [satisfaction, setSatisfaction] = useState<number>(5);
   const [completion, setCompletion] = useState<number>(80);
-  const [feedback, setFeedback] = useState<string>('');
+  const [feedback, setFeedback] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -518,11 +532,11 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
     setError(null);
 
     try {
-      const response = await fetch('/api/v1/feedback/feedback', {
-        method: 'POST',
+      const response = await fetch("/api/v1/feedback/feedback", {
+        method: "POST",
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           recommendation_id: recommendationId,
@@ -530,25 +544,25 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
           product_satisfaction: satisfaction,
           routine_completion_pct: completion,
           feedback_text: feedback,
-          would_recommend: rating >= 4
-        })
+          would_recommend: rating >= 4,
+        }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to submit feedback');
+        throw new Error("Failed to submit feedback");
       }
 
       const data = await response.json();
-      
+
       if (data.insights?.escalations?.length > 0) {
-        alert('⚠️ Adverse reaction reported - our team will review');
+        alert("⚠️ Adverse reaction reported - our team will review");
       }
-      
+
       if (onSuccess) {
         onSuccess(data);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
+      setError(err instanceof Error ? err.message : "Unknown error");
     } finally {
       setLoading(false);
     }
@@ -557,10 +571,13 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
   return (
     <form onSubmit={handleSubmit} className="feedback-form">
       <h2>How helpful was this recommendation?</h2>
-      
+
       <div className="rating-group">
         <label>Helpfulness (1-5)</label>
-        <select value={rating} onChange={(e) => setRating(Number(e.target.value))}>
+        <select
+          value={rating}
+          onChange={(e) => setRating(Number(e.target.value))}
+        >
           <option value={1}>1 - Not helpful</option>
           <option value={2}>2 - Somewhat unhelpful</option>
           <option value={3}>3 - Neutral</option>
@@ -571,7 +588,10 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
 
       <div className="rating-group">
         <label>Product Satisfaction (1-5)</label>
-        <select value={satisfaction} onChange={(e) => setSatisfaction(Number(e.target.value))}>
+        <select
+          value={satisfaction}
+          onChange={(e) => setSatisfaction(Number(e.target.value))}
+        >
           <option value={1}>1 - Not satisfied</option>
           <option value={2}>2 - Somewhat satisfied</option>
           <option value={3}>3 - Neutral</option>
@@ -601,7 +621,7 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
       </div>
 
       <button type="submit" disabled={loading}>
-        {loading ? 'Submitting...' : 'Submit Feedback'}
+        {loading ? "Submitting..." : "Submit Feedback"}
       </button>
 
       {error && <div className="error">{error}</div>}
@@ -617,18 +637,22 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
 ### Key Metrics to Track
 
 1. **Recommendation Quality**
+
    - Average helpful rating
    - % of recommendations rated 4-5 stars
 
 2. **User Engagement**
+
    - % of recommendations with feedback
    - Feedback submission rate over time
 
 3. **Product Performance**
+
    - Which products get highest satisfaction
    - Adverse reaction frequency
 
 4. **Rule Effectiveness**
+
    - Average rating by applied rule
    - Which rule combinations work best
 
@@ -642,11 +666,13 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
 Suggested dashboards to build:
 
 1. **Admin Dashboard**
+
    - Overall recommendation quality
    - High/low performing rules
    - Adverse reactions (alerts)
 
 2. **User Dashboard**
+
    - My recommendations history
    - My feedback trends
    - Products I've tried

@@ -15,8 +15,8 @@ class User(Base):
     profile = relationship('Profile', back_populates='user', uselist=False)
     photos = relationship('Photo', back_populates='user')
     analyses = relationship('Analysis', back_populates='user')
-    recommendations = relationship('Recommendation', back_populates='user')
     feedback = relationship('Feedback', back_populates='user')
+    recommendations = relationship('Recommendation', back_populates='user')
 
 
 class Profile(Base):
@@ -58,6 +58,8 @@ class Analysis(Base):
     confidence_scores = Column(JSON, nullable=True)
 
     user = relationship('User', back_populates='analyses')
+    # Relationships to recommender models
+    # recommendations defined in recommender/models.py
 
 
 class Recommendation(Base):

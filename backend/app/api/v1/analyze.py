@@ -19,12 +19,15 @@ ALLOWED_MIME_TYPES = {"image/jpeg", "image/png", "image/gif", "image/webp"}
 router = APIRouter()
 
 
-@router.post("/photo", status_code=status.HTTP_201_CREATED)
-def analyze_photo(image: UploadFile = File(...), db: Session = Depends(get_db), user_id: int = Depends(get_current_user)):
+@router.post("/image", status_code=status.HTTP_201_CREATED)
+def analyze_photo(image: UploadFile = File(...), db: Session = Depends(get_db)):
     """Save uploaded image, run local analysis, persist Analysis, and return the analysis JSON.
     
-    Requires valid JWT token in Authorization header.
+    Uses demo user for unauthenticated requests.
     """
+    # Get or create demo user
+    user = get_demo_user(db)
+    user_id = user.id
     # Validate file type
     if image.content_type not in ALLOWED_MIME_TYPES:
         raise HTTPException(

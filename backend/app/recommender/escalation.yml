@@ -1,0 +1,300 @@
+# Escalation Rules - Conditions Requiring Medical Attention
+# This file lists skin/hair conditions that require immediate dermatologic consultation
+# Last Updated: 2025-10-25
+
+escalations:
+  # ===== SKIN INFECTIONS & SERIOUS CONDITIONS =====
+
+  infection:
+    severity: high
+    condition_type: "skin"
+    description: "Signs of bacterial, fungal, or viral skin infection"
+
+    triggers:
+      - "Pus-filled pustules with surrounding redness"
+      - "Spreading rash with warmth or heat"
+      - "Yellow or green discharge from skin lesions"
+      - "Fever accompanying skin symptoms"
+      - "Cellulitis (rapidly spreading redness with swelling)"
+
+    medical_advice: "Seek immediate dermatologic care"
+    action: "escalate"
+    urgency: "immediate"
+
+    recommended_next_steps:
+      - "Do not self-treat with over-the-counter products"
+      - "Avoid squeezing or picking at lesions"
+      - "Keep area clean and covered if possible"
+      - "Schedule dermatology appointment within 24-48 hours"
+      - "If fever or signs of cellulitis: visit urgent care/ER immediately"
+
+    why_escalated: "Infections require professional diagnosis and prescription treatment (antibiotics, antivirals, or antifungals)"
+
+  severe_rash:
+    severity: high
+    condition_type: "skin"
+    description: "Extensive, rapidly spreading, or unexplained rash"
+
+    triggers:
+      - "Rash covering >25% of body surface"
+      - "Rash appearing suddenly without clear trigger"
+      - "Accompanied by swelling (especially face/lips)"
+      - "Blistering or oozing lesions"
+      - "Rash with fever or systemic symptoms"
+      - "Rash after new product/medication introduction"
+      - "Rash with severe itching affecting sleep/daily function"
+
+    medical_advice: "Seek dermatologic consultation within 24-48 hours"
+    action: "escalate"
+    urgency: "high"
+
+    recommended_next_steps:
+      - "Stop using all new skincare products immediately"
+      - "Take an oatmeal bath or cool compress for relief"
+      - "Avoid scratching to prevent secondary infection"
+      - "Document rash with photos and note onset date/triggers"
+      - "Schedule dermatology appointment as soon as possible"
+      - "If swelling involves face/throat: go to ER immediately"
+
+    why_escalated: "Widespread rashes can indicate allergies, dermatitis, or systemic conditions requiring professional diagnosis"
+
+  severe_acne:
+    severity: high
+    condition_type: "skin"
+    description: "Severe cystic or nodular acne causing significant scarring risk"
+
+    triggers:
+      - "Painful, deep cystic acne (>5mm diameter)"
+      - "Nodular acne (hard, inflamed bumps)"
+      - "Acne affecting multiple body areas (face, chest, back)"
+      - "Post-inflammatory hyperpigmentation with scarring"
+      - "Acne resistant to 3+ months of targeted skincare"
+      - "Sudden severe acne flare without obvious cause"
+
+    medical_advice: "Seek dermatologic consultation for possible prescription treatment (isotretinoin, antibiotics, hormonal therapy)"
+    action: "escalate"
+    urgency: "high"
+
+    recommended_next_steps:
+      - "Do NOT attempt to pop or pick at cystic acne"
+      - "Apply ice wrapped in cloth for 10-15 min to reduce inflammation"
+      - "Avoid touching face to prevent bacterial transfer"
+      - "Schedule dermatology appointment immediately"
+      - "Be prepared to discuss medical history (hormonal, stress factors)"
+      - "Prepare for possible prescription options (Accutane, doxycycline, etc.)"
+
+    why_escalated: "Severe acne requires prescription treatments and professional monitoring to prevent permanent scarring"
+
+  eczema_severe:
+    severity: high
+    condition_type: "skin"
+    description: "Severe or worsening eczema/atopic dermatitis"
+
+    triggers:
+      - "Eczema covering >40% of body surface"
+      - "Severe itching disrupting sleep/daily activities"
+      - "Signs of secondary bacterial infection"
+      - "Eczema flares despite proper moisturizing routine"
+      - "Sudden onset or unexplained worsening"
+      - "Affecting face, hands, or sensitive areas extensively"
+
+    medical_advice: "Seek dermatologic consultation for prescription treatment (topical corticosteroids, biologics, immunosuppressants)"
+    action: "escalate"
+    urgency: "high"
+
+    recommended_next_steps:
+      - "Avoid all potential irritants and allergens"
+      - "Use only fragrance-free, hypoallergenic products"
+      - "Apply thick moisturizer (ointment base) within 3 min of bathing"
+      - "Take lukewarm baths/showers (not hot water)"
+      - "Schedule dermatology appointment to discuss systemic treatment options"
+      - "Prepare allergy patch testing if eczema is contact-triggered"
+
+    why_escalated: "Severe eczema requires prescription treatments and possible allergy testing or immunologic evaluation"
+
+  psoriasis_severe:
+    severity: high
+    condition_type: "skin"
+    description: "Severe plaque psoriasis or pustular/erythrodermic psoriasis"
+
+    triggers:
+      - "Plaques covering >10% of body (BSA)"
+      - "Erythrodermic psoriasis (nearly complete body coverage)"
+      - "Pustular psoriasis (widespread pustules with systemic symptoms)"
+      - "Psoriatic arthritis pain (joint inflammation)"
+      - "Failure to respond to topical treatments after 4+ weeks"
+      - "Sudden severe onset"
+
+    medical_advice: "Seek dermatologic consultation urgently for systemic treatment"
+    action: "escalate"
+    urgency: "high"
+
+    recommended_next_steps:
+      - "Maintain skin moisture with daily emollient application"
+      - "Avoid triggers: stress, infections, cold/dry weather"
+      - "Schedule urgent dermatology appointment"
+      - "Be prepared to discuss systemic treatments (biologics, methotrexate, etc.)"
+      - "Request rheumatology referral if experiencing joint pain"
+      - "Consider phototherapy options discussed with dermatologist"
+
+    why_escalated: "Severe psoriasis requires biologic or systemic immunomodulatory therapy to prevent complications and joint involvement"
+
+  # ===== HAIR CONDITIONS =====
+
+  sudden_hair_loss:
+    severity: high
+    condition_type: "hair"
+    description: "Rapid or sudden hair loss (alopecia areata, telogen effluvium, etc.)"
+
+    triggers:
+      - "Losing >100 hairs daily (normal is 50-100)"
+      - "Circular bald patches appearing (alopecia areata)"
+      - "Diffuse hair thinning developing over weeks"
+      - "Hair loss following major stress/illness/surgery"
+      - "Nail pitting or dystrophy accompanying hair loss"
+      - "Hair loss with scalp pain or itching"
+
+    medical_advice: "Seek dermatologic evaluation to identify cause and determine treatment"
+    action: "escalate"
+    urgency: "high"
+
+    recommended_next_steps:
+      - "Take photos of affected areas and note onset date"
+      - "Document any recent stress, illness, medications, or diet changes"
+      - "Schedule dermatology appointment within 1-2 weeks"
+      - "Avoid harsh styling, pulling, or tension on hair"
+      - "Be prepared for possible blood work (thyroid, iron, B12)"
+      - "Discuss treatment options: minoxidil, corticosteroids, PRP, etc."
+
+    why_escalated: "Sudden hair loss requires professional diagnosis to identify underlying cause (hormonal, autoimmune, nutritional, etc.) and appropriate treatment"
+
+  scalp_infection:
+    severity: high
+    condition_type: "hair"
+    description: "Bacterial or fungal scalp infection (folliculitis, ringworm, etc.)"
+
+    triggers:
+      - "Pus-filled bumps on scalp with pain"
+      - "Scaling with pustules and surrounding redness"
+      - "Circular scaly patches (possible ringworm/tinea)"
+      - "Drainage or crusting from scalp"
+      - "Painful lymph nodes (neck/behind ears)"
+      - "Foul-smelling discharge from scalp"
+
+    medical_advice: "Seek dermatologic evaluation for prescription antifungal or antibiotic treatment"
+    action: "escalate"
+    urgency: "high"
+
+    recommended_next_steps:
+      - "Do not share hair care tools, brushes, or hats"
+      - "Avoid scratching infected area"
+      - "Keep scalp clean but avoid harsh products"
+      - "Schedule dermatology appointment within 48-72 hours"
+      - "Be prepared for possible fungal culture or KOH mount"
+      - "Discuss treatment options: antifungal shampoos, oral medications, etc."
+
+    why_escalated: "Scalp infections require professional diagnosis and prescription antifungal/antibiotic treatment to prevent spreading and permanent damage"
+
+  # ===== GENERAL DERMATOLOGIC EMERGENCIES =====
+
+  urticaria_severe:
+    severity: high
+    condition_type: "skin"
+    description: "Severe allergic urticaria (hives) with angioedema"
+
+    triggers:
+      - "Widespread hives (>50% body coverage)"
+      - "Hives with swelling (angioedema) of face, lips, or throat"
+      - "Hives with breathing difficulty or throat closure"
+      - "Hives with fever or systemic symptoms"
+      - "Hives unresponsive to antihistamines after 2 hours"
+
+    medical_advice: "EMERGENCY: Go to nearest ER immediately if experiencing breathing difficulty or throat swelling"
+    action: "escalate"
+    urgency: "immediate"
+
+    recommended_next_steps:
+      - "If throat/breathing affected: CALL 911 IMMEDIATELY"
+      - "If stable: Go to ER for evaluation and antihistamine/corticosteroid treatment"
+      - "Take antihistamine (diphenhydramine/Benadryl) if available while awaiting care"
+      - "Avoid re-exposure to identified trigger"
+      - "Follow up with allergy/dermatology for future prevention"
+
+    why_escalated: "Severe urticaria with angioedema can progress to anaphylaxis - requires immediate emergency care"
+
+  suspicious_mole:
+    severity: high
+    condition_type: "skin"
+    description: "Mole or lesion with concerning features (possible melanoma)"
+
+    triggers:
+      - "Mole >6mm diameter (pencil eraser size)"
+      - "Asymmetrical mole (sides don't match)"
+      - "Irregular or scalloped borders"
+      - "Multiple colors within mole (brown, black, red, white)"
+      - "Recent change in size, shape, or color"
+      - "Itching, bleeding, or oozing from mole"
+      - "Mole with unusual texture or raised appearance"
+
+    medical_advice: "Seek dermatologic evaluation for possible biopsy"
+    action: "escalate"
+    urgency: "high"
+
+    recommended_next_steps:
+      - "Do NOT attempt to remove or irritate mole"
+      - "Take clear photo and note when you first noticed it"
+      - "Schedule dermatology appointment within 1-2 weeks"
+      - "Document any changes since first noticing the mole"
+      - "Be prepared for possible skin biopsy"
+      - "Implement strict sun protection going forward"
+
+    why_escalated: "Suspicious moles require professional evaluation and possible biopsy to rule out melanoma"
+
+  # ===== SYSTEMIC CONDITIONS WITH SKIN/HAIR MANIFESTATIONS =====
+
+  autoimmune_suspected:
+    severity: high
+    condition_type: "systemic"
+    description: "Potential autoimmune condition manifesting in skin/hair"
+
+    triggers:
+      - "Combination: hair loss + joint pain + fatigue"
+      - "Rash with photosensitivity (worse with sun exposure)"
+      - "Discoid lupus pattern (circular scaly patches on face/ears)"
+      - "Skin symptoms + oral ulcers + eye inflammation"
+      - "Multiple joint pain + skin changes + fever"
+
+    medical_advice: "Seek rheumatology and dermatology co-evaluation"
+    action: "escalate"
+    urgency: "high"
+
+    recommended_next_steps:
+      - "Document all symptoms and timeline"
+      - "Schedule dermatology appointment first for skin evaluation"
+      - "Request referral to rheumatology from dermatologist"
+      - "Prepare for comprehensive blood work (ANA, ESR, CRP, etc.)"
+      - "Avoid sun exposure while awaiting evaluation"
+      - "Track symptom patterns and report to physician"
+
+    why_escalated: "Suspected autoimmune conditions require multidisciplinary evaluation and systematic diagnosis (blood work, biopsy, imaging) for appropriate management"
+
+# ===== ESCALATION METADATA =====
+escalation_metadata:
+  version: "1.0"
+  last_updated: "2025-10-25"
+  total_escalation_conditions: 11
+
+  severity_levels:
+    high: "Requires professional dermatologic evaluation; seek appointment within 24-48 hours"
+    immediate: "Medical emergency; seek ER/urgent care immediately or call 911 if life-threatening"
+
+  action_types:
+    escalate: "Route to dermatologist or healthcare provider"
+    emergency: "Seek immediate emergency care"
+
+  integration_notes:
+    - "Use in RuleEngine to flag recommendations with escalation conditions"
+    - "Display escalation messages prominently in UI with warning styling"
+    - "Log all escalations to audit trail for compliance"
+    - "Provide dermatologist referral suggestions where applicable"
+    - "Include emergency contact information in escalation responses"

@@ -5,6 +5,7 @@
 All acceptance tests MUST verify these safety requirements:
 
 ### 1. Disclaimer Requirement (MANDATORY)
+
 - ✅ Every `/api/v1/recommend` response MUST include:
   ```json
   "disclaimer": "Informational only — not medical advice. Consult a healthcare professional for medical concerns."
@@ -13,6 +14,7 @@ All acceptance tests MUST verify these safety requirements:
 - ✅ Test: Verify disclaimer field exists in EVERY response
 
 ### 2. Escalation with High Priority (MANDATORY)
+
 - ✅ Conditions requiring dermatologist referral MUST return:
   ```json
   "escalation": {
@@ -25,6 +27,7 @@ All acceptance tests MUST verify these safety requirements:
 - ✅ Test: Verify `high_priority: true` when condition triggers `see_dermatologist` rule
 
 ### 3. OTC Products Only (MANDATORY)
+
 - ✅ Every product MUST have: `"otc_verified": true`
 - ✅ NO prescription medications
 - ✅ NO controlled substances
@@ -32,6 +35,7 @@ All acceptance tests MUST verify these safety requirements:
 - ✅ Test: Verify `prescription_required: false` for all products
 
 ### 4. No Adverse Products (MANDATORY)
+
 - ✅ If user reports adverse reactions, that product MUST be avoided in future
 - ✅ Similar ingredients MUST be avoided
 - ✅ Test: Feedback with `adverse_reactions` must trigger product blacklist
@@ -915,6 +919,7 @@ echo "$RESP" | jq '.disclaimer | length > 0'
 ```
 
 **Validation Checklist:**
+
 - [ ] Disclaimer field exists in response
 - [ ] Disclaimer is not empty string
 - [ ] Disclaimer is not null
@@ -952,6 +957,7 @@ echo "$RESP" | jq '.metadata.medical_referral_required'
 ```
 
 **Validation Checklist:**
+
 - [ ] `escalation` is not null when condition triggers
 - [ ] `escalation.high_priority` is `true`
 - [ ] `escalation.message` includes medical guidance
@@ -989,6 +995,7 @@ echo "$RESP" | jq '.products[] | {name, otc_verified, prescription_required}'
 ```
 
 **Validation Checklist:**
+
 - [ ] All returned products have `otc_verified: true`
 - [ ] All returned products have `prescription_required: false`
 - [ ] No prescription medications in products
@@ -1019,6 +1026,7 @@ echo "$RESP" | jq '.count'
 ```
 
 **Validation Checklist:**
+
 - [ ] All search results have `otc_verified: true`
 - [ ] All search results have `prescription_required: false`
 - [ ] No prescription retinoids (except OTC adapalene)
@@ -1053,6 +1061,7 @@ echo "$RESP" | jq '.adverse_reactions'
 ```
 
 **Validation Checklist:**
+
 - [ ] Adverse reactions stored in feedback
 - [ ] Feedback recorded successfully (HTTP 201)
 - [ ] Product flagged for review (separate check)
@@ -1087,6 +1096,7 @@ curl -s -X GET "http://localhost:8000/api/v1/feedback/rec_001/stats" \
 ```
 
 **Validation Checklist:**
+
 - [ ] Invalid ratings rejected (HTTP 400/422)
 - [ ] Missing fields rejected (HTTP 422)
 - [ ] No auth token rejected (HTTP 401)

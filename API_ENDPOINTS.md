@@ -7,11 +7,13 @@
 ### Safety Requirements - All Endpoints MUST Follow:
 
 1. **Disclaimer in All Responses:** Every recommendation response MUST include:
+
    ```
    "disclaimer": "Informational only — not medical advice. Consult a healthcare professional for medical concerns."
    ```
 
 2. **Escalation Cases - Dermatologist Referral:**
+
    - When `escalation.condition` includes: `see_dermatologist`, severe skin infections, severe rashes, or severe hair loss
    - API MUST return: `"high_priority": true`
    - API MUST include clear instruction: "Seek immediate medical attention from a dermatologist"
@@ -216,6 +218,7 @@ When a severe condition is detected that requires medical attention:
 ```
 
 **Key Points for Escalation:**
+
 - ✅ `high_priority: true` signals frontend to show urgent warning
 - ✅ `escalation.message` MUST include clear medical guidance
 - ✅ `medical_referral_required: true` in metadata
@@ -307,12 +310,14 @@ Authorization: Bearer <user_token>
 **⚠️ Important - Adverse Reactions:**
 
 If a user reports adverse reactions in feedback (e.g., rash, itching, allergic reaction):
+
 - The system SHOULD flag this for review
 - The product SHOULD be marked for investigation
 - Similar products SHOULD be avoided in future recommendations
 - User SHOULD be advised to discontinue use and seek medical help if severe
 
 **Example Adverse Reaction Feedback:**
+
 ```json
 {
   "recommendation_id": "rec_20251025_001",
@@ -476,7 +481,8 @@ Authorization: Bearer <user_token>
   - Prescription antibiotics
   - Corticosteroids (prescription strength)
   - Any controlled medications
-```
+
+````
 
 **Notes:**
 
@@ -498,7 +504,7 @@ curl -X GET "http://localhost:8000/api/v1/products/search?ingredient=salicylic" 
 # Paginated search
 curl -X GET "http://localhost:8000/api/v1/products/search?tag=acne&limit=10&offset=0" \
   -H "Authorization: Bearer $TOKEN" | jq '.'
-```
+````
 
 ---
 
@@ -882,6 +888,7 @@ curl -X POST http://localhost:8000/api/v1/recommend \
 ### Required Disclaimers
 
 **Every API Response MUST include:**
+
 ```
 "disclaimer": "Informational only — not medical advice. Consult a healthcare professional for medical concerns."
 ```
@@ -889,6 +896,7 @@ curl -X POST http://localhost:8000/api/v1/recommend \
 ### Escalation Handling (High Priority Cases)
 
 **Trigger Conditions:**
+
 - Severe skin infections
 - Severe rashes (coverage > 50% of body)
 - Sudden hair loss (telogen effluvium symptoms)
@@ -897,6 +905,7 @@ curl -X POST http://localhost:8000/api/v1/recommend \
 - Any condition mentioning `see_dermatologist` rule
 
 **Required Response Fields:**
+
 ```json
 {
   "escalation": {
@@ -916,6 +925,7 @@ curl -X POST http://localhost:8000/api/v1/recommend \
 ### OTC Product Verification
 
 **ALLOWED Products:**
+
 - ✅ Over-the-counter skincare (cleansers, moisturizers, serums)
 - ✅ Non-prescription acne treatments (benzoyl peroxide, salicylic acid)
 - ✅ Non-prescription hair care products
@@ -925,6 +935,7 @@ curl -X POST http://localhost:8000/api/v1/recommend \
 - ✅ Face masks, peels (cosmetic use)
 
 **PROHIBITED Products:**
+
 - ❌ Prescription retinoids (tretinoin, tazarotene, isotretinoin)
 - ❌ Prescription antibiotics (clindamycin, doxycycline, etc.)
 - ❌ Prescription-strength corticosteroids
@@ -934,6 +945,7 @@ curl -X POST http://localhost:8000/api/v1/recommend \
 - ❌ Pharmaceutical injections or procedures
 
 **Verification Requirements:**
+
 - Every product in database MUST have: `otc_verified: true`
 - Admin panel MUST require: OTC status verification before adding products
 - Regular audits MUST verify all products maintain OTC status
@@ -941,6 +953,7 @@ curl -X POST http://localhost:8000/api/v1/recommend \
 ### Adverse Reaction Handling
 
 **If User Reports Adverse Reactions:**
+
 1. STOP recommending that product/ingredient immediately
 2. Flag product for admin review
 3. Recommend discontinuing use
@@ -949,6 +962,7 @@ curl -X POST http://localhost:8000/api/v1/recommend \
 6. Log incident for compliance tracking
 
 **Adverse Reaction Response Example:**
+
 ```json
 {
   "status": "adverse_reaction_noted",
@@ -961,6 +975,7 @@ curl -X POST http://localhost:8000/api/v1/recommend \
 ### Liability Protections
 
 **Frontend MUST Display:**
+
 1. Disclaimer on every recommendation view
 2. "Consult Healthcare Provider" button/link
 3. Warning banner for escalations (red background)
@@ -968,6 +983,7 @@ curl -X POST http://localhost:8000/api/v1/recommend \
 5. Contact info for healthcare advice (NOT provided by app)
 
 **Backend MUST Enforce:**
+
 1. Disclaimer in every API response
 2. `high_priority: true` flag for urgent cases
 3. Separate escalation handling path

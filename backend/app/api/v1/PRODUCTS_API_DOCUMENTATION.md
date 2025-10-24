@@ -23,14 +23,14 @@ Complete reference for the Products Management API endpoints.
 
 ## Endpoints Overview
 
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|----------------|
-| GET | `/products` | List products with filtering & pagination | No |
-| GET | `/products/{id}` | Get single product details | No |
-| POST | `/products` | Create new product (admin only) | Yes (Admin) |
-| GET | `/products/search/tags` | Get all available tags | No |
-| GET | `/products/search/ingredients` | Get all available ingredients | No |
-| GET | `/products/stats/categories` | Get category statistics | No |
+| Method | Endpoint                       | Description                               | Auth Required |
+| ------ | ------------------------------ | ----------------------------------------- | ------------- |
+| GET    | `/products`                    | List products with filtering & pagination | No            |
+| GET    | `/products/{id}`               | Get single product details                | No            |
+| POST   | `/products`                    | Create new product (admin only)           | Yes (Admin)   |
+| GET    | `/products/search/tags`        | Get all available tags                    | No            |
+| GET    | `/products/search/ingredients` | Get all available ingredients             | No            |
+| GET    | `/products/stats/categories`   | Get category statistics                   | No            |
 
 ---
 
@@ -42,19 +42,19 @@ Complete reference for the Products Management API endpoints.
 
 **Query Parameters:**
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `tag` | string | No | Filter by product tag (e.g., "cleanser", "acne-fighting") |
-| `ingredient` | string | No | Filter by ingredient name (case-insensitive) |
-| `category` | string | No | Filter by category (e.g., "cleanser", "moisturizer") |
-| `min_rating` | float | No | Minimum rating (0-5 scale) |
-| `max_price` | float | No | Maximum price in USD |
-| `dermatologically_safe` | boolean | No | Filter by dermatological safety |
-| `search` | string | No | Full-text search by product name or brand |
-| `sort_by` | string | No | Sort by: rating (default), price, newest, name |
-| `sort_order` | string | No | Sort order: desc (default) or asc |
-| `page` | integer | No | Page number (1-indexed, default: 1) |
-| `page_size` | integer | No | Items per page (1-100, default: 20) |
+| Parameter               | Type    | Required | Description                                               |
+| ----------------------- | ------- | -------- | --------------------------------------------------------- |
+| `tag`                   | string  | No       | Filter by product tag (e.g., "cleanser", "acne-fighting") |
+| `ingredient`            | string  | No       | Filter by ingredient name (case-insensitive)              |
+| `category`              | string  | No       | Filter by category (e.g., "cleanser", "moisturizer")      |
+| `min_rating`            | float   | No       | Minimum rating (0-5 scale)                                |
+| `max_price`             | float   | No       | Maximum price in USD                                      |
+| `dermatologically_safe` | boolean | No       | Filter by dermatological safety                           |
+| `search`                | string  | No       | Full-text search by product name or brand                 |
+| `sort_by`               | string  | No       | Sort by: rating (default), price, newest, name            |
+| `sort_order`            | string  | No       | Sort order: desc (default) or asc                         |
+| `page`                  | integer | No       | Page number (1-indexed, default: 1)                       |
+| `page_size`             | integer | No       | Items per page (1-100, default: 20)                       |
 
 **Example Requests:**
 
@@ -113,13 +113,13 @@ curl -X GET "http://localhost:8000/api/v1/products/products?tag=bha&max_price=15
 
 **Response Fields:**
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `total` | integer | Total number of products matching filters |
-| `page` | integer | Current page number |
-| `page_size` | integer | Items per page |
-| `total_pages` | integer | Total number of pages |
-| `products` | array | Array of ProductResponse objects |
+| Field         | Type    | Description                               |
+| ------------- | ------- | ----------------------------------------- |
+| `total`       | integer | Total number of products matching filters |
+| `page`        | integer | Current page number                       |
+| `page_size`   | integer | Items per page                            |
+| `total_pages` | integer | Total number of pages                     |
+| `products`    | array   | Array of ProductResponse objects          |
 
 ---
 
@@ -131,9 +131,9 @@ curl -X GET "http://localhost:8000/api/v1/products/products?tag=bha&max_price=15
 
 **Path Parameters:**
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `id` | integer | Product ID |
+| Parameter | Type    | Description |
+| --------- | ------- | ----------- |
+| `id`      | integer | Product ID  |
 
 **Example Requests:**
 
@@ -157,7 +157,7 @@ curl -X GET "http://localhost:8000/api/v1/products/products/42"
   "name": "Salicylic Acid 2%",
   "brand": "The Ordinary",
   "category": "treatment",
-  "price_usd": 5.90,
+  "price_usd": 5.9,
   "url": "https://theordinary.deciem.com",
   "ingredients": ["water", "salicylic acid"],
   "tags": ["exfoliating", "bha", "acne-fighting"],
@@ -199,22 +199,22 @@ Content-Type: application/json
 
 **Request Body:**
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `name` | string | Yes | Product name |
-| `brand` | string | Yes | Brand name |
-| `category` | string | Yes | Product category (e.g., "cleanser", "moisturizer") |
-| `price_usd` | float | No | Price in USD |
-| `url` | string | No | Product URL |
-| `ingredients` | array[string] | No | List of ingredients |
-| `tags` | array[string] | No | List of tags (automatically lowercased) |
-| `dermatologically_safe` | boolean | No | Dermatologically safe (default: true) |
-| `recommended_for` | array[string] | No | Recommended for skin types |
-| `avoid_for` | array[string] | No | Should avoid if conditions |
-| `avg_rating` | float | No | Average rating (0-5 scale) |
-| `review_count` | integer | No | Number of reviews (default: 0) |
-| `source` | string | No | Product source/origin |
-| `external_id` | string | No | External ID for tracking |
+| Field                   | Type          | Required | Description                                        |
+| ----------------------- | ------------- | -------- | -------------------------------------------------- |
+| `name`                  | string        | Yes      | Product name                                       |
+| `brand`                 | string        | Yes      | Brand name                                         |
+| `category`              | string        | Yes      | Product category (e.g., "cleanser", "moisturizer") |
+| `price_usd`             | float         | No       | Price in USD                                       |
+| `url`                   | string        | No       | Product URL                                        |
+| `ingredients`           | array[string] | No       | List of ingredients                                |
+| `tags`                  | array[string] | No       | List of tags (automatically lowercased)            |
+| `dermatologically_safe` | boolean       | No       | Dermatologically safe (default: true)              |
+| `recommended_for`       | array[string] | No       | Recommended for skin types                         |
+| `avoid_for`             | array[string] | No       | Should avoid if conditions                         |
+| `avg_rating`            | float         | No       | Average rating (0-5 scale)                         |
+| `review_count`          | integer       | No       | Number of reviews (default: 0)                     |
+| `source`                | string        | No       | Product source/origin                              |
+| `external_id`           | string        | No       | External ID for tracking                           |
 
 **Example Request:**
 
@@ -249,13 +249,15 @@ curl -X POST "http://localhost:8000/api/v1/products/products" \
 **Error Responses:**
 
 - **403 Forbidden** (not admin):
+
   ```json
-  {"detail": "Admin access required"}
+  { "detail": "Admin access required" }
   ```
 
 - **400 Bad Request** (duplicate external_id):
+
   ```json
-  {"detail": "Product with external_id 'X' already exists"}
+  { "detail": "Product with external_id 'X' already exists" }
   ```
 
 - **422 Unprocessable Entity** (validation error):
@@ -536,7 +538,7 @@ curl "http://localhost:8000/api/v1/products/products?page=3&page_size=10"
   "name": "Salicylic Acid 2%",
   "brand": "The Ordinary",
   "category": "treatment",
-  "price_usd": 5.90,
+  "price_usd": 5.9,
   "url": "https://theordinary.deciem.com",
   "ingredients": ["water", "salicylic acid"],
   "tags": ["exfoliating", "bha", "acne-fighting"],
@@ -574,15 +576,15 @@ Database: 500  →  Response: 5.0
 
 ### HTTP Status Codes
 
-| Status | Meaning | Typical Cause |
-|--------|---------|---------------|
-| 200 | OK | Successful GET request |
-| 201 | Created | Successful POST request |
-| 400 | Bad Request | Invalid filter values, duplicate external_id |
-| 403 | Forbidden | Not authenticated/authorized (admin required) |
-| 404 | Not Found | Product ID doesn't exist |
-| 422 | Unprocessable Entity | Invalid request body (validation error) |
-| 500 | Internal Server Error | Server error (check logs) |
+| Status | Meaning               | Typical Cause                                 |
+| ------ | --------------------- | --------------------------------------------- |
+| 200    | OK                    | Successful GET request                        |
+| 201    | Created               | Successful POST request                       |
+| 400    | Bad Request           | Invalid filter values, duplicate external_id  |
+| 403    | Forbidden             | Not authenticated/authorized (admin required) |
+| 404    | Not Found             | Product ID doesn't exist                      |
+| 422    | Unprocessable Entity  | Invalid request body (validation error)       |
+| 500    | Internal Server Error | Server error (check logs)                     |
 
 ### Common Error Responses
 
@@ -651,17 +653,16 @@ Database: 500  →  Response: 5.0
 ```javascript
 // Fetch BHA products under $15 sorted by rating
 const params = new URLSearchParams({
-  tag: 'bha',
+  tag: "bha",
   max_price: 15,
-  sort_by: 'rating',
-  sort_order: 'desc',
-  page_size: 20
+  sort_by: "rating",
+  sort_order: "desc",
+  page_size: 20,
 });
 
-const response = await fetch(
-  `/api/v1/products/products?${params}`,
-  { method: 'GET' }
-);
+const response = await fetch(`/api/v1/products/products?${params}`, {
+  method: "GET",
+});
 const data = await response.json();
 console.log(data.products);
 ```
@@ -678,7 +679,7 @@ console.log(`${product.brand} - ${product.name} ($${product.price_usd})`);
 **Create Product (Admin):**
 
 ```javascript
-const token = localStorage.getItem('access_token');
+const token = localStorage.getItem("access_token");
 
 const newProduct = {
   name: "New Cleanser",
@@ -686,16 +687,16 @@ const newProduct = {
   category: "cleanser",
   price_usd: 12.99,
   tags: ["gentle", "hydrating"],
-  dermatologically_safe: true
+  dermatologically_safe: true,
 };
 
-const response = await fetch('/api/v1/products/products', {
-  method: 'POST',
+const response = await fetch("/api/v1/products/products", {
+  method: "POST",
   headers: {
-    'Authorization': `Bearer ${token}`,
-    'Content-Type': 'application/json'
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
   },
-  body: JSON.stringify(newProduct)
+  body: JSON.stringify(newProduct),
 });
 
 if (response.status === 201) {
@@ -707,17 +708,17 @@ if (response.status === 201) {
 #### React Component Example
 
 ```tsx
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 function ProductCatalog() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
-    tag: '',
-    category: '',
+    tag: "",
+    category: "",
     max_price: null,
     page: 1,
-    page_size: 20
+    page_size: 20,
   });
 
   useEffect(() => {
@@ -728,7 +729,7 @@ function ProductCatalog() {
     const params = new URLSearchParams(
       Object.fromEntries(Object.entries(filters).filter(([, v]) => v))
     );
-    
+
     const response = await fetch(`/api/v1/products/products?${params}`);
     const data = await response.json();
     setProducts(data.products);
@@ -737,19 +738,25 @@ function ProductCatalog() {
 
   return (
     <div>
-      <select onChange={(e) => setFilters({...filters, tag: e.target.value})}>
+      <select onChange={(e) => setFilters({ ...filters, tag: e.target.value })}>
         <option value="">All Tags</option>
         <option value="cleanser">Cleanser</option>
         <option value="exfoliating">Exfoliating</option>
       </select>
 
-      {loading ? <div>Loading...</div> : (
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
         <div>
-          {products.map(product => (
+          {products.map((product) => (
             <div key={product.id}>
               <h3>{product.name}</h3>
-              <p>{product.brand} - ${product.price_usd}</p>
-              <p>Rating: {product.avg_rating}/5 ({product.review_count} reviews)</p>
+              <p>
+                {product.brand} - ${product.price_usd}
+              </p>
+              <p>
+                Rating: {product.avg_rating}/5 ({product.review_count} reviews)
+              </p>
             </div>
           ))}
         </div>
@@ -781,15 +788,16 @@ ADMIN_EMAILS = [
 
 ## Version History
 
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.0 | 2024-01 | Initial release with filtering, pagination, and admin creation |
+| Version | Date    | Changes                                                        |
+| ------- | ------- | -------------------------------------------------------------- |
+| 1.0     | 2024-01 | Initial release with filtering, pagination, and admin creation |
 
 ---
 
 ## Support
 
 For issues or questions:
+
 1. Check error responses and status codes above
 2. Verify filter parameter names and values
 3. Ensure authentication token is valid (for admin endpoints)

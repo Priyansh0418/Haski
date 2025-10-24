@@ -27,13 +27,13 @@ Each diet template entry contains:
 
 ### Fields
 
-| Field | Type | Purpose |
-|-------|------|---------|
-| `key` | string | Unique identifier for the condition (e.g., "acne", "hair_loss") |
-| `foods` | array | List of recommended foods with explanations |
-| `description` | string | Why these foods help for this condition |
-| `deficiency_type` | string | Nutrient deficiencies addressed |
-| `benefits` | array | Expected benefits from following recommendations |
+| Field             | Type   | Purpose                                                         |
+| ----------------- | ------ | --------------------------------------------------------------- |
+| `key`             | string | Unique identifier for the condition (e.g., "acne", "hair_loss") |
+| `foods`           | array  | List of recommended foods with explanations                     |
+| `description`     | string | Why these foods help for this condition                         |
+| `deficiency_type` | string | Nutrient deficiencies addressed                                 |
+| `benefits`        | array  | Expected benefits from following recommendations                |
 
 ---
 
@@ -42,12 +42,14 @@ Each diet template entry contains:
 ### 1. Acne & Breakouts (4 entries)
 
 **Keys:**
+
 - `acne` - General acne treatment
 - `oily_skin` - Sebum regulation
 - `combination_skin` - Balanced nutrition
 - (Plus many more...)
 
 **Example Foods:**
+
 - Leafy greens (spinach, kale)
 - Berries (blueberries, raspberries)
 - Omega-3 rich fish (salmon, sardines)
@@ -60,11 +62,13 @@ Each diet template entry contains:
 ### 2. Dry Skin & Dehydration (3 entries)
 
 **Keys:**
+
 - `dry_skin` - Comprehensive hydration
 - `dehydration` - Fluid and electrolyte restoration
 - `sensitive_skin` - Anti-inflammatory protection
 
 **Example Foods:**
+
 - Avocado
 - Nuts and seeds
 - Sweet potato
@@ -77,11 +81,13 @@ Each diet template entry contains:
 ### 3. Aging & Wrinkles (3 entries)
 
 **Keys:**
+
 - `aging_skin` - General anti-aging
 - `wrinkles` - Collagen support
 - `fine_lines` - Fine line reduction
 
 **Example Foods:**
+
 - Berries (high in antioxidants)
 - Leafy greens
 - Fatty fish (omega-3)
@@ -94,10 +100,12 @@ Each diet template entry contains:
 ### 4. Dark Circles & Puffiness (2 entries)
 
 **Keys:**
+
 - `dark_circles` - Blood circulation and tone
 - `puffy_eyes` - Fluid retention reduction
 
 **Example Foods:**
+
 - Iron-rich foods (spinach, red meat)
 - Potassium sources (banana, coconut water)
 - Anti-inflammatory (ginger, turmeric)
@@ -109,10 +117,12 @@ Each diet template entry contains:
 ### 5. Pigmentation (2 entries)
 
 **Keys:**
+
 - `hyperpigmentation` - Melanin regulation
 - `dark_spots` - Spot fading
 
 **Example Foods:**
+
 - Vitamin C rich foods
 - Leafy greens
 - Turmeric
@@ -125,6 +135,7 @@ Each diet template entry contains:
 ### 6. Hair Health (6 entries)
 
 **Keys:**
+
 - `hair_loss` - Hair follicle strengthening
 - `dry_hair` - Hair hydration
 - `oily_scalp` - Sebum regulation
@@ -133,6 +144,7 @@ Each diet template entry contains:
 - `hair_thinning` - Hair density
 
 **Example Foods:**
+
 - Eggs (biotin, protein)
 - Spinach (iron)
 - Fatty fish (omega-3)
@@ -145,12 +157,14 @@ Each diet template entry contains:
 ### 7. General Skin Health (3 entries)
 
 **Keys:**
+
 - `dull_skin` - Radiance restoration
 - `uneven_skin_tone` - Tone evening
 - `congested_skin` - Detoxification
 - `inflamed_skin` - Inflammation reduction
 
 **Example Foods:**
+
 - Berries
 - Leafy greens
 - Green tea
@@ -163,6 +177,7 @@ Each diet template entry contains:
 ### 8. Deficiency-Based (9 entries)
 
 **Keys:**
+
 - `vitamin_a_deficiency`
 - `vitamin_c_deficiency`
 - `vitamin_d_deficiency`
@@ -180,6 +195,7 @@ Each diet template entry contains:
 ### 9. Lifestyle & Hydration (2 entries)
 
 **Keys:**
+
 - `poor_hydration` - Hydration restoration
 - `general_wellness` - Balanced nutrition
 
@@ -216,14 +232,17 @@ diet_recommendations = engine.get_diet_recommendations(user_analysis)
 ### Expected Integration
 
 1. **Analyze User Profile**
+
    - Identify conditions (acne, dry skin, hair loss, etc.)
    - Detect nutrient deficiencies
 
 2. **Match with Diet Templates**
+
    - Find corresponding keys in `diet_templates.yml`
    - Retrieve food suggestions
 
 3. **Generate Recommendations**
+
    - Include in skincare/haircare recommendations
    - Suggest dietary changes alongside product recommendations
 
@@ -237,40 +256,46 @@ diet_recommendations = engine.get_diet_recommendations(user_analysis)
 ## Food Categories Reference
 
 ### Proteins
+
 - Eggs, chicken, turkey, fish, beef, legumes, yogurt, Greek yogurt
 
 ### Healthy Fats
+
 - Avocado, olive oil, nuts, seeds, fatty fish, coconut
 
 ### Vegetables
+
 - Leafy greens (spinach, kale), bell peppers, carrots, sweet potato, broccoli, tomatoes, cucumber
 
 ### Fruits
+
 - Berries, citrus fruits, watermelon, oranges, kiwi, pomegranate
 
 ### Other
+
 - Whole grains, legumes, probiotics, green tea, water, herbal teas
 
 ---
 
 ## Nutrient Deficiency Mapping
 
-| Deficiency | Foods | Benefits |
-|------------|-------|----------|
-| **Vitamin A** | Sweet potato, carrots, spinach | Cell renewal, eye health |
-| **Vitamin C** | Citrus, kiwi, berries, peppers | Collagen, brightness |
-| **Vitamin D** | Fatty fish, eggs, mushrooms | Immune function, skin health |
-| **Vitamin E** | Almonds, seeds, spinach | Skin protection, antioxidant |
-| **Iron** | Red meat, spinach, lentils | Blood circulation, complexion |
-| **Zinc** | Oysters, beef, seeds, chocolate | Immune function, acne healing |
-| **Biotin** | Eggs, almonds, sweet potato | Hair, skin, nails |
-| **Omega-3** | Salmon, walnuts, flax seeds | Anti-inflammation, hydration |
+| Deficiency    | Foods                           | Benefits                      |
+| ------------- | ------------------------------- | ----------------------------- |
+| **Vitamin A** | Sweet potato, carrots, spinach  | Cell renewal, eye health      |
+| **Vitamin C** | Citrus, kiwi, berries, peppers  | Collagen, brightness          |
+| **Vitamin D** | Fatty fish, eggs, mushrooms     | Immune function, skin health  |
+| **Vitamin E** | Almonds, seeds, spinach         | Skin protection, antioxidant  |
+| **Iron**      | Red meat, spinach, lentils      | Blood circulation, complexion |
+| **Zinc**      | Oysters, beef, seeds, chocolate | Immune function, acne healing |
+| **Biotin**    | Eggs, almonds, sweet potato     | Hair, skin, nails             |
+| **Omega-3**   | Salmon, walnuts, flax seeds     | Anti-inflammation, hydration  |
 
 ---
 
 ## Common Food Recommendations
 
 ### Most Recommended Foods
+
 1. **Leafy Greens** - 18+ conditions
 2. **Berries** - 16+ conditions
 3. **Fatty Fish** - 14+ conditions
@@ -278,6 +303,7 @@ diet_recommendations = engine.get_diet_recommendations(user_analysis)
 5. **Avocado** - 8+ conditions
 
 ### Superfood Combinations
+
 - **Anti-acne:** Berries + fish + greens + probiotics
 - **Anti-aging:** Berries + nuts + citrus + greens
 - **Hair growth:** Eggs + spinach + fish + seeds
@@ -288,16 +314,19 @@ diet_recommendations = engine.get_diet_recommendations(user_analysis)
 ## Integration with Other Systems
 
 ### Recommender Engine
+
 - Uses diet templates to suggest dietary changes
 - Combines with product recommendations
 - Provides holistic skincare routine
 
 ### Analysis System
+
 - Identifies nutritional deficiencies
 - Recommends food sources
 - Tracks dietary improvements
 
 ### Feedback System
+
 - Collects user feedback on diet recommendations
 - Measures dietary compliance
 - Assesses improvement from dietary changes
@@ -307,6 +336,7 @@ diet_recommendations = engine.get_diet_recommendations(user_analysis)
 ## Future Enhancements
 
 ### Possible Additions
+
 - [ ] Meal plans based on diet templates
 - [ ] Weekly food shopping lists
 - [ ] Preparation instructions for foods
@@ -319,6 +349,7 @@ diet_recommendations = engine.get_diet_recommendations(user_analysis)
 - [ ] Restaurant menu suggestions
 
 ### Dietary Restrictions
+
 - Vegan/vegetarian alternatives
 - Gluten-free options
 - Dairy-free options
@@ -368,20 +399,24 @@ acne_foods = diet_map['acne']['foods']
 ### When Using Diet Templates
 
 1. **Combine Multiple Recommendations**
+
    - User with acne: Use `acne` + `omega_3_deficiency` + `zinc_deficiency`
    - User with hair loss: Use `hair_loss` + `iron_deficiency` + `biotin_deficiency`
 
 2. **Prioritize Affordable Options**
+
    - Suggest common foods first
    - Provide budget alternatives
    - Note seasonal availability
 
 3. **Consider Allergies/Restrictions**
+
    - Check user profile for restrictions
    - Suggest alternatives
    - Avoid problematic foods
 
 4. **Gradual Implementation**
+
    - Don't suggest all foods at once
    - Prioritize 5-7 key foods
    - Build habit gradually
@@ -396,16 +431,19 @@ acne_foods = diet_map['acne']['foods']
 ## Troubleshooting
 
 ### Food Not In Templates
+
 - Check for similar conditions
 - Use generic wellness recommendations
 - Consider deficiency-based templates
 
 ### Conflicting Recommendations
+
 - Prioritize most specific condition
 - Combine complementary foods
 - Focus on most impactful nutrients
 
 ### User Not Seeing Results
+
 - Ensure consistency
 - Check for 4-6 week timeline
 - Combine with skincare routine
@@ -415,15 +453,16 @@ acne_foods = diet_map['acne']['foods']
 
 ## Version History
 
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.0 | 2024-01 | Initial release with 30+ templates |
+| Version | Date    | Changes                            |
+| ------- | ------- | ---------------------------------- |
+| 1.0     | 2024-01 | Initial release with 30+ templates |
 
 ---
 
 ## Support
 
 For questions or additions:
+
 1. Check condition mapping in templates
 2. Review food categories
 3. Consult nutrient deficiency section

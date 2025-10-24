@@ -47,7 +47,7 @@ Your SkinHairAI recommender system is now **fully integrated and production-read
     │ SQLite   │                    │  File Store   │
     │ (Dev)    │                    │  (Images)     │
     └──────────┘                    └───────────────┘
-    
+
     ┌─────────────────────────────────────────────────────────┐
     │ PostgreSQL (Production)                                 │
     │ - Analysis records with image references                │
@@ -66,6 +66,7 @@ Your SkinHairAI recommender system is now **fully integrated and production-read
 ### Scenario: User with Oily Skin + Acne
 
 **Step 1: Image Capture & Analysis**
+
 ```
 Frontend: User takes photo of face
          ↓
@@ -91,6 +92,7 @@ Database: Saves Analysis #123
 ```
 
 **Step 2: Recommendation Generation**
+
 ```
 Frontend: User clicks "Get Recommendations"
          ↓
@@ -103,7 +105,7 @@ POST /api/v1/recommend
 Backend: Load Analysis #123 + User Profile
          ↓
 RuleEngine: Apply 9 YAML rules
-         
+
 Rule Matching:
   r001 (Oily + Acne) → MATCH ✓
     - Detect: skin_type = "oily" + "acne" in conditions
@@ -113,17 +115,17 @@ Rule Matching:
       * Diet: Increase omega-3, limit dairy
       * Warnings: None
       * Escalation: None
-  
+
   r007 (Blackheads + Pores) → MATCH ✓
     - Detect: "blackheads" + "enlarged_pores" in conditions
     - Actions:
       * Products: [exfoliating, pore-cleansing]
       * Routines: "Clay mask or BHA to manage pores"
       * Warnings: "Avoid heavy silicones"
-  
+
   r008 (Severe Acne) → NO MATCH
     - Requires "severe_acne" not just "acne"
-  
+
   (6 other rules checked, no matches)
 
 Escalation Check:
@@ -136,9 +138,9 @@ Action Merge (Deduplication):
   - Tags to search: ["exfoliating", "BHA", "oil-control", "pore-cleansing", "acne-fighting"]
          ↓
 Product Lookup: Query database
-  SELECT * FROM products WHERE tags LIKE %exfoliating% 
+  SELECT * FROM products WHERE tags LIKE %exfoliating%
   OR tags LIKE %BHA% ... ORDER BY rating DESC
-  
+
 Result: Fetch 5 products
   - Salicylic Acid 2% (rating 4.3)
   - Niacinamide 10% (rating 4.4)
@@ -196,6 +198,7 @@ Frontend: Display recommendation
 **Location:** `backend/ml/training/model.py`
 
 **Specifications:**
+
 - Architecture: EfficientNet-B0 (4.1M parameters)
 - Accuracy: 92.55%
 - Classes: 34 (30 skin + 5 hair)
@@ -204,6 +207,7 @@ Frontend: Display recommendation
 - Performance: 50-100ms inference per image
 
 **Integration:**
+
 - Loaded in `backend/app/services/ml_infer.py`
 - Exposed via POST `/api/v1/analyze`
 - Returns confidence scores + top conditions
@@ -217,6 +221,7 @@ Frontend: Display recommendation
 **Key Classes:**
 
 #### RuleEngine
+
 ```python
 engine = RuleEngine(yaml_path='rules.yaml')
 recommendation, applied_rules = engine.apply_rules(
@@ -226,6 +231,7 @@ recommendation, applied_rules = engine.apply_rules(
 ```
 
 **Capabilities:**
+
 - Loads 9+ YAML rules on initialization
 - Matches conditions using 4 strategies:
   - Exact match: `skin_type == "oily"`
@@ -288,6 +294,7 @@ r008:
 ```
 
 **Rule Matching Logic:**
+
 1. Check all conditions for a rule
 2. If all conditions match → rule is applicable
 3. If rule is applicable AND no contraindications → apply actions
@@ -301,10 +308,11 @@ r008:
 **Models Located:** `backend/app/recommender/models.py`
 
 #### Product Table
+
 ```python
 class Product(Base):
     __tablename__ = "products"
-    
+
     id: int (PK)
     external_id: str (UNIQUE) - "ordinary_sa_001"
     name: str - "Salicylic Acid 2%"
@@ -321,10 +329,11 @@ class Product(Base):
 ```
 
 #### RecommendationRecord Table
+
 ```python
 class RecommendationRecord(Base):
     __tablename__ = "recommendation_records"
-    
+
     id: int (PK)
     user_id: int (FK) - Link to user
     analysis_id: int (FK) - Link to analysis
@@ -338,10 +347,11 @@ class RecommendationRecord(Base):
 ```
 
 #### RuleLog Table
+
 ```python
 class RuleLog(Base):
     __tablename__ = "rule_logs"
-    
+
     id: int (PK)
     analysis_id: int (FK)
     rule_id: str - "r001"
@@ -351,10 +361,11 @@ class RuleLog(Base):
 ```
 
 #### RecommendationFeedback Table
+
 ```python
 class RecommendationFeedback(Base):
     __tablename__ = "recommendation_feedback"
-    
+
     id: int (PK)
     user_id: int (FK)
     analysis_id: int (FK)
@@ -373,6 +384,7 @@ class RecommendationFeedback(Base):
 **Location:** `backend/app/recommender/seed_products.json` (10 products)
 
 **Products Included:**
+
 1. Hydrating Cleanser (CeraVe) - $10.99
 2. Salicylic Acid 2% (The Ordinary) - $5.90
 3. Moisturizing Cream (Vanicream) - $13.99
@@ -385,11 +397,13 @@ class RecommendationFeedback(Base):
 10. Sulfate-Free Shampoo (SheaMoisture) - $10.99
 
 **Loading Products:**
+
 ```bash
 python -m backend.app.recommender.seed_products --seed
 ```
 
 **Deduplication:**
+
 - Products deduplicated by `external_id`
 - Idempotent: Safe to run multiple times
 - Verification mode: `--verify` flag
@@ -406,12 +420,14 @@ python -m uvicorn backend.app.main:app --reload
 ```
 
 **Expected Output:**
+
 ```
 INFO:     Uvicorn running on http://127.0.0.1:8000
 INFO:     Application startup complete
 ```
 
 **Verify at:**
+
 ```
 http://localhost:8000/docs  # Swagger UI
 http://localhost:8000/api/v1/health  # Health check
@@ -424,6 +440,7 @@ python -m backend.app.recommender.seed_products --seed
 ```
 
 **Expected Output:**
+
 ```
 Loaded 10 products from seed_products.json
 ✓ Inserted 10 new products
@@ -507,6 +524,7 @@ curl -X GET http://localhost:8000/api/v1/recommendations/rec_20251024_143000 \
 - ✅ Tests created and verified
 
 **Next Steps:**
+
 - [ ] Run full test suite: `pytest backend/app/api/v1/test_recommend.py -v`
 - [ ] Test with Swagger UI: http://localhost:8000/docs
 - [ ] Implement frontend integration (React)
@@ -523,7 +541,7 @@ curl -X GET http://localhost:8000/api/v1/recommendations/rec_20251024_143000 \
 ### React Component for Recommendations
 
 ```typescript
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 interface Recommendation {
   recommendation_id: string;
@@ -542,17 +560,19 @@ interface Recommendation {
     reason: string;
   }>;
   escalation: {
-    level: 'urgent' | 'caution' | 'warning' | 'none';
+    level: "urgent" | "caution" | "warning" | "none";
     message: string;
     see_dermatologist: boolean;
   } | null;
 }
 
-export const RecommendationDisplay: React.FC<{ analysisId: number; token: string }> = ({
-  analysisId,
-  token,
-}) => {
-  const [recommendation, setRecommendation] = useState<Recommendation | null>(null);
+export const RecommendationDisplay: React.FC<{
+  analysisId: number;
+  token: string;
+}> = ({ analysisId, token }) => {
+  const [recommendation, setRecommendation] = useState<Recommendation | null>(
+    null
+  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -561,14 +581,14 @@ export const RecommendationDisplay: React.FC<{ analysisId: number; token: string
     setError(null);
 
     try {
-      const response = await fetch('/api/v1/recommend', {
-        method: 'POST',
+      const response = await fetch("/api/v1/recommend", {
+        method: "POST",
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          method: 'analysis_id',
+          method: "analysis_id",
           analysis_id: analysisId,
           include_diet: true,
           include_products: true,
@@ -576,13 +596,13 @@ export const RecommendationDisplay: React.FC<{ analysisId: number; token: string
       });
 
       if (!response.ok) {
-        throw new Error('Failed to generate recommendation');
+        throw new Error("Failed to generate recommendation");
       }
 
       const data = await response.json();
       setRecommendation(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
+      setError(err instanceof Error ? err.message : "Unknown error");
     } finally {
       setLoading(false);
     }
@@ -591,7 +611,7 @@ export const RecommendationDisplay: React.FC<{ analysisId: number; token: string
   if (!recommendation) {
     return (
       <button onClick={generateRecommendation} disabled={loading}>
-        {loading ? 'Generating...' : 'Get Recommendations'}
+        {loading ? "Generating..." : "Get Recommendations"}
       </button>
     );
   }
@@ -702,47 +722,59 @@ pytest -v
 The system implements 4 escalation levels:
 
 ### Level 1: URGENT (Red Alert)
+
 **Trigger:** Severe conditions requiring immediate dermatologist care
+
 - Severe acne (cystic, widespread)
 - Fungal infections
 - Severe eczema with signs of infection
 - Severe allergic reactions
 
-**Action:** 
+**Action:**
+
 - Flash urgent alert to user
 - Display dermatologist contact info
 - Prevent product recommendations
 - Suggest immediate professional care
 
 ### Level 2: CAUTION (Yellow Alert)
+
 **Trigger:** Conditions needing professional evaluation
+
 - Persistent eczema (may need prescription)
 - Rosacea (needs confirmation)
 - Post-treatment (evaluate results)
 
 **Action:**
+
 - Show caution message
 - Recommend professional evaluation
 - Provide general guidance
 - Offer product suggestions for mild cases
 
 ### Level 3: WARNING (Orange Info)
+
 **Trigger:** Important considerations
+
 - Pregnancy contraindication (retinol)
 - Strong sensitivities
 - Multiple active conditions
 
 **Action:**
+
 - Display as info box
 - Note specific contraindications
 - Provide safe alternatives
 
 ### Level 4: NONE (Green)
+
 **Trigger:** Standard skincare routine
+
 - Common conditions
 - No risk factors
 
 **Action:**
+
 - Normal recommendation display
 - Product suggestions
 - Routine guidance
@@ -752,6 +784,7 @@ The system implements 4 escalation levels:
 ## Performance Optimization Tips
 
 ### 1. Cache Rule Engine
+
 ```python
 # Initialize once at startup, reuse for all requests
 engine = RuleEngine()  # ~200ms first load
@@ -761,6 +794,7 @@ recommendation, rules = engine.apply_rules(analysis, profile)
 ```
 
 ### 2. Batch Product Queries
+
 ```python
 # Instead of querying for each product separately
 # Load all at once
@@ -771,12 +805,14 @@ products = db.query(Product).filter(
 ```
 
 ### 3. Use Database Indices
+
 ```sql
 CREATE INDEX idx_products_tags ON products(tags);
 CREATE INDEX idx_rules_applied ON rule_logs(rule_id, applied);
 ```
 
 ### 4. Minimize JSON Processing
+
 ```python
 # Store as JSON in DB, deserialize on demand
 recommendation_json = db.query(RecommendationRecord).first()
@@ -788,21 +824,25 @@ data = json.loads(recommendation_json.content)  # One parse
 ## Troubleshooting
 
 ### Issue: "Rule engine not initialized"
+
 ```
 Solution: Ensure rules.yaml exists and engine is created on app startup
 ```
 
 ### Issue: "Products not found"
+
 ```
 Solution: Run seed_products.py to load initial products
 ```
 
 ### Issue: "Analysis record not found"
+
 ```
 Solution: Ensure analysis was created before requesting recommendations
 ```
 
 ### Issue: "JWT token invalid"
+
 ```
 Solution: Get fresh token, ensure Authorization header format is correct
 ```

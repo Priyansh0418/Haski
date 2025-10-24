@@ -8,8 +8,10 @@ from .db.base import Base
 
 # ensure models are imported so they are registered on Base
 from .models import db_models  # noqa: F401
+from .recommender import models as recommender_models  # noqa: F401
 
 from .api.v1 import router as api_v1_router
+from .api.admin import router as admin_router
 
 
 APP_TITLE = "SkinHairAI API"
@@ -45,6 +47,9 @@ app.add_middleware(
 
 # include API v1 router (it already includes auth/profile/photos/analyze)
 app.include_router(api_v1_router, prefix="/api/v1")
+
+# include admin router for management endpoints
+app.include_router(admin_router, prefix="/admin")
 
 
 if __name__ == "__main__":

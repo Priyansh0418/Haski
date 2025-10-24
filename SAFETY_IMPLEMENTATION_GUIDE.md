@@ -18,10 +18,10 @@ from typing import Optional, List
 
 class RecommendationResponse(BaseModel):
     """Recommendation response with required safety disclaimer."""
-    
+
     # Add this disclaimer field at the top
     disclaimer: str = "Informational only — not medical advice. Consult a healthcare professional for medical concerns."
-    
+
     recommendation_id: str
     routines: List[dict]
     products: List[dict]
@@ -29,7 +29,7 @@ class RecommendationResponse(BaseModel):
     escalation: Optional[dict] = None
     applied_rules: List[str]
     metadata: dict
-    
+
     class Config:
         schema_extra = {
             "example": {
@@ -63,13 +63,13 @@ async def generate_recommendation(
 ) -> RecommendationResponse:
     """
     Generate skincare/haircare recommendations.
-    
+
     ⚠️ IMPORTANT: All responses include a disclaimer that this is not medical advice.
     """
     try:
         # Generate recommendation logic...
         recommendation = engine.generate(request)
-        
+
         # Build response with REQUIRED disclaimer field
         response = RecommendationResponse(
             disclaimer="Informational only — not medical advice. Consult a healthcare professional for medical concerns.",  # MANDATORY
@@ -85,9 +85,9 @@ async def generate_recommendation(
                 "analysis_method": request.method
             }
         )
-        
+
         return response
-        
+
     except Exception as e:
         logger.error(f"Recommendation generation failed: {e}")
         raise HTTPException(status_code=500, detail="Failed to generate recommendation")
@@ -122,13 +122,13 @@ Update `backend/app/schemas/pydantic_schemas.py`:
 ```python
 class EscalationResponse(BaseModel):
     """Escalation response for severe conditions requiring medical attention."""
-    
+
     level: str  # "urgent", "caution", "warning"
     condition: str  # e.g., "sudden_hair_loss", "severe_infection"
     high_priority: bool  # ⚠️ MANDATORY: Set to True for medical referrals
     message: str  # Clear guidance for user
     recommended_next_steps: List[str]  # List of actions user should take
-    
+
     class Config:
         schema_extra = {
             "example": {
@@ -152,7 +152,7 @@ Update `backend/app/services/escalation_handler.py` (or your equivalent):
 ```python
 class EscalationHandler:
     """Detect and handle severe conditions requiring medical attention."""
-    
+
     # Conditions that trigger high_priority = true
     URGENT_CONDITIONS = {
         "sudden_hair_loss",
@@ -161,15 +161,15 @@ class EscalationHandler:
         "severe_acne_cystic",
         "severe_eczema_flare",
     }
-    
+
     def detect_escalation(self, analysis: dict) -> Optional[EscalationResponse]:
         """
         Detect if conditions warrant escalation.
-        
+
         ⚠️ MANDATORY: Return high_priority=True for urgent conditions.
         """
         conditions = analysis.get("conditions_detected", [])
-        
+
         for condition in conditions:
             if condition in self.URGENT_CONDITIONS:
                 return EscalationResponse(
@@ -179,7 +179,7 @@ class EscalationHandler:
                     message=self._get_urgent_message(condition),
                     recommended_next_steps=self._get_next_steps(condition)
                 )
-        
+
         # Check for severe confidence scores
         confidence = analysis.get("confidence_scores", {})
         if any(score > 0.9 for score in confidence.values()):
@@ -195,9 +195,9 @@ class EscalationHandler:
                         "Prepare list of symptoms"
                     ]
                 )
-        
+
         return None
-    
+
     def _get_urgent_message(self, condition: str) -> str:
         """Get urgent medical guidance message."""
         messages = {
@@ -206,7 +206,7 @@ class EscalationHandler:
             "severe_rash": "Severe rashes require professional evaluation. PLEASE CONTACT A DERMATOLOGIST OR PHYSICIAN IMMEDIATELY.",
         }
         return messages.get(condition, "This condition requires professional medical evaluation.")
-    
+
     def _get_next_steps(self, condition: str) -> List[str]:
         """Get recommended next steps."""
         return [
@@ -225,10 +225,10 @@ Update `backend/app/api/v1/recommend.py`:
 @router.post("/recommend", response_model=RecommendationResponse, status_code=201)
 async def generate_recommendation(request: RecommendationRequest, ...):
     # ... existing code ...
-    
+
     # Check for escalation
     escalation = escalation_handler.detect_escalation(analysis)
-    
+
     # Build escalation response if needed
     escalation_response = None
     if escalation:
@@ -239,18 +239,18 @@ async def generate_recommendation(request: RecommendationRequest, ...):
             "message": escalation.message,
             "recommended_next_steps": escalation.recommended_next_steps
         }
-    
+
     # Update metadata for escalations
     metadata = {
         "generated_at": datetime.utcnow().isoformat(),
         "processing_time_ms": processing_time,
         "analysis_method": request.method,
     }
-    
+
     if escalation:
         metadata["escalation_triggered"] = True
         metadata["medical_referral_required"] = escalation.high_priority
-    
+
     return RecommendationResponse(
         disclaimer="Informational only — not medical advice. URGENT: Seek immediate medical attention." if escalation else "Informational only — not medical advice. Consult a healthcare professional for medical concerns.",
         recommendation_id=recommendation.id,
@@ -296,9 +296,9 @@ Update `backend/app/models/db_models.py`:
 ```python
 class Product(Base):
     """Product model with OTC verification."""
-    
+
     __tablename__ = "products"
-    
+
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     brand = Column(String, nullable=False)
@@ -307,16 +307,16 @@ class Product(Base):
     rating = Column(Float)
     ingredients = Column(JSON)
     tags = Column(JSON)
-    
+
     # ⚠️ MANDATORY OTC VERIFICATION FIELDS
     otc_verified: bool = Column(Boolean, default=False, nullable=False)  # MUST be True
     prescription_required: bool = Column(Boolean, default=False, nullable=False)  # MUST be False
     verified_by: str = Column(String)  # Admin who verified
     verified_at: datetime = Column(DateTime, default=datetime.utcnow)
-    
+
     # Prohibited substances check
     is_prohibited: bool = Column(Boolean, default=False)  # Flag if suspicious
-    
+
     class Config:
         orm_mode = True
 ```
@@ -328,7 +328,7 @@ Update `backend/app/schemas/pydantic_schemas.py`:
 ```python
 class ProductResponse(BaseModel):
     """Product response with OTC verification."""
-    
+
     id: int
     name: str
     brand: str
@@ -337,11 +337,11 @@ class ProductResponse(BaseModel):
     rating: float
     tags: List[str]
     ingredients: List[str]
-    
+
     # ⚠️ MANDATORY OTC FIELDS
     otc_verified: bool  # Must be True
     prescription_required: bool  # Must be False
-    
+
     class Config:
         orm_mode = True
         schema_extra = {
@@ -372,12 +372,12 @@ def _get_products_for_recommendation(
 ) -> List[ProductResponse]:
     """
     Get products for recommendation.
-    
+
     ⚠️ MANDATORY: ONLY return OTC products.
     """
     # Get recommended products from engine
     product_ids = engine.get_product_ids(analysis)
-    
+
     # Filter ONLY OTC products
     products = db.query(Product).filter(
         Product.id.in_(product_ids),
@@ -385,10 +385,10 @@ def _get_products_for_recommendation(
         Product.prescription_required == False,  # ⚠️ MANDATORY FILTER
         Product.is_prohibited == False  # ⚠️ SAFETY CHECK
     ).all()
-    
+
     if not products:
         logger.warning(f"No OTC products found for conditions: {analysis.get('conditions_detected')}")
-    
+
     # Convert to response schema (automatically includes otc_verified and prescription_required)
     return [ProductResponse.from_orm(p) for p in products]
 ```
@@ -432,7 +432,7 @@ Update `backend/app/schemas/pydantic_schemas.py`:
 ```python
 class FeedbackRequest(BaseModel):
     """Feedback request including adverse reactions."""
-    
+
     recommendation_id: str
     helpful_rating: int  # 1-5
     product_satisfaction: Optional[int] = None
@@ -440,11 +440,11 @@ class FeedbackRequest(BaseModel):
     would_recommend: Optional[bool] = None
     timeframe: Optional[str] = None
     feedback_text: Optional[str] = None
-    
+
     # ⚠️ MANDATORY: Adverse reactions tracking
     adverse_reactions: Optional[List[str]] = None  # e.g., ["redness", "itching", "allergic_reaction"]
     product_ratings: Optional[dict] = None
-    
+
     @validator('helpful_rating')
     def validate_rating(cls, v):
         if not 1 <= v <= 5:
@@ -465,17 +465,17 @@ async def submit_feedback(
 ):
     """
     Submit feedback on recommendation.
-    
+
     ⚠️ MANDATORY: Handle adverse reactions.
     """
     # Validate recommendation exists
     recommendation = db.query(RecommendationRecord).filter(
         RecommendationRecord.id == request.recommendation_id
     ).first()
-    
+
     if not recommendation:
         raise HTTPException(status_code=404, detail=f"Recommendation '{request.recommendation_id}' not found")
-    
+
     # Store feedback
     feedback = RecommendationFeedback(
         recommendation_id=request.recommendation_id,
@@ -490,10 +490,10 @@ async def submit_feedback(
         product_ratings=request.product_ratings,
         created_at=datetime.utcnow()
     )
-    
+
     db.add(feedback)
     db.commit()
-    
+
     # ⚠️ CRITICAL: Handle adverse reactions
     if request.adverse_reactions and len(request.adverse_reactions) > 0:
         await _handle_adverse_reactions(
@@ -502,18 +502,18 @@ async def submit_feedback(
             current_user,
             db
         )
-    
+
     return FeedbackResponse.from_orm(feedback)
 
 
 async def _handle_adverse_reactions(recommendation, feedback_request, user, db):
     """
     Handle adverse reactions reported by user.
-    
+
     ⚠️ MANDATORY: Flag product, create incident, alert admin.
     """
     logger.warning(f"ADVERSE REACTION reported by user {user.id}: {feedback_request.adverse_reactions}")
-    
+
     # 1. Flag products in recommendation for review
     for product_id in recommendation.product_ids:
         product = db.query(Product).filter(Product.id == product_id).first()
@@ -521,7 +521,7 @@ async def _handle_adverse_reactions(recommendation, feedback_request, user, db):
             product.is_prohibited = True
             product.verified_by = "ADVERSE_REACTION_FLAG"
             product.verified_at = datetime.utcnow()
-    
+
     # 2. Create incident for admin review
     incident = AdverseReactionIncident(
         user_id=user.id,
@@ -533,15 +533,15 @@ async def _handle_adverse_reactions(recommendation, feedback_request, user, db):
         created_at=datetime.utcnow(),
         status="new"
     )
-    
+
     db.add(incident)
-    
+
     # 3. Send admin alert
     await _send_admin_alert(incident, user)
-    
+
     # 4. Log to audit
     audit_logger.log_adverse_reaction(incident)
-    
+
     db.commit()
 
 
@@ -549,17 +549,17 @@ async def _send_admin_alert(incident: AdverseReactionIncident, user: User):
     """Send alert to admin team."""
     message = f"""
     ⚠️ ADVERSE REACTION REPORTED
-    
+
     User: {user.email} (ID: {user.id})
     Reactions: {', '.join(incident.reactions)}
     Products: {incident.product_ids}
     Severity: {incident.severity}
     Time: {incident.created_at}
-    
+
     Incident ID: {incident.id}
     Action Required: Review products and user recommendations
     """
-    
+
     # Send to admin email/Slack
     await send_admin_notification(message)
 ```
@@ -602,7 +602,7 @@ client = TestClient(app)
 
 class TestSafetyRequirements:
     """Test all mandatory safety requirements."""
-    
+
     def test_recommendation_includes_disclaimer(self, user_token):
         """Test 1: Every recommendation includes disclaimer."""
         response = client.post(
@@ -616,13 +616,13 @@ class TestSafetyRequirements:
                 "gender": "F"
             }
         )
-        
+
         assert response.status_code == 201
         data = response.json()
         assert "disclaimer" in data
         assert "not medical advice" in data["disclaimer"]
         assert len(data["disclaimer"]) > 0
-    
+
     def test_escalation_has_high_priority_flag(self, user_token):
         """Test 2: Escalations include high_priority flag."""
         response = client.post(
@@ -636,13 +636,13 @@ class TestSafetyRequirements:
                 "gender": "F"
             }
         )
-        
+
         assert response.status_code == 201
         data = response.json()
         assert data["escalation"] is not None
         assert data["escalation"]["high_priority"] == True
         assert "SEEK MEDICAL ATTENTION" in data["escalation"]["message"]
-    
+
     def test_products_otc_verified(self, user_token):
         """Test 3: All products are OTC verified."""
         response = client.post(
@@ -656,14 +656,14 @@ class TestSafetyRequirements:
                 "gender": "F"
             }
         )
-        
+
         assert response.status_code == 201
         data = response.json()
-        
+
         for product in data["products"]:
             assert product["otc_verified"] == True
             assert product["prescription_required"] == False
-    
+
     def test_adverse_reactions_stored(self, user_token, recommendation_id):
         """Test 4: Adverse reactions are stored."""
         response = client.post(
@@ -676,7 +676,7 @@ class TestSafetyRequirements:
                 "feedback_text": "Allergic reaction"
             }
         )
-        
+
         assert response.status_code == 201
         data = response.json()
         assert data["adverse_reactions"] == ["redness", "itching"]
@@ -721,6 +721,7 @@ Before deploying to production:
 ### Issue: Disclaimer not appearing
 
 **Solution:** Verify:
+
 1. Schema includes `disclaimer` field
 2. Endpoint returns `disclaimer` in response
 3. Response model is `RecommendationResponse`
@@ -737,6 +738,7 @@ response_dict = {
 ### Issue: High priority flag not set
 
 **Solution:**
+
 1. Check escalation detection logic
 2. Verify condition is in `URGENT_CONDITIONS` list
 3. Test with conditions that should escalate:
@@ -747,6 +749,7 @@ response_dict = {
 ### Issue: Non-OTC products appearing
 
 **Solution:**
+
 1. Database query must include:
    - `otc_verified == True`
    - `prescription_required == False`
