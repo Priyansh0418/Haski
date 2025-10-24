@@ -1,0 +1,653 @@
+# Diet Templates for Skincare & Haircare Recommendations
+# Maps skin conditions and deficiencies to nutritional food suggestions
+# Used by the recommendation engine to suggest dietary changes
+#
+# Format:
+#   - key: [condition_name]
+#     foods: [list of recommended foods]
+#     description: [why these foods help]
+#     deficiency_type: [vitamin/mineral deficiency addressed]
+
+# =============================================================================
+# ACNE & BREAKOUTS
+# =============================================================================
+
+- key: acne
+  foods:
+    - "leafy greens (spinach, kale)"
+    - "berries (blueberries, raspberries)"
+    - "omega-3 rich fish (salmon, sardines)"
+    - "probiotics (yogurt, kefir, sauerkraut)"
+    - "green tea"
+    - "almonds"
+    - "turmeric"
+  description: "Anti-inflammatory foods that reduce sebum production and support skin healing"
+  deficiency_type: "omega-3, zinc, vitamin A"
+  benefits:
+    - Reduces inflammation
+    - Lowers sebum production
+    - Supports skin barrier
+    - Fights acne-causing bacteria
+
+- key: oily_skin
+  foods:
+    - "leafy greens"
+    - "citrus fruits"
+    - "lean proteins (chicken, turkey)"
+    - "whole grains"
+    - "green tea"
+    - "tomatoes"
+    - "cucumber"
+  description: "Light foods that regulate sebum without clogging pores"
+  deficiency_type: "B vitamins, zinc"
+  benefits:
+    - Regulates sebum production
+    - Balances skin pH
+    - Reduces oil accumulation
+    - Supports skin clarity
+
+- key: combination_skin
+  foods:
+    - "olive oil"
+    - "avocado"
+    - "berries"
+    - "whole grains"
+    - "nuts and seeds"
+    - "lean fish"
+    - "broccoli"
+  description: "Balanced nutrition that hydrates dry areas and calms oily zones"
+  deficiency_type: "vitamin C, vitamin E, omega-3"
+  benefits:
+    - Balances hydration levels
+    - Supports skin elasticity
+    - Regulates oil production
+    - Promotes skin health overall
+
+# =============================================================================
+# DRY SKIN & DEHYDRATION
+# =============================================================================
+
+- key: dry_skin
+  foods:
+    - "avocado"
+    - "nuts and seeds (walnuts, flax seeds)"
+    - "sweet potato"
+    - "water-rich fruits (watermelon, oranges)"
+    - "olive oil"
+    - "fatty fish (salmon, mackerel)"
+    - "coconut"
+    - "egg yolks"
+  description: "Rich foods that provide essential fatty acids and hydration"
+  deficiency_type: "omega-3, vitamin E, vitamin A"
+  benefits:
+    - Increases skin hydration
+    - Strengthens skin barrier
+    - Improves skin elasticity
+    - Provides nourishment from within
+
+- key: dehydration
+  foods:
+    - "water (8-10 glasses daily)"
+    - "watermelon"
+    - "cucumber"
+    - "coconut water"
+    - "herbal teas"
+    - "citrus fruits"
+    - "leafy greens"
+    - "celery"
+  description: "Hydrating foods and fluids that restore skin moisture"
+  deficiency_type: "water, electrolytes"
+  benefits:
+    - Restores skin hydration
+    - Improves skin plumpness
+    - Enhances natural glow
+    - Supports detoxification
+
+- key: sensitive_skin
+  foods:
+    - "leafy greens"
+    - "berries (especially blueberries)"
+    - "omega-3 fish"
+    - "probiotics"
+    - "turmeric"
+    - "ginger"
+    - "chamomile tea"
+    - "oats"
+  description: "Anti-inflammatory foods that calm and protect sensitive skin"
+  deficiency_type: "omega-3, antioxidants"
+  benefits:
+    - Reduces skin inflammation
+    - Calms irritation
+    - Strengthens skin barrier
+    - Supports skin healing
+
+# =============================================================================
+# AGING & WRINKLES
+# =============================================================================
+
+- key: aging_skin
+  foods:
+    - "berries (rich in antioxidants)"
+    - "leafy greens"
+    - "nuts and seeds"
+    - "fatty fish (omega-3)"
+    - "red grapes"
+    - "dark chocolate (70%+ cocoa)"
+    - "citrus fruits"
+    - "tomatoes"
+    - "sweet potato"
+  description: "Antioxidant-rich foods that fight free radicals and support collagen"
+  deficiency_type: "antioxidants, vitamin C, omega-3"
+  benefits:
+    - Fights free radical damage
+    - Supports collagen production
+    - Improves skin elasticity
+    - Reduces fine lines
+
+- key: wrinkles
+  foods:
+    - "citrus fruits (vitamin C)"
+    - "leafy greens"
+    - "berries"
+    - "nuts"
+    - "avocado"
+    - "fatty fish"
+    - "bell peppers"
+    - "carrots"
+  description: "Collagen-supporting foods rich in vitamin C and antioxidants"
+  deficiency_type: "vitamin C, copper, amino acids"
+  benefits:
+    - Promotes collagen synthesis
+    - Improves skin firmness
+    - Smooths fine lines
+    - Enhances skin texture
+
+- key: fine_lines
+  foods:
+    - "berries"
+    - "leafy greens"
+    - "orange vegetables"
+    - "nuts"
+    - "seeds"
+    - "fatty fish"
+    - "olive oil"
+    - "water"
+  description: "Hydrating and antioxidant foods that plump skin and reduce lines"
+  deficiency_type: "vitamin A, vitamin C, water"
+  benefits:
+    - Plumps fine lines
+    - Improves skin hydration
+    - Supports skin renewal
+    - Boosts natural radiance
+
+# =============================================================================
+# DARK CIRCLES & PUFFINESS
+# =============================================================================
+
+- key: dark_circles
+  foods:
+    - "iron-rich foods (spinach, red meat)"
+    - "berries"
+    - "leafy greens"
+    - "citrus fruits"
+    - "almonds"
+    - "salmon"
+    - "dark chocolate"
+    - "beets"
+  description: "Iron and antioxidant foods that improve blood circulation and skin tone"
+  deficiency_type: "iron, vitamin C"
+  benefits:
+    - Improves blood circulation
+    - Reduces dark discoloration
+    - Brightens under-eye area
+    - Boosts antioxidant defense
+
+- key: puffy_eyes
+  foods:
+    - "foods low in sodium"
+    - "potassium-rich (banana, coconut water)"
+    - "anti-inflammatory (ginger, turmeric)"
+    - "leafy greens"
+    - "berries"
+    - "cucumber"
+    - "green tea"
+    - "water"
+  description: "Foods that reduce fluid retention and inflammation"
+  deficiency_type: "potassium, water"
+  benefits:
+    - Reduces water retention
+    - Decreases puffiness
+    - Soothes inflammation
+    - Promotes lymphatic drainage
+
+# =============================================================================
+# PIGMENTATION & HYPERPIGMENTATION
+# =============================================================================
+
+- key: hyperpigmentation
+  foods:
+    - "vitamin C rich foods (citrus, kiwi)"
+    - "leafy greens"
+    - "berries"
+    - "turmeric"
+    - "ginger"
+    - "green tea"
+    - "tomatoes"
+    - "carrots"
+  description: "Foods that inhibit melanin production and provide antioxidants"
+  deficiency_type: "vitamin C, polyphenols"
+  benefits:
+    - Inhibits melanin overproduction
+    - Brightens skin tone
+    - Provides UV protection
+    - Supports skin clarity
+
+- key: dark_spots
+  foods:
+    - "citrus fruits"
+    - "berries"
+    - "leafy greens"
+    - "red grapes"
+    - "pomegranate"
+    - "green tea"
+    - "turmeric"
+    - "water"
+  description: "Antioxidant foods that fade existing spots and prevent new ones"
+  deficiency_type: "vitamin C, antioxidants"
+  benefits:
+    - Fades dark spots
+    - Improves skin tone
+    - Prevents sun damage
+    - Brightens complexion
+
+# =============================================================================
+# HAIR HEALTH
+# =============================================================================
+
+- key: hair_loss
+  foods:
+    - "eggs (biotin, protein)"
+    - "spinach (iron, vitamins)"
+    - "lean meat (zinc, B vitamins)"
+    - "oily fish (omega-3)"
+    - "sweet potato (beta-carotene)"
+    - "nuts and seeds (biotin)"
+    - "legumes (protein, iron)"
+    - "Greek yogurt (protein)"
+  description: "Protein, iron, and biotin-rich foods that strengthen hair follicles"
+  deficiency_type: "biotin, iron, zinc, protein, B vitamins"
+  benefits:
+    - Strengthens hair roots
+    - Improves hair growth
+    - Prevents hair breakage
+    - Promotes scalp health
+
+- key: dry_hair
+  foods:
+    - "fatty fish (salmon, mackerel)"
+    - "nuts and seeds"
+    - "avocado"
+    - "olive oil"
+    - "eggs"
+    - "coconut"
+    - "sweet potato"
+    - "berries"
+  description: "Omega-3 and antioxidant foods that hydrate and nourish hair"
+  deficiency_type: "omega-3, vitamin E"
+  benefits:
+    - Hydrates hair strands
+    - Reduces frizz
+    - Adds shine
+    - Improves hair texture
+
+- key: oily_scalp
+  foods:
+    - "leafy greens"
+    - "lean proteins"
+    - "whole grains"
+    - "citrus fruits"
+    - "berries"
+    - "tea (green or black)"
+    - "tomatoes"
+    - "cucumber"
+  description: "Light foods that regulate sebum without excess oil"
+  deficiency_type: "B vitamins, zinc"
+  benefits:
+    - Regulates scalp oil"
+    - Balances pH"
+    - Reduces greasiness"
+    - Promotes hair clarity"
+
+- key: dandruff
+  foods:
+    - "fatty fish (selenium, omega-3)"
+    - "eggs (selenium, biotin)"
+    - "nuts and seeds (zinc, selenium)"
+    - "leafy greens (B vitamins)"
+    - "probiotics (yogurt, kefir)"
+    - "zinc-rich foods (pumpkin seeds)"
+    - "turmeric (anti-inflammatory)"
+    - "water"
+  description: "Foods with selenium, zinc, and probiotics that support scalp health"
+  deficiency_type: "selenium, zinc, B vitamins, probiotics"
+  benefits:
+    - Reduces scalp flaking
+    - Soothes inflammation
+    - Supports healthy scalp microbiome
+    - Improves hair health
+
+- key: brittle_hair
+  foods:
+    - "eggs"
+    - "fatty fish"
+    - "nuts and seeds"
+    - "legumes"
+    - "sweet potato"
+    - "berries"
+    - "olive oil"
+    - "Greek yogurt"
+  description: "Protein and micronutrient foods that strengthen hair structure"
+  deficiency_type: "protein, biotin, iron, zinc"
+  benefits:
+    - Strengthens hair strands
+    - Reduces breakage
+    - Improves elasticity
+    - Promotes healthy growth
+
+- key: hair_thinning
+  foods:
+    - "iron-rich foods (spinach, red meat)"
+    - "biotin-rich foods (eggs, almonds)"
+    - "protein (chicken, fish, legumes)"
+    - "zinc sources (oysters, beef)"
+    - "vitamin B12 (salmon, beef)"
+    - "vitamin D (fatty fish, egg yolks)"
+    - "copper sources (cashews, dark chocolate)"
+  description: "Nutrients that prevent hair loss and support thickness"
+  deficiency_type: "iron, biotin, zinc, B12, vitamin D"
+  benefits:
+    - Prevents hair thinning
+    - Supports hair density
+    - Improves hair strength
+    - Promotes new growth
+
+# =============================================================================
+# GENERAL SKIN HEALTH
+# =============================================================================
+
+- key: dull_skin
+  foods:
+    - "berries (antioxidants)"
+    - "leafy greens"
+    - "citrus fruits"
+    - "fatty fish"
+    - "nuts and seeds"
+    - "water"
+    - "green tea"
+    - "tomatoes"
+  description: "Antioxidant and hydrating foods that restore radiance"
+  deficiency_type: "antioxidants, vitamin C"
+  benefits:
+    - Restores natural glow
+    - Improves skin radiance
+    - Brightens complexion
+    - Supports skin clarity
+
+- key: uneven_skin_tone
+  foods:
+    - "citrus fruits"
+    - "berries"
+    - "leafy greens"
+    - "turmeric"
+    - "green tea"
+    - "tomatoes"
+    - "red grapes"
+    - "pomegranate"
+  description: "Foods that promote even skin tone and natural radiance"
+  deficiency_type: "vitamin C, antioxidants"
+  benefits:
+    - Evens skin tone
+    - Reduces discoloration
+    - Brightens complexion
+    - Promotes clarity
+
+- key: congested_skin
+  foods:
+    - "leafy greens"
+    - "berries"
+    - "whole grains"
+    - "lean proteins"
+    - "probiotics"
+    - "green tea"
+    - "turmeric"
+    - "water"
+  description: "Detoxifying foods that clear congestion and support skin clarity"
+  deficiency_type: "fiber, probiotics"
+  benefits:
+    - Detoxifies skin
+    - Clears congestion
+    - Reduces blackheads
+    - Improves skin clarity
+
+- key: inflamed_skin
+  foods:
+    - "fatty fish (omega-3)"
+    - "berries"
+    - "leafy greens"
+    - "turmeric"
+    - "ginger"
+    - "green tea"
+    - "probiotics"
+    - "dark chocolate"
+  description: "Anti-inflammatory foods that soothe and calm skin"
+  deficiency_type: "omega-3, antioxidants"
+  benefits:
+    - Reduces inflammation
+    - Soothes irritated skin
+    - Calms redness
+    - Supports healing
+
+# =============================================================================
+# DEFICIENCY-BASED RECOMMENDATIONS
+# =============================================================================
+
+- key: vitamin_a_deficiency
+  foods:
+    - "sweet potato"
+    - "carrots"
+    - "spinach"
+    - "kale"
+    - "red pepper"
+    - "broccoli"
+    - "egg yolk"
+    - "salmon"
+  description: "Foods rich in vitamin A for skin cell renewal and eye health"
+  deficiency_type: "vitamin A"
+  benefits:
+    - Supports skin cell turnover
+    - Improves skin texture
+    - Reduces acne
+    - Supports eye health
+
+- key: vitamin_c_deficiency
+  foods:
+    - "orange"
+    - "kiwi"
+    - "strawberries"
+    - "bell pepper"
+    - "broccoli"
+    - "tomato"
+    - "grapefruit"
+    - "papaya"
+  description: "Vitamin C sources for collagen synthesis and antioxidant protection"
+  deficiency_type: "vitamin C"
+  benefits:
+    - Supports collagen production
+    - Brightens skin
+    - Provides antioxidant protection
+    - Improves wound healing
+
+- key: vitamin_d_deficiency
+  foods:
+    - "fatty fish (salmon, sardines)"
+    - "egg yolks"
+    - "mushrooms"
+    - "fortified milk"
+    - "cod liver oil"
+    - "trout"
+    - "mackerel"
+  description: "Vitamin D sources for immune function and skin health"
+  deficiency_type: "vitamin D"
+  benefits:
+    - Supports immune function
+    - Improves skin condition
+    - Reduces inflammation
+    - Supports bone health
+
+- key: vitamin_e_deficiency
+  foods:
+    - "almonds"
+    - "sunflower seeds"
+    - "spinach"
+    - "vegetable oils"
+    - "avocado"
+    - "wheat germ"
+    - "hazelnuts"
+    - "pine nuts"
+  description: "Vitamin E sources for skin protection and cell repair"
+  deficiency_type: "vitamin E"
+  benefits:
+    - Protects skin from damage
+    - Supports cell repair
+    - Provides antioxidant protection
+    - Improves skin elasticity
+
+- key: iron_deficiency
+  foods:
+    - "red meat"
+    - "spinach"
+    - "lentils"
+    - "beans"
+    - "oysters"
+    - "fortified cereals"
+    - "dark chocolate"
+    - "beets"
+  description: "Iron-rich foods for oxygen transport and skin health"
+  deficiency_type: "iron"
+  benefits:
+    - Improves blood oxygen"
+    - Reduces dark circles"
+    - Supports energy"
+    - Improves complexion"
+
+- key: zinc_deficiency
+  foods:
+    - "oysters"
+    - "beef"
+    - "pumpkin seeds"
+    - "chickpeas"
+    - "cashews"
+    - "almonds"
+    - "spinach"
+    - "dark chocolate"
+  description: "Zinc sources for immune function and acne healing"
+  deficiency_type: "zinc"
+  benefits:
+    - Supports immune function
+    - Promotes acne healing
+    - Supports wound repair
+    - Improves skin clarity
+
+- key: biotin_deficiency
+  foods:
+    - "eggs"
+    - "almonds"
+    - "sweet potato"
+    - "spinach"
+    - "salmon"
+    - "mushrooms"
+    - "sunflower seeds"
+    - "peanuts"
+  description: "Biotin sources for hair, skin, and nail health"
+  deficiency_type: "biotin"
+  benefits:
+    - Supports hair growth
+    - Improves skin health
+    - Strengthens nails
+    - Supports energy metabolism
+
+- key: omega_3_deficiency
+  foods:
+    - "salmon"
+    - "sardines"
+    - "mackerel"
+    - "walnuts"
+    - "flax seeds"
+    - "chia seeds"
+    - "hemp seeds"
+    - "algae supplements"
+  description: "Omega-3 sources for skin hydration and anti-inflammation"
+  deficiency_type: "omega-3"
+  benefits:
+    - Hydrates skin from within
+    - Reduces inflammation
+    - Supports skin barrier
+    - Improves overall skin health
+
+- key: collagen_deficiency
+  foods:
+    - "bone broth"
+    - "citrus fruits (vitamin C for collagen synthesis)"
+    - "berries"
+    - "leafy greens"
+    - "amino acid-rich (eggs, meat, fish)"
+    - "garlic"
+    - "red peppers"
+    - "tomatoes"
+  description: "Foods that support collagen production and strength"
+  deficiency_type: "collagen, amino acids, vitamin C"
+  benefits:
+    - Supports collagen production
+    - Improves skin elasticity
+    - Reduces wrinkles
+    - Strengthens connective tissue
+
+# =============================================================================
+# LIFESTYLE & HYDRATION
+# =============================================================================
+
+- key: poor_hydration
+  foods:
+    - "water (8-10 glasses daily)"
+    - "coconut water"
+    - "herbal tea"
+    - "cucumber"
+    - "watermelon"
+    - "oranges"
+    - "strawberries"
+    - "celery"
+  description: "Hydrating foods and fluids for overall skin health"
+  deficiency_type: "water, electrolytes"
+  benefits:
+    - Improves skin hydration
+    - Enhances natural glow
+    - Supports detoxification
+    - Improves energy levels
+
+- key: general_wellness
+  foods:
+    - "balanced vegetables"
+    - "lean proteins"
+    - "whole grains"
+    - "healthy fats"
+    - "fruits"
+    - "probiotics"
+    - "herbal teas"
+    - "water"
+  description: "General balanced nutrition for overall wellness and skin health"
+  deficiency_type: "all nutrients"
+  benefits:
+    - Supports overall health
+    - Improves skin condition
+    - Boosts energy
+    - Promotes longevity
