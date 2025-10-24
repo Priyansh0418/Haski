@@ -1,0 +1,350 @@
+[
+  {
+    "name": "Hydrating Facial Cleanser",
+    "brand": "CeraVe",
+    "category": "cleanser",
+    "price_usd": 899,
+    "url": "https://www.cerave.com/skincare/hydrating-cleanser",
+    "ingredients": [
+      "water",
+      "glycerin",
+      "hyaluronic acid",
+      "ceramides",
+      "cetearyl alcohol",
+      "methylisothiazolinone"
+    ],
+    "tags": [
+      "gentle",
+      "hydrating",
+      "non-comedogenic",
+      "fragrance-free",
+      "dermatologist-recommended"
+    ],
+    "dermatologically_safe": true,
+    "recommended_for": [
+      "dry_skin",
+      "sensitive",
+      "eczema",
+      "combination"
+    ],
+    "avoid_for": [],
+    "avg_rating": 450,
+    "review_count": 2340,
+    "source": "sephora",
+    "external_id": "cerave_cleanser_001"
+  },
+  {
+    "name": "Salicylic Acid 2% Solution",
+    "brand": "The Ordinary",
+    "category": "treatment",
+    "price_usd": 590,
+    "url": "https://theordinary.deciem.com/product/rbn-salicylic-acid-2pct-solution-30ml",
+    "ingredients": [
+      "salicylic acid",
+      "glycerin",
+      "panthenol",
+      "allantoin",
+      "dimethyl isosorbide"
+    ],
+    "tags": [
+      "exfoliating",
+      "BHA",
+      "acne-fighting",
+      "pore-cleansing",
+      "affordable"
+    ],
+    "dermatologically_safe": true,
+    "recommended_for": [
+      "acne",
+      "blackheads",
+      "oily_skin",
+      "congestion"
+    ],
+    "avoid_for": [
+      "very_sensitive",
+      "pregnancy"
+    ],
+    "avg_rating": 430,
+    "review_count": 5890,
+    "source": "sephora",
+    "external_id": "ordinary_sa_001"
+  },
+  {
+    "name": "Moisturizing Cream",
+    "brand": "Vanicream",
+    "category": "moisturizer",
+    "price_usd": 799,
+    "url": "https://www.vanicream.com/moisturizing-cream",
+    "ingredients": [
+      "water",
+      "glycerin",
+      "petrolatum",
+      "cetyl alcohol",
+      "ceramides",
+      "cholesterol",
+      "stearic acid"
+    ],
+    "tags": [
+      "rich",
+      "barrier-repair",
+      "hypoallergenic",
+      "free-of-dyes",
+      "free-of-fragrance"
+    ],
+    "dermatologically_safe": true,
+    "recommended_for": [
+      "dry_skin",
+      "sensitive",
+      "acne_prone",
+      "eczema",
+      "dermatitis"
+    ],
+    "avoid_for": [],
+    "avg_rating": 460,
+    "review_count": 1230,
+    "source": "amazon",
+    "external_id": "vanicream_moisturizer_001"
+  },
+  {
+    "name": "Anthelios Fluid SPF 60",
+    "brand": "La Roche-Posay",
+    "category": "sunscreen",
+    "price_usd": 3400,
+    "url": "https://www.laroche-posay.com/products/sun-care/anthelios",
+    "ingredients": [
+      "zinc oxide",
+      "avobenzone",
+      "niacinamide",
+      "hyaluronic acid",
+      "water",
+      "glycerin"
+    ],
+    "tags": [
+      "broad-spectrum",
+      "non-comedogenic",
+      "lightweight",
+      "mineral",
+      "chemical-hybrid"
+    ],
+    "dermatologically_safe": true,
+    "recommended_for": [
+      "all_skin_types",
+      "acne_prone",
+      "sensitive",
+      "post-treatment"
+    ],
+    "avoid_for": [],
+    "avg_rating": 440,
+    "review_count": 890,
+    "source": "sephora",
+    "external_id": "lrp_sunscreen_001"
+  },
+  {
+    "name": "Hydrating Toner",
+    "brand": "Hada Labo",
+    "category": "toner",
+    "price_usd": 699,
+    "url": "https://www.amazon.com/Hada-Labo-Hydrating-Lotion-Hyaluronic/dp/B00BSNBTYC",
+    "ingredients": [
+      "water",
+      "glycerin",
+      "hyaluronic acid",
+      "sodium acetate",
+      "boric acid"
+    ],
+    "tags": [
+      "hydrating",
+      "essence-like",
+      "lightweight",
+      "layer-able",
+      "budget-friendly"
+    ],
+    "dermatologically_safe": true,
+    "recommended_for": [
+      "dry_skin",
+      "all_skin_types",
+      "dehydration",
+      "anti-aging"
+    ],
+    "avoid_for": [],
+    "avg_rating": 420,
+    "review_count": 3450,
+    "source": "amazon",
+    "external_id": "hadalabo_toner_001"
+  },
+  {
+    "name": "Niacinamide 10% + Zinc 1%",
+    "brand": "The Ordinary",
+    "category": "serum",
+    "price_usd": 590,
+    "url": "https://theordinary.deciem.com/product/rbn-niacinamide-10-zinc-1",
+    "ingredients": [
+      "niacinamide",
+      "zinc",
+      "water",
+      "glycerin",
+      "phenoxyethanol"
+    ],
+    "tags": [
+      "pore-minimizing",
+      "oil-control",
+      "brightening",
+      "affordable",
+      "multi-tasking"
+    ],
+    "dermatologically_safe": true,
+    "recommended_for": [
+      "oily_skin",
+      "acne",
+      "enlarged_pores",
+      "rosacea"
+    ],
+    "avoid_for": [],
+    "avg_rating": 440,
+    "review_count": 8920,
+    "source": "sephora",
+    "external_id": "ordinary_niacinamide_001"
+  },
+  {
+    "name": "Gentle Exfoliating Cleanser",
+    "brand": "Neutrogena",
+    "category": "cleanser",
+    "price_usd": 549,
+    "url": "https://www.neutrogena.com/products/foaming-acne-cleanser",
+    "ingredients": [
+      "water",
+      "salicylic acid",
+      "sodium lauryl sulfate",
+      "glycerin",
+      "tea tree oil"
+    ],
+    "tags": [
+      "exfoliating",
+      "acne-fighting",
+      "foaming",
+      "affordable",
+      "dermatologist-tested"
+    ],
+    "dermatologically_safe": true,
+    "recommended_for": [
+      "acne",
+      "oily_skin",
+      "blackheads"
+    ],
+    "avoid_for": [
+      "dry_skin",
+      "sensitive",
+      "eczema"
+    ],
+    "avg_rating": 380,
+    "review_count": 4120,
+    "source": "drugstore",
+    "external_id": "neutrogena_cleanser_001"
+  },
+  {
+    "name": "Deep Hydrating Sheet Mask",
+    "brand": "MAC",
+    "category": "mask",
+    "price_usd": 799,
+    "url": "https://www.maccosmetics.com/product/13847/50997/skincare/sheet-masks",
+    "ingredients": [
+      "water",
+      "hyaluronic acid",
+      "glycerin",
+      "honey extract",
+      "aloe vera",
+      "green tea extract"
+    ],
+    "tags": [
+      "hydrating",
+      "sheet-mask",
+      "soothing",
+      "treatment",
+      "single-use"
+    ],
+    "dermatologically_safe": true,
+    "recommended_for": [
+      "dry_skin",
+      "dehydration",
+      "sensitive",
+      "all_skin_types"
+    ],
+    "avoid_for": [],
+    "avg_rating": 420,
+    "review_count": 2100,
+    "source": "sephora",
+    "external_id": "mac_mask_001"
+  },
+  {
+    "name": "Retinol 0.2% in Squalane",
+    "brand": "The Ordinary",
+    "category": "serum",
+    "price_usd": 590,
+    "url": "https://theordinary.deciem.com/product/rbn-retinol-0-2-in-squalane-30ml",
+    "ingredients": [
+      "retinol",
+      "squalane",
+      "tocopherol",
+      "helianthus annuus seed oil"
+    ],
+    "tags": [
+      "anti-aging",
+      "retinol",
+      "brightening",
+      "beginner-friendly",
+      "affordable"
+    ],
+    "dermatologically_safe": true,
+    "recommended_for": [
+      "fine_lines",
+      "wrinkles",
+      "texture",
+      "brightness",
+      "collagen_support"
+    ],
+    "avoid_for": [
+      "pregnancy",
+      "breastfeeding",
+      "very_sensitive"
+    ],
+    "avg_rating": 400,
+    "review_count": 6780,
+    "source": "sephora",
+    "external_id": "ordinary_retinol_001"
+  },
+  {
+    "name": "Sulfate-Free Hydrating Shampoo",
+    "brand": "SheaMoisture",
+    "category": "hair_shampoo",
+    "price_usd": 899,
+    "url": "https://www.sheamoisture.com/products/raw-shea-butter-restorative-shampoo",
+    "ingredients": [
+      "water",
+      "shea butter",
+      "coconut oil",
+      "argan oil",
+      "jojoba oil",
+      "lavender oil",
+      "peppermint oil"
+    ],
+    "tags": [
+      "sulfate-free",
+      "hydrating",
+      "natural",
+      "curly-hair-friendly",
+      "moisturizing"
+    ],
+    "dermatologically_safe": true,
+    "recommended_for": [
+      "dry_hair",
+      "curly_hair",
+      "damaged_hair",
+      "color-treated"
+    ],
+    "avoid_for": [],
+    "avg_rating": 430,
+    "review_count": 3560,
+    "source": "amazon",
+    "external_id": "sheamoisture_shampoo_001"
+  }
+]
