@@ -1,0 +1,399 @@
+# Recommender Rules Configuration
+# Format: Condition matching + Product recommendations + Routine guidance + Safety escalations
+# 
+# Rule Structure:
+#   - id: unique rule identifier (r001, r002, etc.)
+#   - name: human-readable rule name
+#   - description: what conditions trigger this rule
+#   - priority: execution order (1=highest, 10=lowest)
+#   - conditions: matching criteria (skin_type, conditions_detected, sensitivity)
+#   - actions:
+#       - recommend_products_external_ids: specific products to recommend
+#       - recommend_products_tags: product tags to search by
+#       - routine: daily skincare routine steps
+#       - diet_recommendations: dietary advice
+#       - warnings: safety warnings for user
+#   - escalation: medical escalation if needed
+#   - avoid_if: contraindications (e.g., pregnancy, very_sensitive)
+
+rules:
+  # Rule 1: Oily Skin + Acne
+  - id: r001
+    name: "Oily Skin with Acne - Oil Control & Pore Cleansing"
+    description: "Oily skin type with acne detection"
+    priority: 1
+    conditions:
+      - skin_type: oily
+      - conditions_contains:
+          - acne
+          - blackheads
+          - congestion
+    actions:
+      recommend_products_external_ids:
+        - ordinary_sa_001      # Salicylic Acid 2% Solution
+        - ordinary_niacinamide_001  # Niacinamide 10% + Zinc 1%
+        - lrp_sunscreen_001    # Anthelios SPF 60 (non-comedogenic)
+      recommend_products_tags:
+        - exfoliating
+        - oil-control
+        - pore-cleansing
+        - acne-fighting
+      routine:
+        - morning: "Gentle exfoliating cleanser (Neutrogena) → Niacinamide serum → Non-comedogenic sunscreen SPF 60"
+        - evening: "Gentle exfoliating cleanser → Salicylic acid 2% (2-3x per week, start 1x/week) → Light moisturizer"
+        - weekly: "Clay mask or chemical exfoliation (BHA) to manage pore congestion"
+      diet_recommendations:
+        - increase:
+            - "omega-3 fatty acids (salmon, walnuts, flax seeds)"
+            - "water intake (2-3 liters daily)"
+            - "zinc-rich foods (oysters, beef, pumpkin seeds)"
+            - "antioxidants (berries, green tea)"
+        - limit:
+            - "dairy products (can trigger acne in sensitive individuals)"
+            - "high-glycemic foods (refined sugars, white bread)"
+            - "excess oils and fried foods"
+      warnings:
+        - "Salicylic acid may cause initial dryness or irritation - start 1x per week"
+        - "Avoid combining multiple exfoliants (salicylic + physical scrubbing)"
+        - "Consistent use required: results visible in 4-6 weeks"
+    escalation: none
+    avoid_if:
+      - very_sensitive
+      - pregnancy
+
+  # Rule 2: Dry Skin + Eczema
+  - id: r002
+    name: "Dry Skin with Eczema - Barrier Repair & Hydration"
+    description: "Dry or very dry skin with eczema or dermatitis"
+    priority: 2
+    conditions:
+      - skin_type:
+          - dry
+          - very_dry
+      - conditions_contains:
+          - eczema
+          - dermatitis
+          - dry_patches
+    actions:
+      recommend_products_external_ids:
+        - cerave_cleanser_001      # Hydrating Facial Cleanser
+        - vanicream_moisturizer_001  # Moisturizing Cream
+        - hadalabo_toner_001       # Hydrating Toner
+        - mac_mask_001             # Deep Hydrating Sheet Mask
+      recommend_products_tags:
+        - hydrating
+        - barrier-repair
+        - hypoallergenic
+        - soothing
+        - fragrance-free
+      routine:
+        - morning: "CeraVe hydrating cleanser (lukewarm water only) → Hydrating toner → Vanicream moisturizing cream → Sunscreen SPF 30+"
+        - evening: "CeraVe hydrating cleanser → Hydrating toner → Vanicream moisturizing cream (apply to damp skin for better absorption)"
+        - weekly: "Deep hydrating sheet mask (2-3x per week) for intensive hydration"
+      diet_recommendations:
+        - increase:
+            - "healthy fats (avocados, olive oil, fatty fish)"
+            - "collagen-boosting foods (bone broth, citrus fruits)"
+            - "hydrating foods (cucumbers, watermelon, leafy greens)"
+            - "vitamin E sources (nuts, seeds)"
+        - limit:
+            - "alcohol and caffeine (dehydrating)"
+            - "processed foods with additives"
+            - "very hot beverages"
+      warnings:
+        - "Use ONLY lukewarm or cool water - hot water worsens dryness"
+        - "Pat skin dry gently - do not rub"
+        - "Apply moisturizer to slightly damp skin for better hydration"
+        - "Avoid products with fragrance, sulfates, or strong actives"
+    escalation: "If rash worsens or spreads despite consistent treatment, consult dermatologist"
+    avoid_if:
+      - none
+
+  # Rule 3: Sensitive Skin + Rosacea
+  - id: r003
+    name: "Sensitive Skin with Rosacea - Calming & Barrier Support"
+    description: "Sensitive skin with rosacea or flushing"
+    priority: 2
+    conditions:
+      - skin_sensitivity: sensitive
+      - conditions_contains:
+          - rosacea
+          - flushing
+          - facial_redness
+    actions:
+      recommend_products_external_ids:
+        - cerave_cleanser_001       # Hydrating Facial Cleanser
+        - vanicream_moisturizer_001 # Moisturizing Cream
+        - ordinary_niacinamide_001  # Niacinamide (anti-inflammatory)
+        - lrp_sunscreen_001         # Anthelios SPF 60
+      recommend_products_tags:
+        - gentle
+        - calming
+        - hypoallergenic
+        - fragrance-free
+        - barrier-repair
+      routine:
+        - morning: "CeraVe hydrating cleanser → Niacinamide serum (calming) → Vanicream moisturizer → SPF 60 daily (critical)"
+        - evening: "CeraVe hydrating cleanser → Niacinamide serum → Vanicream moisturizer"
+        - weekly: "Skip exfoliants completely - stick to gentle cleansing and moisturizing"
+      diet_recommendations:
+        - increase:
+            - "anti-inflammatory foods (fatty fish, turmeric, ginger)"
+            - "cooling foods (oatmeal, green tea, cucumber)"
+            - "antioxidants (berries, dark leafy greens)"
+        - limit:
+            - "spicy foods and hot beverages"
+            - "alcohol (especially red wine, alcohol in general triggers flushing)"
+            - "histamine-rich foods (aged cheeses, cured meats, fermented foods)"
+      warnings:
+        - "Niacinamide is anti-inflammatory and critical for rosacea management"
+        - "Avoid ALL exfoliating products (physical and chemical)"
+        - "SPF 60+ is MANDATORY daily - UV exposure triggers flare-ups"
+        - "Identify personal triggers (heat, stress, foods) and avoid"
+    escalation: "If rosacea worsens or affects eyes, consult dermatologist"
+    avoid_if:
+      - none
+
+  # Rule 4: Combination Skin + Anti-Aging
+  - id: r004
+    name: "Combination Skin with Fine Lines - Gentle Anti-Aging"
+    description: "Combination skin type with fine lines or wrinkles"
+    priority: 3
+    conditions:
+      - skin_type: combination
+      - conditions_contains:
+          - fine_lines
+          - wrinkles
+          - age_spots
+    actions:
+      recommend_products_external_ids:
+        - cerave_cleanser_001       # Hydrating Facial Cleanser
+        - ordinary_retinol_001      # Retinol 0.2%
+        - hadalabo_toner_001        # Hydrating Toner
+        - lrp_sunscreen_001         # Anthelios SPF 60
+      recommend_products_tags:
+        - retinol
+        - anti-aging
+        - brightening
+        - hydrating
+      routine:
+        - morning: "CeraVe cleanser → Hydrating toner → Retinol serum (start 1-2x/week, increase gradually) → SPF 60"
+        - evening: "CeraVe cleanser → Hydrating toner → Retinol serum (alternate nights with moisturizer) → Night cream"
+        - weekly: "Deep hydrating sheet mask (1-2x per week) to counteract retinol dryness"
+      diet_recommendations:
+        - increase:
+            - "collagen-boosting foods (bone broth, citrus, berries)"
+            - "antioxidants (green tea, dark chocolate, blueberries)"
+            - "healthy fats (omega-3, avocado, nuts)"
+            - "vitamin C sources (citrus, broccoli, peppers)"
+        - limit:
+            - "sugar and refined carbs (accelerate aging)"
+            - "excessive sun exposure without SPF"
+      warnings:
+        - "Retinol is CONTRAINDICATED during pregnancy and breastfeeding"
+        - "Start with low concentration (0.2%) and increase gradually over 4-6 weeks"
+        - "Expect retinization phase: dryness, redness (1-2 weeks) - this is normal"
+        - "SPF 60+ is CRITICAL - retinol increases sun sensitivity"
+        - "Avoid combining retinol with vitamin C or AHAs on same night"
+    escalation: none
+    avoid_if:
+      - pregnancy
+      - breastfeeding
+      - very_sensitive
+
+  # Rule 5: Dry Hair + Curly Hair
+  - id: r005
+    name: "Dry Curly Hair - Deep Moisturization & Protection"
+    description: "Dry or very dry hair that is curly or coily with damage"
+    priority: 3
+    conditions:
+      - hair_type: curly
+      - hair_condition_contains:
+          - dry_hair
+          - damaged_hair
+          - frizz
+    actions:
+      recommend_products_external_ids:
+        - sheamoisture_shampoo_001  # Sulfate-Free Hydrating Shampoo
+      recommend_products_tags:
+        - sulfate-free
+        - hydrating
+        - curly-hair-friendly
+        - natural
+      routine:
+        - weekly_wash: "Use SheaMoisture sulfate-free shampoo 1-2x per week (less frequent than straight hair)"
+        - co_wash: "On non-wash days, rinse with conditioner only (co-washing) to preserve natural oils"
+        - deep_conditioning: "Deep condition 2x per month with moisture-rich treatments"
+        - styling: "Apply leave-in conditioner to damp hair, use curl cream, avoid heat styling when possible"
+      diet_recommendations:
+        - increase:
+            - "biotin-rich foods (eggs, almonds, sweet potatoes)"
+            - "collagen sources (bone broth, citrus fruits)"
+            - "zinc (oysters, pumpkin seeds, beef)"
+            - "vitamins B and E (leafy greens, nuts)"
+        - limit:
+            - "excess heat styling (use heat protectant if necessary)"
+            - "chlorine exposure (wet hair before swimming)"
+      warnings:
+        - "Avoid sulfate shampoos - they strip natural oils crucial for curls"
+        - "Reduce washing frequency - curly hair needs natural oils more than straight hair"
+        - "Co-washing (conditioner-only wash) is beneficial 1-2x per week"
+        - "Deep condition regularly to prevent breakage and frizz"
+    escalation: none
+    avoid_if:
+      - none
+
+  # Rule 6: Dehydrated Skin + Oily T-Zone
+  - id: r006
+    name: "Dehydrated Oily Skin - Hydration Without Heaviness"
+    description: "Dehydration (not dryness) with oily T-zone"
+    priority: 2
+    conditions:
+      - skin_type: oily
+      - conditions_contains:
+          - dehydration
+          - oily_t_zone
+          - tight_feeling
+    actions:
+      recommend_products_external_ids:
+        - hadalabo_toner_001        # Hydrating Toner (lightweight, layerable)
+        - ordinary_niacinamide_001  # Niacinamide (oil control + hydration)
+        - lrp_sunscreen_001         # Non-comedogenic sunscreen
+      recommend_products_tags:
+        - hydrating
+        - lightweight
+        - oil-control
+        - essence-like
+      routine:
+        - morning: "Gentle cleanser → Hydrating toner (layer 2-3 times) → Niacinamide serum → Light gel moisturizer → SPF"
+        - evening: "Gentle cleanser → Hydrating toner (layer 2-3 times) → Niacinamide serum → Light hydrating lotion"
+        - weekly: "Deep hydrating mask 1x per week (focus on cheeks, avoid T-zone if too oily)"
+      diet_recommendations:
+        - increase:
+            - "water intake (2-3 liters daily - critical for dehydration)"
+            - "electrolytes (coconut water, mineral water, sea salt)"
+            - "hydrating foods (cucumber, watermelon, lettuce)"
+            - "omega-3s (salmon, walnuts)"
+        - limit:
+            - "caffeine and alcohol (dehydrating)"
+            - "excess salt (dehydrating)"
+      warnings:
+        - "Dehydration ≠ Dry - oily skin can be dehydrated (needs hydration, not oil)"
+        - "Layer lightweight hydrating products (toner, essences) rather than using heavy cream"
+        - "Increase water intake - this is internal hydration"
+        - "Avoid heavy moisturizers that clog pores"
+    escalation: none
+    avoid_if:
+      - none
+
+  # Rule 7: Blackheads + Open Pores
+  - id: r007
+    name: "Blackheads & Enlarged Pores - Deep Cleansing & Minimization"
+    description: "Visible blackheads and enlarged pores (usually oily or combination skin)"
+    priority: 2
+    conditions:
+      - conditions_contains:
+          - blackheads
+          - enlarged_pores
+          - pore_congestion
+          - sebaceous_filaments
+    actions:
+      recommend_products_external_ids:
+        - ordinary_sa_001           # Salicylic Acid 2% (BHA for pores)
+        - ordinary_niacinamide_001  # Niacinamide (pore-minimizing)
+      recommend_products_tags:
+        - exfoliating
+        - pore-cleansing
+        - BHA
+        - pore-minimizing
+      routine:
+        - morning: "Gentle cleanser → Niacinamide serum (pore-minimizing) → Light moisturizer → SPF"
+        - evening: "Gentle cleanser → Salicylic acid 2% (start 2-3x per week) → Niacinamide serum → Light moisturizer"
+        - intensive: "1x per week: Deep pore-cleansing mask or clay mask to extract congestion"
+      diet_recommendations:
+        - increase:
+            - "zinc (pumpkin seeds, beef, oysters) - controls sebum production"
+            - "antioxidants (green tea, berries)"
+            - "water (hydration reduces sebum production)"
+        - limit:
+            - "dairy products (can trigger increased sebum)"
+            - "high-glycemic foods"
+      warnings:
+        - "Blackheads take 6-8 weeks to improve with BHA - consistency is key"
+        - "Avoid squeezing or picking at blackheads - risk of scarring and infection"
+        - "Pores cannot be permanently 'shrunk' but can appear minimized with regular BHA use"
+        - "Initial breakout possible (1-2 weeks) as pores purge"
+    escalation: none
+    avoid_if:
+      - very_sensitive
+      - pregnancy
+
+  # Rule 8: Infection/Severe Acne - ESCALATION
+  - id: r008
+    name: "Severe Acne or Suspected Infection - Medical Escalation"
+    description: "Severe acne (cystic), signs of infection, or rapid spread"
+    priority: 0  # Highest priority
+    conditions:
+      - conditions_contains:
+          - severe_acne
+          - cystic_acne
+          - infection
+          - pustules_spreading
+    actions:
+      recommend_products_external_ids: []
+      recommend_products_tags: []
+      routine:
+        - temporary: "Stop all active treatments (retinol, BHA, AHA) - use only gentle cleanser and moisturizer"
+        - placeholder: "Awaiting dermatologist consultation"
+      diet_recommendations:
+        - increase: []
+        - limit: []
+      warnings:
+        - "⚠️ DO NOT attempt self-treatment with OTC products"
+        - "⚠️ Risk of permanent scarring if untreated"
+        - "⚠️ Possible oral medication or prescription topicals needed"
+    escalation: "URGENT - See dermatologist immediately. Likely requires prescription oral antibiotics, isotretinoin, or professional extraction."
+    avoid_if:
+      - none
+
+  # Rule 9: Post-Treatment Sensitivity
+  - id: r009
+    name: "Post-Treatment Sensitivity - Recovery & Barrier Repair"
+    description: "Skin sensitivity after professional treatment (laser, chemical peel, microneedling)"
+    priority: 1
+    conditions:
+      - conditions_contains:
+          - post_treatment
+          - treatment_sensitivity
+          - barrier_damaged
+    actions:
+      recommend_products_external_ids:
+        - cerave_cleanser_001       # Hydrating Cleanser
+        - vanicream_moisturizer_001 # Barrier repair cream
+        - lrp_sunscreen_001         # Protective SPF (critical post-treatment)
+      recommend_products_tags:
+        - gentle
+        - barrier-repair
+        - hypoallergenic
+        - soothing
+      routine:
+        - first_week: "Minimal routine: Lukewarm water rinse → Vanicream cream → SPF 60+ (mandatory). NO actives."
+        - week_2_3: "Add gentle cleanser → Vanicream cream → SPF 60+. Still no actives."
+        - week_4_plus: "Gradually reintroduce products as tolerated. Monitor for reactions."
+      diet_recommendations:
+        - increase:
+            - "antioxidants (green tea, berries) - reduce inflammation"
+            - "vitamin C (citrus, broccoli) - collagen synthesis"
+            - "protein (healing support)"
+            - "water (hydration supports recovery)"
+        - limit:
+            - "alcohol and caffeine (can dilate blood vessels, slow healing)"
+            - "spicy foods (inflammation)"
+      warnings:
+        - "SPF 60+ is MANDATORY for at least 4 weeks post-treatment"
+        - "Do NOT use any active ingredients (retinol, AHA/BHA) for minimum 2 weeks"
+        - "Avoid sun exposure completely for first week if possible"
+        - "Some redness/flaking is normal - do not strip skin"
+    escalation: "If severe blistering, severe swelling, or signs of infection develop, contact dermatologist"
+    avoid_if:
+      - none

@@ -4,7 +4,8 @@ This directory contains the seed products system for populating the recommender 
 
 ## Files
 
-### `seed_products.json` 
+### `seed_products.json`
+
 JSON file containing 10 seed products with the following structure:
 
 ```json
@@ -27,9 +28,11 @@ JSON file containing 10 seed products with the following structure:
 ```
 
 ### `seed_products.py`
+
 Python script that reads `seed_products.json` and inserts products into the database.
 
 **Key Features:**
+
 - Checks for existing products by `external_id` to avoid duplicates
 - Skips products that already exist
 - Provides detailed output showing what was inserted/skipped
@@ -47,6 +50,7 @@ python -m backend.app.recommender.seed_products
 ```
 
 **Output:**
+
 ```
 Loading 10 seed products...
 
@@ -76,6 +80,7 @@ python -m backend.app.recommender.seed_products --verify
 ```
 
 **Verification Output:**
+
 ```
 ============================================================
 Product Database Verification
@@ -102,18 +107,18 @@ ID: 2
 
 The 10 seed products cover:
 
-| # | Product | Brand | Category | Use Case |
-|---|---------|-------|----------|----------|
-| 1 | Hydrating Facial Cleanser | CeraVe | cleanser | Dry/sensitive skin |
-| 2 | Salicylic Acid 2% Solution | The Ordinary | treatment | Acne/blackheads |
-| 3 | Moisturizing Cream | Vanicream | moisturizer | Dry/eczema |
-| 4 | Anthelios Fluid SPF 60 | La Roche-Posay | sunscreen | All skin types |
-| 5 | Hydrating Toner | Hada Labo | toner | Dehydration |
-| 6 | Niacinamide 10% + Zinc 1% | The Ordinary | serum | Oily/acne |
-| 7 | Gentle Exfoliating Cleanser | Neutrogena | cleanser | Acne/oily |
-| 8 | Deep Hydrating Sheet Mask | MAC | mask | Hydration |
-| 9 | Retinol 0.2% in Squalane | The Ordinary | serum | Anti-aging |
-| 10 | Sulfate-Free Hydrating Shampoo | SheaMoisture | hair_shampoo | Dry/curly hair |
+| #   | Product                        | Brand          | Category     | Use Case           |
+| --- | ------------------------------ | -------------- | ------------ | ------------------ |
+| 1   | Hydrating Facial Cleanser      | CeraVe         | cleanser     | Dry/sensitive skin |
+| 2   | Salicylic Acid 2% Solution     | The Ordinary   | treatment    | Acne/blackheads    |
+| 3   | Moisturizing Cream             | Vanicream      | moisturizer  | Dry/eczema         |
+| 4   | Anthelios Fluid SPF 60         | La Roche-Posay | sunscreen    | All skin types     |
+| 5   | Hydrating Toner                | Hada Labo      | toner        | Dehydration        |
+| 6   | Niacinamide 10% + Zinc 1%      | The Ordinary   | serum        | Oily/acne          |
+| 7   | Gentle Exfoliating Cleanser    | Neutrogena     | cleanser     | Acne/oily          |
+| 8   | Deep Hydrating Sheet Mask      | MAC            | mask         | Hydration          |
+| 9   | Retinol 0.2% in Squalane       | The Ordinary   | serum        | Anti-aging         |
+| 10  | Sulfate-Free Hydrating Shampoo | SheaMoisture   | hair_shampoo | Dry/curly hair     |
 
 ## Adding More Products
 
