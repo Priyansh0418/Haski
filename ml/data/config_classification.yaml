@@ -1,0 +1,28 @@
+# Example classification dataset configuration
+
+# Dataset splits (train/val/test)
+splits:
+  - train
+  - val
+  - test
+
+# Classification classes
+classes:
+  - normal
+  - dry
+  - oily
+  - combination
+  - sensitive
+
+# Data directory structure
+# Expected: source_dir/
+#   ├── train/
+#   │   ├── normal/*.jpg
+#   │   ├── dry/*.jpg
+#   │   └── ...
+#   ├── val/
+#   │   ├── normal/*.jpg
+#   │   └── ...
+#   └── test/
+#       ├── normal/*.jpg
+#       └── ...

@@ -1,0 +1,32 @@
+# Example detection dataset configuration (YOLO format)
+
+# Dataset splits
+splits:
+  - train
+  - val
+  - test
+
+# Class names with their IDs
+class_names:
+  0: acne
+  1: eczema
+  2: psoriasis
+  3: dandruff
+  4: rosacea
+  5: hair_loss
+
+# Data directory structure
+# Expected:
+#   images_dir/
+#   ├── train/*.jpg
+#   ├── val/*.jpg
+#   └── test/*.jpg
+#
+#   labels_dir/
+#   ├── train/*.txt  (YOLO format)
+#   ├── val/*.txt
+#   └── test/*.txt
+#
+# YOLO label format (normalized coordinates):
+#   class_id center_x center_y width height
+#   Example: 0 0.5 0.5 0.3 0.4
