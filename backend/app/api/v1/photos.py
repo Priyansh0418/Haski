@@ -40,13 +40,3 @@ from fastapi import APIRouter, UploadFile, File, Depends
 from app.services.storage import upload_to_s3
 from app.db.session import get_db
 
-router = APIRouter()
-
-
-@router.post('/upload')
-async def upload_photo(file: UploadFile = File(...), db=Depends(get_db)):
-    content = await file.read()
-    # placeholder key
-    key = f"uploads/{file.filename}"
-    res = upload_to_s3(bucket="your-bucket", key=key, data=content)
-    return {"filename": file.filename, "size": len(content), "s3": res}

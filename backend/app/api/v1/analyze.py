@@ -95,11 +95,3 @@ from fastapi import APIRouter, UploadFile, File
 from app.services.ml_infer import analyze_image
 from app.schemas.pydantic_schemas import AnalysisResponse
 
-router = APIRouter()
-
-
-@router.post("/image", response_model=AnalysisResponse)
-async def analyze(image: UploadFile = File(...)):
-    data = await image.read()
-    result = analyze_image(data)
-    return result
