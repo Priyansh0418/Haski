@@ -154,6 +154,7 @@ class_id center_x center_y width height
 ```
 
 This means:
+
 - Box 1: class 0 (acne) at center (50%, 50%) with width 30%, height 40%
 - Box 2: class 2 (psoriasis) at center (20%, 30%) with width 10%, height 20%
 
@@ -171,28 +172,28 @@ def coco_to_yolo(coco_json_path, output_dir):
     """Convert COCO format annotations to YOLO format."""
     with open(coco_json_path) as f:
         coco = json.load(f)
-    
+
     # Build image lookup
     images = {img['id']: img for img in coco['images']}
-    
+
     # Process annotations
     for annotation in coco['annotations']:
         image_id = annotation['image_id']
         image_info = images[image_id]
-        
+
         image_width = image_info['width']
         image_height = image_info['height']
-        
+
         # COCO bbox: [x, y, width, height]
         bbox = annotation['bbox']
         class_id = annotation['category_id']
-        
+
         # Convert to YOLO format (normalized)
         x_center = (bbox[0] + bbox[2] / 2) / image_width
         y_center = (bbox[1] + bbox[3] / 2) / image_height
         width = bbox[2] / image_width
         height = bbox[3] / image_height
-        
+
         # Write to YOLO label file
         label_file = output_dir / f"{Path(image_info['file_name']).stem}.txt"
         with open(label_file, 'a') as f:
@@ -212,29 +213,29 @@ def voc_to_yolo(xml_file, output_file):
     """Convert Pascal VOC XML to YOLO format."""
     tree = ET.parse(xml_file)
     root = tree.getroot()
-    
+
     # Get image dimensions
     size = root.find('size')
     img_width = int(size.find('width').text)
     img_height = int(size.find('height').text)
-    
+
     # Process objects
     with open(output_file, 'w') as f:
         for obj in root.findall('object'):
             class_name = obj.find('name').text
             bbox = obj.find('bndbox')
-            
+
             xmin = float(bbox.find('xmin').text)
             ymin = float(bbox.find('ymin').text)
             xmax = float(bbox.find('xmax').text)
             ymax = float(bbox.find('ymax').text)
-            
+
             # Convert to YOLO format
             x_center = (xmin + xmax) / 2 / img_width
             y_center = (ymin + ymax) / 2 / img_height
             width = (xmax - xmin) / img_width
             height = (ymax - ymin) / img_height
-            
+
             class_id = class_mapping[class_name]  # Define class_mapping
             f.write(f"{class_id} {x_center} {y_center} {width} {height}\n")
 
@@ -346,11 +347,13 @@ names:
 The script automatically validates:
 
 1. **Image Files**
+
    - Checks if files exist
    - Verifies files are readable with Pillow
    - Skips corrupted images with warning
 
 2. **Label Files (Detection)**
+
    - Checks for corresponding `.txt` file
    - Validates YOLO format (5 values per line)
    - Ensures coordinates are normalized (0-1 range)
@@ -423,18 +426,23 @@ python ml/data/prepare_dataset.py \
 ## Troubleshooting
 
 ### Issue: "Image file not found"
+
 **Solution:** Ensure your source data structure matches the expected layout.
 
 ### Issue: "Invalid image" or "Could not open image file"
+
 **Solution:** Check if images are corrupted. The script skips these and logs warnings.
 
 ### Issue: "Label file not found" (detection)
+
 **Solution:** Ensure your images and labels are in the same relative directory structure with matching filenames.
 
 ### Issue: "Coordinate out of range" (detection)
+
 **Solution:** YOLO format requires normalized coordinates (0-1). Verify your label conversion.
 
 ### Issue: "Empty label file"
+
 **Solution:** Remove or fix label files with no annotations.
 
 ## Next Steps

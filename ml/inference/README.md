@@ -7,6 +7,7 @@ Unified inference interface for skin type classification and condition detection
 ## Overview
 
 This module provides production-ready inference APIs for:
+
 - **Classifier**: Skin type classification (normal, dry, oily, combination, sensitive)
 - **Detector**: Condition detection (acne, eczema, psoriasis, dandruff, rosacea)
 
@@ -144,11 +145,13 @@ classifier = SkinTypeClassifier(
 Classify single image.
 
 Args:
+
 - `image_path`: Path to image
 - `return_probabilities`: Return full probability distribution
 - `top_k`: Return top-K predictions
 
 Returns:
+
 ```python
 {
     'predicted_class': str,
@@ -163,10 +166,12 @@ Returns:
 Classify multiple images.
 
 Args:
+
 - `image_paths`: List of image paths
 - `return_probabilities`: Return probability distributions
 
 Returns:
+
 - List of prediction results
 
 ### ConditionDetector
@@ -187,11 +192,13 @@ detector = ConditionDetector(
 Detect conditions in single image.
 
 Args:
+
 - `image_path`: Path to image
 - `conf_thresh`: Confidence threshold (overrides default)
 - `return_summary`: Include per-class counts
 
 Returns:
+
 ```python
 {
     'detections': [
@@ -218,10 +225,12 @@ Returns:
 Detect conditions in multiple images.
 
 Args:
+
 - `image_paths`: List of image paths
 - `conf_thresh`: Confidence threshold
 
 Returns:
+
 - List of detection results
 
 **`draw_detections(image_path, output_path, conf_thresh=None, line_thickness=2, text_size=0.6)`**
@@ -229,6 +238,7 @@ Returns:
 Draw detection boxes on image and save.
 
 Args:
+
 - `image_path`: Path to input image
 - `output_path`: Path to save annotated image
 - `conf_thresh`: Confidence threshold
@@ -249,6 +259,7 @@ analysis = analyze_detections(
 ```
 
 Returns:
+
 ```python
 {
     'total_conditions_detected': int,
@@ -278,24 +289,24 @@ class SkinAnalyzer:
             class_mapping_path='ml/exports/class_mapping.json'
         )
         self.detector = ConditionDetector(model_path=detector_path)
-    
+
     def analyze_image(self, image_path: str) -> dict:
         # Classify skin type
         classification_result = self.classifier.predict(
             image_path,
             return_probabilities=True
         )
-        
+
         # Detect conditions
         detection_result = self.detector.detect(
             image_path,
             conf_thresh=0.3,
             return_summary=True
         )
-        
+
         # Analyze detections
         analysis = analyze_detections(detection_result)
-        
+
         # Combine results
         return {
             'skin_type': classification_result['predicted_class'],
@@ -368,10 +379,12 @@ python ml/inference/detector_infer.py \
 ### Model Selection
 
 **Classifier**:
+
 - EfficientNet-B0: Fast (80ms), suitable for real-time
 - ResNet50: Accurate (120ms), for high-accuracy requirements
 
 **Detector**:
+
 - YOLOv8n: Fast (40ms), real-time
 - YOLOv8s: Balanced (60ms)
 - YOLOv8m: Accurate (120ms)

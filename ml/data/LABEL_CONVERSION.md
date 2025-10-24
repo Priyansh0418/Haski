@@ -59,6 +59,7 @@ python label_utils.py validate-coco \
 ### Pascal VOC XML Format
 
 **File structure:**
+
 ```
 annotations/
 ├── image_001.xml
@@ -67,6 +68,7 @@ annotations/
 ```
 
 **Example image_001.xml:**
+
 ```xml
 <?xml version="1.0"?>
 <annotation>
@@ -102,11 +104,13 @@ annotations/
 ### COCO JSON Format
 
 **File structure:**
+
 ```
 annotations.json
 ```
 
 **Example annotations.json:**
+
 ```json
 {
   "images": [
@@ -142,9 +146,9 @@ annotations.json
     }
   ],
   "categories": [
-    {"id": 0, "name": "acne"},
-    {"id": 1, "name": "eczema"},
-    {"id": 2, "name": "psoriasis"}
+    { "id": 0, "name": "acne" },
+    { "id": 1, "name": "eczema" },
+    { "id": 2, "name": "psoriasis" }
   ]
 }
 ```
@@ -154,6 +158,7 @@ annotations.json
 ### YOLO TXT Format
 
 **File structure:**
+
 ```
 images/
 ├── train/
@@ -168,12 +173,14 @@ images/
 ```
 
 **Example image_001.txt:**
+
 ```
 0 0.25 0.30 0.23 0.33
 1 0.55 0.40 0.15 0.35
 ```
 
 **Coordinate system:** Normalized coordinates (0 to 1)
+
 - `class_id`: Integer class identifier (0-based)
 - `center_x`: Horizontal center (relative to image width)
 - `center_y`: Vertical center (relative to image height)
@@ -199,6 +206,7 @@ python label_utils.py convert-voc \
 ```
 
 **class_mapping.json:**
+
 ```json
 {
   "acne": 0,
@@ -236,6 +244,7 @@ python label_utils.py validate \
 ```
 
 **Expected output:**
+
 ```
 YOLO Validation Summary
 ============================================================
@@ -267,6 +276,7 @@ python label_utils.py validate-coco \
 ```
 
 **Expected output:**
+
 ```
 COCO Validation Summary
 ============================================================
@@ -393,12 +403,14 @@ if results['errors']:
 ### VOC to YOLO
 
 **Pascal VOC (pixel coordinates):**
+
 ```
 xmin=100, ymin=120, xmax=250, ymax=280
 Image size: 640x480
 ```
 
 **YOLO (normalized):**
+
 ```
 x_center = (100 + 250) / 2 / 640 = 0.273
 y_center = (120 + 280) / 2 / 480 = 0.417
@@ -411,12 +423,14 @@ height = (280 - 120) / 480 = 0.333
 ### COCO to YOLO
 
 **COCO format:**
+
 ```
 bbox = [100, 120, 150, 160]  # [x, y, width, height]
 Image size: 640x480
 ```
 
 **YOLO (normalized):**
+
 ```
 x_center = (100 + 150/2) / 640 = 0.195
 y_center = (120 + 160/2) / 480 = 0.417

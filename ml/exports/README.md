@@ -14,27 +14,27 @@ This directory contains tools and documentation for exporting trained PyTorch mo
 
 ### Core Export Tools
 
-| File | Purpose | Lines |
-|------|---------|-------|
-| `export_models.py` | Main export framework (PyTorch → ONNX → TFLite) | 900+ |
-| `example_inference.py` | Inference examples for exported models | 650+ |
-| `QUICK_START_EXAMPLES.py` | Practical usage examples (8 use cases) | 550+ |
+| File                      | Purpose                                         | Lines |
+| ------------------------- | ----------------------------------------------- | ----- |
+| `export_models.py`        | Main export framework (PyTorch → ONNX → TFLite) | 900+  |
+| `example_inference.py`    | Inference examples for exported models          | 650+  |
+| `QUICK_START_EXAMPLES.py` | Practical usage examples (8 use cases)          | 550+  |
 
 ### Documentation
 
-| File | Purpose |
-|------|---------|
+| File              | Purpose                             |
+| ----------------- | ----------------------------------- |
 | `EXPORT_GUIDE.md` | Complete export guide (1500+ lines) |
-| `README.md` | This file |
+| `README.md`       | This file                           |
 
 ### Exported Models (Generated)
 
-| File | Format | Size | Platform |
-|------|--------|------|----------|
-| `skin_classifier.pth` | PyTorch | ~21 MB | Training |
-| `skin_classifier.onnx` | ONNX | ~21 MB | Server/Desktop |
-| `skin_classifier.tflite` | TFLite | 5-21 MB | Mobile/Edge |
-| `export_metadata.json` | Metadata | ~1 KB | All |
+| File                     | Format   | Size    | Platform       |
+| ------------------------ | -------- | ------- | -------------- |
+| `skin_classifier.pth`    | PyTorch  | ~21 MB  | Training       |
+| `skin_classifier.onnx`   | ONNX     | ~21 MB  | Server/Desktop |
+| `skin_classifier.tflite` | TFLite   | 5-21 MB | Mobile/Edge    |
+| `export_metadata.json`   | Metadata | ~1 KB   | All            |
 
 ## Quick Start
 
@@ -242,31 +242,31 @@ async def predict(file: UploadFile = File(...)):
 
 ### Model Sizes
 
-| Model | Format | Size |
-|-------|--------|------|
-| EfficientNet-B0 | PyTorch (fp32) | 21 MB |
-| | ONNX | 21 MB |
-| | TFLite (fp32) | 21 MB |
-| | TFLite (fp16) | 11 MB |
-| | TFLite (int8) | 5.5 MB |
+| Model           | Format         | Size   |
+| --------------- | -------------- | ------ |
+| EfficientNet-B0 | PyTorch (fp32) | 21 MB  |
+|                 | ONNX           | 21 MB  |
+|                 | TFLite (fp32)  | 21 MB  |
+|                 | TFLite (fp16)  | 11 MB  |
+|                 | TFLite (int8)  | 5.5 MB |
 
 ### Inference Latency
 
-| Platform | Device | ONNX | TFLite (fp16) | TFLite (int8) |
-|----------|--------|------|---------------|---------------|
-| Desktop | CPU (i7) | 50ms | 50ms | 25ms |
-| Desktop | GPU (V100) | 10ms | N/A | N/A |
-| Mobile | Snapdragon | N/A | 90ms | 20ms |
-| Edge | Raspberry Pi 4 | 200ms | N/A | 100ms |
+| Platform | Device         | ONNX  | TFLite (fp16) | TFLite (int8) |
+| -------- | -------------- | ----- | ------------- | ------------- |
+| Desktop  | CPU (i7)       | 50ms  | 50ms          | 25ms          |
+| Desktop  | GPU (V100)     | 10ms  | N/A           | N/A           |
+| Mobile   | Snapdragon     | N/A   | 90ms          | 20ms          |
+| Edge     | Raspberry Pi 4 | 200ms | N/A           | 100ms         |
 
 ### Throughput
 
-| Format | Device | Images/sec |
-|--------|--------|-----------|
-| ONNX | CPU | 20 img/s |
-| ONNX | GPU | 100 img/s |
-| TFLite | Mobile CPU | 11 img/s |
-| TFLite | Mobile GPU | 50 img/s |
+| Format | Device     | Images/sec |
+| ------ | ---------- | ---------- |
+| ONNX   | CPU        | 20 img/s   |
+| ONNX   | GPU        | 100 img/s  |
+| TFLite | Mobile CPU | 11 img/s   |
+| TFLite | Mobile GPU | 50 img/s   |
 
 ## Troubleshooting
 
@@ -380,6 +380,7 @@ ensemble_prediction = (onnx_result + tflite_result) / 2
 ## Support
 
 For issues:
+
 1. Check `EXPORT_GUIDE.md` troubleshooting section
 2. Review `QUICK_START_EXAMPLES.py` for your use case
 3. Verify model and dependencies with `example_inference.py`

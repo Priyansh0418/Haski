@@ -75,6 +75,25 @@ def analyze_photo(image: UploadFile = File(...), db: Session = Depends(get_db), 
 
         # Run local analysis
         analysis_result = analyze_image_local(local_path)
+        
+        # Handle model output format
+        # New PyTorch model returns: class_id, class_name, confidence, probabilities, model_type
+        # Map to analysis schema
+        if "error" in analysis_result:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Analysis failed: {analysis_result['error']}"
+            )
+        
+        # Transform model output to analysis schema
+        analysis_output = {
+            "class_id": analysis_result.get("class_id", 0),
+            "class_name": analysis_result.get("class_name", "unknown"),
+            "confidence": analysis_result.get("confidence", 0.0),
+            "probabilities": analysis_result.get("probabilities", []),
+            "model_type": analysis_result.get("model_type", "unknown"),
+            "model_version": "v1-pytorch"
+        }
     except FileNotFoundError:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Saved image file not found for analysis")
     except Exception as exc:
@@ -93,22 +112,43 @@ def analyze_photo(image: UploadFile = File(...), db: Session = Depends(get_db), 
     db.commit()
     db.refresh(photo)
 
-    # Map analysis_result to Analysis model fields
+    # Map analysis output to Analysis model
+    # For now, model outputs single class - in production with multi-class model:
+    # skin_type, hair_type, conditions could be separate predictions
+    class_name = analysis_output.get("class_name", "unknown")
+    confidence = analysis_output.get("confidence", 0.0)
+    
     analysis = Analysis(
         user_id=user_id,
         photo_id=photo.id,
-        skin_type=analysis_result.get("skin_type"),
-        hair_type=analysis_result.get("hair_type"),
-        conditions=analysis_result.get("conditions_detected") or analysis_result.get("conditions"),
-        confidence_scores=analysis_result.get("confidence_scores"),
+        skin_type=class_name,  # PyTorch model outputs class_name
+        hair_type=class_name,  # Can be either skin or hair type
+        conditions=[class_name] if class_name else [],
+        confidence_scores={
+            "skin_type": confidence,
+            "hair_type": confidence,
+            "conditions": [confidence] if class_name else []
+        },
     )
 
     db.add(analysis)
     db.commit()
     db.refresh(analysis)
 
-    # Return the analysis JSON with identifiers
-    out = dict(analysis_result)
-    out.update({"id": analysis.id, "photo_id": photo.id})
-    return out
+    # Return business-friendly format
+    response = {
+        "skin_type": analysis.skin_type,
+        "hair_type": analysis.hair_type,
+        "conditions_detected": analysis.conditions,
+        "confidence_scores": {
+            analysis.skin_type: confidence,
+            analysis.hair_type: confidence,
+        },
+        "model_version": "v1-skinhair-classifier",
+        # Metadata
+        "analysis_id": analysis.id,
+        "photo_id": photo.id,
+        "status": "success"
+    }
+    return response
 

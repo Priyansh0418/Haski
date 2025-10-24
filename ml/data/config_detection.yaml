@@ -14,7 +14,6 @@ class_names:
   3: dandruff
   4: rosacea
   5: hair_loss
-
 # Data directory structure
 # Expected:
 #   images_dir/

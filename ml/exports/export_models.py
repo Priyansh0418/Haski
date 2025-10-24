@@ -32,6 +32,12 @@ from torch.onnx import export as onnx_export
 from torchvision import models as torch_models
 from PIL import Image
 
+# Import representative data generator
+try:
+    from representative_data import RepresentativeDataGenerator
+except ImportError:
+    RepresentativeDataGenerator = None
+
 logger = logging.getLogger(__name__)
 logging.basicConfig(
     level=logging.INFO,
@@ -526,7 +532,8 @@ class ModelExporter:
         tflite_filename: str = 'skin_classifier.tflite',
         quantize: Optional[str] = None,
         calibration_image_dir: Optional[str] = None,
-        input_size: Tuple[int, int] = (224, 224)
+        input_size: Tuple[int, int] = (224, 224),
+        representative_data_gen=None
     ) -> Dict[str, str]:
         """
         Export model to all formats.
@@ -538,6 +545,7 @@ class ModelExporter:
             quantize: Quantization type for TFLite ('float16', 'int8', or None)
             calibration_image_dir: Directory with images for int8 calibration
             input_size: Input image size (H, W)
+            representative_data_gen: Generator for int8 quantization calibration
         
         Returns:
             Dictionary with export paths
@@ -571,7 +579,7 @@ class ModelExporter:
                 output_path=tflite_path,
                 input_size=input_size,
                 quantize=quantize,
-                calibration_image_dir=calibration_image_dir
+                representative_data_gen=representative_data_gen
             )
             results['tflite'] = tflite_path
         
@@ -635,6 +643,25 @@ def main():
         help='Directory with calibration images for int8 quantization'
     )
     parser.add_argument(
+        '--dataset-dir',
+        type=str,
+        default='ml/data',
+        help='Path to prepared dataset for representative data generation'
+    )
+    parser.add_argument(
+        '--dataset-type',
+        type=str,
+        choices=['classification', 'detection'],
+        default='classification',
+        help='Type of dataset for representative data'
+    )
+    parser.add_argument(
+        '--num-calib-samples',
+        type=int,
+        default=100,
+        help='Number of samples for int8 calibration'
+    )
+    parser.add_argument(
         '--input-size',
         type=int,
         default=224,
@@ -666,6 +693,31 @@ def main():
     # Load checkpoint
     exporter.load_checkpoint()
     
+    # Prepare representative dataset for int8 quantization
+    representative_data_gen = None
+    if args.quantize == 'int8':
+        if RepresentativeDataGenerator is None:
+            logger.warning("representative_data module not available")
+        else:
+            logger.info("Generating representative dataset for int8 quantization...")
+            try:
+                dataset_gen = RepresentativeDataGenerator(
+                    data_dir=args.dataset_dir,
+                    dataset_type=args.dataset_type,
+                    num_samples=args.num_calib_samples,
+                    batch_size=1,
+                    input_size=(args.input_size, args.input_size)
+                )
+                dataset_gen.print_summary()
+                
+                # Create generator function for TFLite converter
+                def representative_data_gen():
+                    return dataset_gen.generate_tflite_batches()
+                
+                logger.info("Representative dataset ready for quantization")
+            except Exception as e:
+                logger.warning(f"Failed to create representative dataset: {e}")
+    
     # Export
     if args.format == 'onnx':
         exporter.export_to_onnx(
@@ -685,7 +737,7 @@ def main():
             output_path=str(Path(args.output_dir) / 'skin_classifier.tflite'),
             input_size=(args.input_size, args.input_size),
             quantize=args.quantize,
-            calibration_image_dir=args.calibration_dir
+            representative_data_gen=representative_data_gen
         )
     
     elif args.format == 'both':
@@ -693,7 +745,8 @@ def main():
             output_dir=args.output_dir,
             quantize=args.quantize,
             calibration_image_dir=args.calibration_dir,
-            input_size=(args.input_size, args.input_size)
+            input_size=(args.input_size, args.input_size),
+            representative_data_gen=representative_data_gen
         )
 
 

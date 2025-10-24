@@ -13,7 +13,6 @@ classes:
   - oily
   - combination
   - sensitive
-
 # Data directory structure
 # Expected: source_dir/
 #   ├── train/

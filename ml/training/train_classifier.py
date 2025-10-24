@@ -585,8 +585,7 @@ def train_model(
         optimizer,
         mode='min',
         factor=0.1,
-        patience=5,
-        verbose=True
+        patience=5
     )
     early_stopping = EarlyStopping(patience=config.patience)
     

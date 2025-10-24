@@ -83,6 +83,7 @@ Each `.txt` file corresponds to an image and contains one line per detection:
 ```
 
 **Important**: All coordinates are **normalized** (0-1 range):
+
 - `x_center`: Horizontal center as fraction of image width
 - `y_center`: Vertical center as fraction of image height
 - `width`: Bounding box width as fraction of image width
@@ -96,6 +97,7 @@ Each `.txt` file corresponds to an image and contains one line per detection:
 ```
 
 This means:
+
 - Class 0 (acne): center at 50% horizontal, 30% vertical; 40% width, 30% height
 - Class 1 (eczema): center at 20% horizontal, 70% vertical; 15% width, 20% height
 
@@ -126,10 +128,10 @@ Create a `data.yaml` file in your dataset root directory:
 
 ```yaml
 # Dataset paths (relative to yaml location or absolute)
-path: /path/to/dataset  # Dataset root
-train: images/train     # Training images
-val: images/val         # Validation images
-test: images/test       # Test images (optional)
+path: /path/to/dataset # Dataset root
+train: images/train # Training images
+val: images/val # Validation images
+test: images/test # Test images (optional)
 
 # Number of classes
 nc: 5
@@ -158,7 +160,7 @@ test: images/test
 nc: 5
 
 # Class names (must match label file class indices)
-names: ['acne', 'eczema', 'psoriasis', 'dandruff', 'rosacea']
+names: ["acne", "eczema", "psoriasis", "dandruff", "rosacea"]
 
 # Download/preparation commands (optional)
 download: |
@@ -175,7 +177,7 @@ path: ml/data/detection
 train: images/train
 val: images/val
 nc: 5
-names: ['acne', 'eczema', 'psoriasis', 'dandruff', 'rosacea']
+names: ["acne", "eczema", "psoriasis", "dandruff", "rosacea"]
 ```
 
 ## Training YOLOv8 Models
@@ -233,15 +235,16 @@ yolo task=detect mode=train \
 
 ### Model Size Options
 
-| Model | Size | mAP50 | Speed | Parameters |
-|-------|------|-------|-------|-----------|
-| YOLOv8n | 640 | 37.3 | 80.4ms | 3.2M |
-| YOLOv8s | 640 | 44.9 | 128.4ms | 11.2M |
-| YOLOv8m | 640 | 50.2 | 234.7ms | 25.9M |
-| YOLOv8l | 640 | 52.9 | 375.2ms | 43.7M |
-| YOLOv8x | 640 | 53.9 | 479.1ms | 68.2M |
+| Model   | Size | mAP50 | Speed   | Parameters |
+| ------- | ---- | ----- | ------- | ---------- |
+| YOLOv8n | 640  | 37.3  | 80.4ms  | 3.2M       |
+| YOLOv8s | 640  | 44.9  | 128.4ms | 11.2M      |
+| YOLOv8m | 640  | 50.2  | 234.7ms | 25.9M      |
+| YOLOv8l | 640  | 52.9  | 375.2ms | 43.7M      |
+| YOLOv8x | 640  | 53.9  | 479.1ms | 68.2M      |
 
 **Recommendations**:
+
 - **Mobile/Real-time**: Use YOLOv8n or YOLOv8s
 - **Balanced**: Use YOLOv8m
 - **High accuracy**: Use YOLOv8l or YOLOv8x
@@ -249,12 +252,14 @@ yolo task=detect mode=train \
 ### Training Parameters Explained
 
 #### Model & Data
+
 - `model`: Pre-trained weights (yolov8n.pt, yolov8s.pt, etc.)
 - `data`: Path to data.yaml configuration
 - `project`: Output directory for runs
 - `name`: Run name/experiment identifier
 
 #### Training Settings
+
 - `epochs`: Number of training epochs (typically 50-300)
 - `batch`: Batch size (adjust based on GPU memory)
 - `imgsz`: Input image size (640 recommended for balance)
@@ -262,13 +267,15 @@ yolo task=detect mode=train \
 - `device`: GPU device ID (0, 1, etc.) or 'cpu'
 
 #### Optimization
+
 - `optimizer`: SGD (default), Adam, AdamW
 - `lr0`: Initial learning rate
-- `lrf`: Final learning rate factor (lr_final = lr0 * lrf)
+- `lrf`: Final learning rate factor (lr_final = lr0 \* lrf)
 - `momentum`: SGD momentum
 - `weight_decay`: L2 regularization
 
 #### Augmentation
+
 - `hsv_h`: HSV hue augmentation (0-1)
 - `hsv_s`: HSV saturation augmentation (0-1)
 - `hsv_v`: HSV value augmentation (0-1)
@@ -282,6 +289,7 @@ yolo task=detect mode=train \
 - `copy_paste`: Copy-paste augmentation probability (0-1)
 
 #### Loss Weights
+
 - `box`: Box loss weight (default: 7.5)
 - `cls`: Classification loss weight (default: 0.5)
 - `dfl`: Distribution focal loss weight (default: 1.5)
@@ -347,10 +355,12 @@ yolo task=detect mode=train \
 YOLOv8 includes sophisticated augmentation strategies:
 
 #### Color Augmentations
+
 - **HSV-HSV**: Hue, Saturation, Value shifts to handle different lighting
 - Simulates changes in ambient lighting and camera settings
 
 #### Geometric Augmentations
+
 - **Rotation**: Handles tilted detection scenarios
 - **Translation**: Shifts objects around the image
 - **Scale**: Handles objects at different distances
@@ -358,11 +368,13 @@ YOLOv8 includes sophisticated augmentation strategies:
 - **Perspective**: Camera angle variations
 
 #### Mixing Augmentations
+
 - **Mosaic**: Combines 4 images in 1 (strong regularization)
 - **Mixup**: Blends two images (soft labels)
 - **Copy-Paste**: Copies objects between images
 
 #### Flip Augmentations
+
 - **Horizontal Flip**: Natural variations in image capture
 - **Vertical Flip**: Can be disabled if not representative
 
@@ -436,6 +448,7 @@ yolo task=detect mode=train \
 ### Fine-tuning Strategy
 
 1. **Freeze backbone** (optional, for very small datasets):
+
    ```python
    model = YOLO('yolov8n.pt')
    model.train(data='data.yaml', epochs=50, freeze=10)
@@ -471,14 +484,14 @@ ml/exports/detector/
 
 ### Key Output Files
 
-| File | Description |
-|------|-------------|
-| `best.pt` | Model with best validation mAP (use for production) |
-| `last.pt` | Model from last epoch (for resuming training) |
-| `results.csv` | Epoch-by-epoch metrics |
-| `confusion_matrix.png` | Class confusion patterns |
-| `results.png` | Training curves (loss, accuracy, mAP) |
-| `args.yaml` | Reproducible training configuration |
+| File                   | Description                                         |
+| ---------------------- | --------------------------------------------------- |
+| `best.pt`              | Model with best validation mAP (use for production) |
+| `last.pt`              | Model from last epoch (for resuming training)       |
+| `results.csv`          | Epoch-by-epoch metrics                              |
+| `confusion_matrix.png` | Class confusion patterns                            |
+| `results.png`          | Training curves (loss, accuracy, mAP)               |
+| `args.yaml`            | Reproducible training configuration                 |
 
 ### Resuming Training
 
@@ -606,12 +619,14 @@ yolo task=detect mode=train \
 Start with defaults and adjust based on results:
 
 1. **If overfitting** (train loss low, val loss high):
+
    - Increase augmentation (mosaic, mixup)
    - Increase weight_decay
    - Reduce model size
    - Reduce learning rate
 
 2. **If underfitting** (both losses high):
+
    - Increase model size
    - Increase learning rate
    - Decrease augmentation
@@ -663,11 +678,13 @@ yolo task=detect mode=train \
 ### Poor Validation Performance
 
 1. **Check data quality**:
+
    - Verify images and labels match
    - Ensure bounding boxes are in valid range (0-1)
    - Check for mislabeled images
 
 2. **Class imbalance**:
+
    ```bash
    # Increase training time for rare classes
    yolo task=detect mode=train \
@@ -742,11 +759,11 @@ from ultralytics import YOLO
 class ConditionDetector:
     def __init__(self, model_path='ml/exports/detector/skin_conditions_v1/weights/best.pt'):
         self.model = YOLO(model_path)
-    
+
     def detect(self, image_path: str, conf: float = 0.5):
         results = self.model.predict(source=image_path, conf=conf)
         detections = []
-        
+
         for result in results:
             for box in result.boxes:
                 detections.append({
@@ -754,7 +771,7 @@ class ConditionDetector:
                     'confidence': float(box.conf),
                     'bbox': box.xyxy[0].tolist(),
                 })
-        
+
         return detections
 ```
 

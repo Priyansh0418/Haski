@@ -27,11 +27,13 @@ ONNX Model (.onnx)
 #### Key Classes
 
 **`PyTorchClassifier`**: Wrapper for standard PyTorch classifier
+
 - EfficientNet-B0 or ResNet50 backbone
 - Fully connected classification head
 - Forward pass returning logits
 
 **`ONNXExporter`**: PyTorch → ONNX conversion
+
 - Dynamic axes for batch and spatial dimensions
 - Opset version 11 (broad compatibility)
 - Constant folding optimization
@@ -44,6 +46,7 @@ onnx_path = exporter.export('model.onnx', input_size=(224, 224), opset_version=1
 ```
 
 **`TFLiteExporter`**: ONNX → TFLite conversion
+
 - Multi-method conversion support:
   1. Primary: `onnx-tf` package (most reliable)
   2. Fallback: `tf.experimental.onnx` (if available)
@@ -60,6 +63,7 @@ tflite_path = exporter.export_from_onnx(
 ```
 
 **`RepresentativeDataGenerator`**: Dataset generator for int8 quantization
+
 - Loads images from directory
 - Applies ImageNet normalization
 - Batch-wise generation for memory efficiency
@@ -75,6 +79,7 @@ generator = RepresentativeDataGenerator(
 ```
 
 **`ModelExporter`**: Main orchestrator
+
 - Checkpoint loading with config extraction
 - Sequential ONNX → TFLite export
 - Metadata tracking (model architecture, num classes)
@@ -104,6 +109,7 @@ python export_models.py \
 ```
 
 **Options**:
+
 - `--checkpoint`: PyTorch checkpoint path (required)
 - `--format`: Export format (onnx, tflite, both)
 - `--quantize`: TFLite quantization (None, float16, int8)
@@ -117,6 +123,7 @@ python export_models.py \
 #### Inference Classes
 
 **`ONNXInference`**: ONNX model inference
+
 - Session management with input/output handling
 - Single and batch prediction
 - Performance benchmarking
@@ -132,6 +139,7 @@ benchmark = onnx_inf.benchmark('photo.jpg', num_iterations=100)
 ```
 
 **`TFLiteInference`**: TFLite model inference
+
 - Interpreter allocation and management
 - Quantization handling (float32, uint8)
 - Batch processing support
@@ -147,6 +155,7 @@ benchmark = tflite_inf.benchmark('photo.jpg', num_iterations=100)
 ```
 
 **`ModelComparison`**: Multi-model comparison
+
 - Cross-model prediction comparison
 - Output verification and agreement checking
 - Confidence differential analysis
@@ -161,6 +170,7 @@ performance = comparator.compare_performance('photo.jpg', iterations=100)
 #### Preprocessing & Postprocessing
 
 **Image Preprocessing**:
+
 ```python
 # Load → Resize (224×224) → Normalize → Float32
 # ImageNet statistics: mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]
@@ -168,6 +178,7 @@ performance = comparator.compare_performance('photo.jpg', iterations=100)
 ```
 
 **Output Postprocessing**:
+
 ```python
 # Softmax normalization
 # Top-1 class prediction
@@ -196,35 +207,41 @@ Each example includes complete, ready-to-use code.
 Complete reference guide including:
 
 **Installation**:
+
 - Core packages (torch, torchvision, pillow, numpy)
 - ONNX support (onnx, onnxruntime)
 - TFLite support (tensorflow, onnx-tf)
 - Optional tools (netron, tensorboard)
 
 **Export Procedures**:
+
 - ONNX export (opset 11, dynamic axes)
 - TFLite export (float32, float16, int8)
 - Batch export with all formats
 
 **Quantization Details**:
+
 - **Float16**: 2× compression, minimal accuracy loss, recommended for balance
 - **Int8**: 4× compression, requires calibration data, maximum compression
 - Calibration dataset requirements (50-200 diverse images)
 - Accuracy comparison table
 
 **Performance Benchmarks**:
+
 - Model sizes (PyTorch vs ONNX vs TFLite)
 - Inference latency across devices (CPU, GPU, mobile, edge)
 - Throughput measurements
 - Platform-specific comparison tables
 
 **Integration Guide**:
+
 - ONNX model loading and inference
 - TFLite interpreter setup
 - Python usage examples
 - Mobile integration patterns
 
 **Troubleshooting**:
+
 - ONNX export failures
 - TFLite conversion issues
 - Quantization accuracy degradation
@@ -233,6 +250,7 @@ Complete reference guide including:
 #### `README.md` (400+ lines)
 
 Overview and quick reference:
+
 - Files and purposes
 - Quick start procedures
 - Feature matrix
@@ -247,12 +265,14 @@ Overview and quick reference:
 ### ONNX Format
 
 **Characteristics**:
+
 - Open standard, widely supported
 - CPU and GPU inference
 - Cross-platform (Windows, Linux, macOS)
 - Large deployment ecosystem (ONNX Runtime, web browsers, various frameworks)
 
 **Export Process**:
+
 ```
 PyTorch Model
   ↓ torch.onnx.export()
@@ -265,18 +285,21 @@ ONNX Model (opset=11)
 **Model Size**: ~21 MB (EfficientNet-B0 with 10 classes)
 
 **Inference Latency**:
+
 - CPU (i7): 50ms (20 img/s)
 - GPU (V100): 10ms (100 img/s)
 
 ### TFLite Format
 
 **Characteristics**:
+
 - Optimized for mobile and embedded
 - Minimal dependencies (TFLite runtime)
 - Small model sizes with quantization
 - Fast inference on edge devices
 
 **Export Process**:
+
 ```
 ONNX Model
   ↓ onnx-tf.backend.prepare()
@@ -288,11 +311,13 @@ TFLite Model (float16 or int8)
 ```
 
 **Model Sizes**:
+
 - Float32: ~21 MB
 - Float16: ~11 MB (2× compression)
 - Int8: ~5.5 MB (4× compression)
 
 **Inference Latency**:
+
 - Mobile CPU: 100ms (10 img/s)
 - Mobile GPU: 20-30ms (33-50 img/s)
 - Edge (Raspberry Pi): 100-300ms (3-10 img/s)
@@ -300,6 +325,7 @@ TFLite Model (float16 or int8)
 ## Quantization Strategy
 
 ### No Quantization (Float32)
+
 ```
 Use case: Maximum accuracy needed, disk/bandwidth not critical
 Size: 21 MB
@@ -308,6 +334,7 @@ Speed: ~50ms (CPU)
 ```
 
 ### Float16 Quantization
+
 ```
 Use case: Mobile deployment with good accuracy
 Size: 11 MB (50% reduction)
@@ -317,6 +344,7 @@ Advantages: No calibration data needed
 ```
 
 ### Int8 Quantization
+
 ```
 Use case: Maximum compression and speed
 Size: 5.5 MB (75% reduction)
@@ -347,18 +375,21 @@ def predict(image: UploadFile):
 ### Pattern 2: Mobile/Edge (TFLite)
 
 **Android**:
+
 ```kotlin
 val interpreter = Interpreter(loadModelFile("model.tflite"))
 interpreter.run(input, output)
 ```
 
 **iOS**:
+
 ```swift
 let interpreter = try Interpreter(modelPath: "model.tflite")
 try interpreter.invoke()
 ```
 
 **Raspberry Pi**:
+
 ```python
 interpreter = tf.lite.Interpreter("model.tflite")
 interpreter.invoke()
@@ -377,6 +408,7 @@ CMD ["python", "app.py"]
 ```
 
 **Deployment**:
+
 ```bash
 docker build -t skin-classifier .
 docker run -p 5000:5000 skin-classifier
@@ -389,10 +421,10 @@ docker run -p 5000:5000 skin-classifier
 
 ### Model Architecture Comparison
 
-| Architecture | Parameters | Float32 | Float16 | Int8 | Latency (CPU) |
-|--------------|-----------|---------|---------|------|---------------|
-| EfficientNet-B0 | 5.3M | 21 MB | 11 MB | 5.5 MB | 50ms |
-| ResNet50 | 25.5M | 102 MB | 51 MB | 25 MB | 200ms |
+| Architecture    | Parameters | Float32 | Float16 | Int8   | Latency (CPU) |
+| --------------- | ---------- | ------- | ------- | ------ | ------------- |
+| EfficientNet-B0 | 5.3M       | 21 MB   | 11 MB   | 5.5 MB | 50ms          |
+| ResNet50        | 25.5M      | 102 MB  | 51 MB   | 25 MB  | 200ms         |
 
 ### Device/Format Performance Matrix
 
@@ -437,20 +469,21 @@ TFLite          Mobile GPU  50+ img/s
 
 ## File Statistics
 
-| Component | Type | Lines | Purpose |
-|-----------|------|-------|---------|
-| export_models.py | Code | 900+ | Main export framework |
-| example_inference.py | Code | 650+ | Inference demonstrations |
-| QUICK_START_EXAMPLES.py | Code | 550+ | Integration examples |
-| EXPORT_GUIDE.md | Docs | 1500+ | Complete reference guide |
-| README.md | Docs | 400+ | Quick reference |
-| **Total** | | **4000+** | Production-ready framework |
+| Component               | Type | Lines     | Purpose                    |
+| ----------------------- | ---- | --------- | -------------------------- |
+| export_models.py        | Code | 900+      | Main export framework      |
+| example_inference.py    | Code | 650+      | Inference demonstrations   |
+| QUICK_START_EXAMPLES.py | Code | 550+      | Integration examples       |
+| EXPORT_GUIDE.md         | Docs | 1500+     | Complete reference guide   |
+| README.md               | Docs | 400+      | Quick reference            |
+| **Total**               |      | **4000+** | Production-ready framework |
 
 ## Next Steps
 
 ### Immediate (Ready Now)
 
 1. **Export trained model**:
+
    ```bash
    python ml/exports/export_models.py \
      --checkpoint ml/exports/skin_classifier.pth \
@@ -459,6 +492,7 @@ TFLite          Mobile GPU  50+ img/s
    ```
 
 2. **Test exports**:
+
    ```bash
    python ml/exports/example_inference.py \
      --image test_image.jpg \
@@ -486,14 +520,14 @@ TFLite          Mobile GPU  50+ img/s
 
 ## Troubleshooting Guide
 
-| Issue | Solution |
-|-------|----------|
-| ONNX export fails | Update onnx: `pip install --upgrade onnx` |
-| TFLite conversion fails | Install onnx-tf: `pip install onnx-tf` |
-| Import onnxruntime error | Install: `pip install onnxruntime` |
-| Import tensorflow error | Install: `pip install tensorflow` |
-| Int8 quantization accuracy drops | Provide better calibration images or use float16 |
-| Inference output mismatch | Check normalization, input shape, and quantization |
+| Issue                            | Solution                                           |
+| -------------------------------- | -------------------------------------------------- |
+| ONNX export fails                | Update onnx: `pip install --upgrade onnx`          |
+| TFLite conversion fails          | Install onnx-tf: `pip install onnx-tf`             |
+| Import onnxruntime error         | Install: `pip install onnxruntime`                 |
+| Import tensorflow error          | Install: `pip install tensorflow`                  |
+| Int8 quantization accuracy drops | Provide better calibration images or use float16   |
+| Inference output mismatch        | Check normalization, input shape, and quantization |
 
 ## References
 

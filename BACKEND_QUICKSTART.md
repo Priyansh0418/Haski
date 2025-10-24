@@ -32,6 +32,7 @@ curl -X POST http://127.0.0.1:8001/api/v1/auth/signup \
 ```
 
 **Response** (200 OK):
+
 ```json
 {
   "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzI5NzYxMjAwfQ.xxx",
@@ -52,6 +53,7 @@ curl -X POST http://127.0.0.1:8001/api/v1/photos/upload \
 ```
 
 **Response** (201 Created):
+
 ```json
 {
   "photo_id": 42,
@@ -70,6 +72,7 @@ curl -X POST http://127.0.0.1:8001/api/v1/analyze/photo \
 ```
 
 **Response** (201 Created):
+
 ```json
 {
   "skin_type": "combination",
@@ -95,12 +98,12 @@ curl -X POST http://127.0.0.1:8001/api/v1/analyze/photo \
 
 ### Common Upload Errors
 
-| Status | Error | Solution |
-|--------|-------|----------|
-| 401 | Missing/invalid token | Ensure `Authorization: Bearer <token>` header is present |
-| 400 | Invalid file type | Use jpeg, png, gif, or webp format |
-| 413 | File too large | Compress image to under 10 MB |
-| 400 | Empty file | Upload a file with content |
+| Status | Error                 | Solution                                                 |
+| ------ | --------------------- | -------------------------------------------------------- |
+| 401    | Missing/invalid token | Ensure `Authorization: Bearer <token>` header is present |
+| 400    | Invalid file type     | Use jpeg, png, gif, or webp format                       |
+| 413    | File too large        | Compress image to under 10 MB                            |
+| 400    | Empty file            | Upload a file with content                               |
 
 ## Working with Python Requests
 
@@ -201,16 +204,20 @@ backend/
 ## Troubleshooting
 
 ### Server won't start
+
 - Check if port 8001 is already in use: `netstat -ano | findstr "8001"`
 - Kill process: `taskkill /PID <pid> /F`
 
 ### Database errors
+
 - Delete `dev.db` and re-apply migrations: `python -m alembic upgrade head`
 
 ### 401 Unauthorized errors
+
 - Make sure you're including the `Authorization` header
 - Token format must be: `Authorization: Bearer <token>`
 - Tokens expire after 24 hours by default
 
 ### CORS errors
+
 - Frontend must be running on same host or CORS policy needs to be updated in `app/main.py`

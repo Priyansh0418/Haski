@@ -5,6 +5,7 @@ Advanced prototype for joint skin type classification and lesion segmentation.
 ## Overview
 
 This framework implements **multi-task learning** with:
+
 - **Shared Backbone**: EfficientNet-B0 (pre-trained on ImageNet)
 - **Classification Head**: Skin type / hair type prediction
 - **Segmentation Head**: Lesion localization (UNet decoder)
@@ -34,6 +35,7 @@ pip install torch torchvision pillow numpy tqdm
 ```
 
 Optional (for visualization and monitoring):
+
 ```bash
 pip install pytorch-lightning tensorboard matplotlib
 ```
@@ -98,6 +100,7 @@ print(results['segmentation'])
 ### Shared Backbone
 
 **EfficientNet-B0** pre-trained on ImageNet:
+
 - Efficient scaling (compound scaling law)
 - Good accuracy-efficiency tradeoff
 - Output: 1280-dimensional feature maps at 7×7 spatial resolution
@@ -120,6 +123,7 @@ print(results['segmentation'])
 ```
 
 **Purpose**: Predict skin type and/or hair type
+
 - Outputs: Logits for classification
 - Loss: Cross-entropy
 - Classes: Configurable (default: 10 for 5 skin types + 5 hair types)
@@ -145,6 +149,7 @@ UNet-style decoder with progressive upsampling:
 ```
 
 **Purpose**: Localize lesions on skin
+
 - Outputs: Logits for binary segmentation
 - Loss: BCE with logits
 - Resolution: 112×112 (can be upsampled to 224×224 if needed)
@@ -170,20 +175,21 @@ segmentation_weight = 0.5    # Lower than classification (lesion seg. is harder)
 ```
 
 Adjust based on task importance:
+
 - Increase `classification_weight` if accuracy is more important
 - Increase `segmentation_weight` if lesion localization is critical
 
 ### Training Configuration
 
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `epochs` | 50 | Number of training epochs |
-| `batch_size` | 16 | Batch size per GPU |
-| `lr` | 0.001 | Learning rate |
-| `classification_weight` | 1.0 | Classification loss weight |
-| `segmentation_weight` | 0.5 | Segmentation loss weight |
-| `device` | auto | 'cuda' or 'cpu' |
-| `freeze_backbone` | False | Freeze backbone for limited data |
+| Parameter               | Default | Description                      |
+| ----------------------- | ------- | -------------------------------- |
+| `epochs`                | 50      | Number of training epochs        |
+| `batch_size`            | 16      | Batch size per GPU               |
+| `lr`                    | 0.001   | Learning rate                    |
+| `classification_weight` | 1.0     | Classification loss weight       |
+| `segmentation_weight`   | 0.5     | Segmentation loss weight         |
+| `device`                | auto    | 'cuda' or 'cpu'                  |
+| `freeze_backbone`       | False   | Freeze backbone for limited data |
 
 ### Optimization
 
@@ -196,6 +202,7 @@ Adjust based on task importance:
 ### Checkpoints
 
 **`ml/exports/multitask_best.pth`**:
+
 ```python
 {
     'state_dict': {...},              # Model weights
@@ -212,6 +219,7 @@ Adjust based on task importance:
 ### Metrics
 
 **`ml/exports/multitask_history.json`**:
+
 ```json
 {
     "train_loss": [2.31, 1.89, 1.45, ...],
@@ -283,7 +291,7 @@ for i in range(len(images)):
     class_pred = class_probs[i].argmax().item()
     class_conf = class_probs[i].max().item()
     mask = (seg_probs[i] > 0.5).float()
-    
+
     print(f"Image {i}: class={class_pred}, conf={class_conf:.3f}, lesion_ratio={mask.mean():.3f}")
 ```
 
@@ -294,15 +302,18 @@ for i in range(len(images)):
 The `MultiTaskDataset` class needs implementation for:
 
 1. **Classification Labels**
+
    - Load from CSV or JSON mapping files
    - Example: `image_001.jpg -> class_id_3`
 
 2. **Segmentation Masks**
+
    - Load binary masks (PNG, GIF, or generated)
    - Normalize to [0, 1] range
    - Handle missing masks gracefully
 
 3. **Train/Val Split**
+
    ```python
    total = len(image_paths)
    train_size = int(0.8 * total)
@@ -311,9 +322,10 @@ The `MultiTaskDataset` class needs implementation for:
    ```
 
 4. **Data Augmentation**
+
    ```python
    from torchvision import transforms as T
-   
+
    transforms = T.Compose([
        T.RandomHorizontalFlip(0.5),
        T.RandomRotation(15),
@@ -351,6 +363,7 @@ data/
 ### Label Format
 
 **`labels.json`**:
+
 ```json
 {
     "image_001.jpg": 0,
@@ -453,10 +466,10 @@ python train_multitask.py --device cpu
 ### Training Speed (NVIDIA V100 GPU)
 
 | Batch Size | Epoch Time | Throughput |
-|-----------|-----------|-----------|
-| 8 | ~30s | 213 img/s |
-| 16 | ~50s | 256 img/s |
-| 32 | ~90s | 284 img/s |
+| ---------- | ---------- | ---------- |
+| 8          | ~30s       | 213 img/s  |
+| 16         | ~50s       | 256 img/s  |
+| 32         | ~90s       | 284 img/s  |
 
 ### Model Size
 
@@ -474,10 +487,10 @@ from ml.training.train_multitask import MultiTaskModel
 class SkinAnalyzer:
     def __init__(self):
         self.model = MultiTaskModel.load('ml/exports/multitask_best.pth')
-    
+
     def analyze(self, image_path: str):
         result = self.model.predict(image_path)
-        
+
         return {
             'skin_type': self._get_skin_type_name(
                 result['classification']['predicted_class_id']
@@ -495,10 +508,10 @@ analyzer = SkinAnalyzer()
 async def analyze_multitask(file: UploadFile = File(...)):
     # Save uploaded file
     # ...
-    
+
     # Analyze
     result = analyzer.analyze(image_path)
-    
+
     return result
 ```
 

@@ -5,12 +5,14 @@
 **Location**: `backend/alembic.ini`, `backend/migrations/`
 
 ### What was added:
+
 - Initialized Alembic migration system for SQLAlchemy models
 - Configured Alembic to work with SQLite database (`dev.db`)
 - Updated `migrations/env.py` to automatically import models and generate migrations
 - Created initial migration: `0d2250749c88_initial_migration_create_all_tables.py`
 
 ### Usage:
+
 ```bash
 # Create a new migration after model changes
 cd backend
@@ -24,6 +26,7 @@ python -m alembic downgrade -1
 ```
 
 ### Benefits:
+
 - Track database schema changes in version control
 - Easy rollback capability
 - Reproducible database setup across environments
@@ -36,12 +39,14 @@ python -m alembic downgrade -1
 **Location**: `backend/app/core/security.py`
 
 ### What was added:
+
 - `get_current_user()` FastAPI dependency
 - JWT token validation using HTTPBearer scheme
 - Automatic user ID extraction from JWT claims
 - Proper error handling with 401 Unauthorized responses
 
 ### Implementation:
+
 ```python
 # In any route handler:
 from fastapi import Depends
@@ -54,12 +59,14 @@ def protected_route(user_id: int = Depends(get_current_user)):
 ```
 
 ### How it works:
+
 1. Client sends request with `Authorization: Bearer <token>` header
 2. HTTPBearer automatically extracts the token
 3. `get_current_user()` validates the JWT signature
 4. Returns user ID if valid, raises 401 if invalid or expired
 
 ### Secured Routes:
+
 - **POST /api/v1/photos/upload** - Now requires JWT authentication
 - **POST /api/v1/analyze/photo** - Now requires JWT authentication
 
@@ -70,6 +77,7 @@ def protected_route(user_id: int = Depends(get_current_user)):
 **Location**: `backend/app/api/v1/photos.py`, `backend/app/api/v1/analyze.py`
 
 ### Validation Rules:
+
 - **Max File Size**: 10 MB (returns 413 Request Entity Too Large if exceeded)
 - **Allowed MIME Types**: `image/jpeg`, `image/png`, `image/gif`, `image/webp`
 - **Empty File Check**: Rejects empty files (400 Bad Request)
@@ -77,6 +85,7 @@ def protected_route(user_id: int = Depends(get_current_user)):
 ### Error Responses:
 
 #### Invalid File Type (400):
+
 ```json
 {
   "detail": "Invalid file type. Allowed types: image/jpeg, image/png, image/gif, image/webp"
@@ -84,6 +93,7 @@ def protected_route(user_id: int = Depends(get_current_user)):
 ```
 
 #### File Too Large (413):
+
 ```json
 {
   "detail": "File size exceeds maximum allowed size of 10.0 MB"
@@ -91,6 +101,7 @@ def protected_route(user_id: int = Depends(get_current_user)):
 ```
 
 #### File Read Error (400):
+
 ```json
 {
   "detail": "Could not read uploaded file"
@@ -98,6 +109,7 @@ def protected_route(user_id: int = Depends(get_current_user)):
 ```
 
 #### Empty File (400):
+
 ```json
 {
   "detail": "Empty file uploaded"
@@ -105,6 +117,7 @@ def protected_route(user_id: int = Depends(get_current_user)):
 ```
 
 ### Implementation Details:
+
 ```python
 MAX_FILE_SIZE = 10 * 1024 * 1024  # 10 MB
 ALLOWED_MIME_TYPES = {"image/jpeg", "image/png", "image/gif", "image/webp"}
@@ -123,6 +136,7 @@ if len(contents) > MAX_FILE_SIZE:
 ## Testing the New Features
 
 ### Test 1: Signup (generates JWT token)
+
 ```bash
 curl -X POST http://127.0.0.1:8001/api/v1/auth/signup \
   -H "Content-Type: application/json" \
@@ -130,6 +144,7 @@ curl -X POST http://127.0.0.1:8001/api/v1/auth/signup \
 ```
 
 Response:
+
 ```json
 {
   "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
@@ -138,6 +153,7 @@ Response:
 ```
 
 ### Test 2: Authenticated Photo Upload
+
 ```bash
 curl -X POST http://127.0.0.1:8001/api/v1/photos/upload \
   -H "Authorization: Bearer <token_from_signup>" \
@@ -145,6 +161,7 @@ curl -X POST http://127.0.0.1:8001/api/v1/photos/upload \
 ```
 
 ### Test 3: File Size Validation
+
 ```bash
 # This will fail with 413 if file > 10MB
 curl -X POST http://127.0.0.1:8001/api/v1/photos/upload \
@@ -153,6 +170,7 @@ curl -X POST http://127.0.0.1:8001/api/v1/photos/upload \
 ```
 
 ### Test 4: Invalid File Type
+
 ```bash
 # This will fail with 400 if MIME type not in allowed list
 curl -X POST http://127.0.0.1:8001/api/v1/photos/upload \
@@ -161,6 +179,7 @@ curl -X POST http://127.0.0.1:8001/api/v1/photos/upload \
 ```
 
 ### Test 5: Missing Authentication
+
 ```bash
 # This will fail with 401 if no token provided
 curl -X POST http://127.0.0.1:8001/api/v1/photos/upload \
@@ -172,6 +191,7 @@ curl -X POST http://127.0.0.1:8001/api/v1/photos/upload \
 ## Database Migrations Guide
 
 ### Initial Setup:
+
 ```bash
 cd backend
 
@@ -180,6 +200,7 @@ python -m alembic upgrade head
 ```
 
 ### After Model Changes:
+
 1. Modify models in `app/models/db_models.py`
 2. Generate migration:
    ```bash
@@ -192,6 +213,7 @@ python -m alembic upgrade head
    ```
 
 ### Downgrade Database:
+
 ```bash
 # Rollback one migration
 python -m alembic downgrade -1
@@ -205,12 +227,14 @@ python -m alembic downgrade 0d2250749c88
 ## Files Modified/Created
 
 ### Created:
+
 - `backend/alembic.ini` - Alembic configuration
 - `backend/migrations/` - Migration directory structure
 - `backend/migrations/env.py` - Migration environment setup
 - `backend/migrations/versions/0d2250749c88_initial_migration_create_all_tables.py` - Initial migration
 
 ### Modified:
+
 - `backend/app/core/security.py` - Added `get_current_user()` dependency
 - `backend/app/api/v1/photos.py` - Added JWT auth + file validation
 - `backend/app/api/v1/analyze.py` - Added JWT auth + file validation
@@ -220,6 +244,7 @@ python -m alembic downgrade 0d2250749c88
 ## Security Notes
 
 ⚠️ **Important for Production:**
+
 1. Change `secret_key` in `app/core/config.py` to a strong secret
 2. Implement proper password hashing (bcrypt) instead of SHA256
 3. Add rate limiting to prevent brute force attacks

@@ -12,6 +12,7 @@
 ## One-Liner Quickstart
 
 ### Classification (Skin Type)
+
 ```bash
 python prepare_dataset.py --task classification \
   --source /path/to/images --output datasets/skin_type \
@@ -19,6 +20,7 @@ python prepare_dataset.py --task classification \
 ```
 
 ### Detection (Conditions - YOLO)
+
 ```bash
 python prepare_dataset.py --task detection \
   --source /path/to/images --labels /path/to/labels \
@@ -28,17 +30,20 @@ python prepare_dataset.py --task detection \
 ## Features
 
 ### ✅ Automatic Validation
+
 - **Image files**: Checks readability with Pillow
 - **YOLO labels**: Validates format and coordinate ranges
 - **Class coverage**: Reports missing labels
 - **File integrity**: Skips corrupted files with warnings
 
 ### ✅ Flexible Input
+
 - **Copy mode**: Duplicates files (safer)
 - **Symlink mode**: Links files (faster, saves space with `--symlink`)
 - **Config files**: YAML-based configuration for reproducibility
 
 ### ✅ Rich Output
+
 - **Manifest JSON**: Dataset statistics and split information
 - **YOLO config**: data.yaml for YOLOv5/v8 training
 - **Console summary**: Class distribution and validation results
@@ -46,6 +51,7 @@ python prepare_dataset.py --task detection \
 ## Output Files
 
 ### Classification Dataset
+
 ```
 output_dir/
 ├── train/{class_name}/*.jpg
@@ -55,6 +61,7 @@ output_dir/
 ```
 
 ### Detection Dataset
+
 ```
 output_dir/
 ├── images/{train,val,test}/*.jpg
@@ -65,18 +72,19 @@ output_dir/
 
 ## Common Issues & Solutions
 
-| Issue | Solution |
-|-------|----------|
-| "File not found" | Verify source directory structure |
-| "Invalid image" | Check image format (JPG/PNG/GIF/WebP) |
-| "Skipped N images" | Corrupted files - safe to ignore |
-| "Label not found" | Ensure .txt files match image filenames |
-| "Coord out of range" | Normalize YOLO labels to 0-1 |
-| "Empty label file" | Remove empty label files |
+| Issue                | Solution                                |
+| -------------------- | --------------------------------------- |
+| "File not found"     | Verify source directory structure       |
+| "Invalid image"      | Check image format (JPG/PNG/GIF/WebP)   |
+| "Skipped N images"   | Corrupted files - safe to ignore        |
+| "Label not found"    | Ensure .txt files match image filenames |
+| "Coord out of range" | Normalize YOLO labels to 0-1            |
+| "Empty label file"   | Remove empty label files                |
 
 ## Dataset Statistics
 
 ### Classification Example
+
 ```
 Skin Type Classification Summary
 ==================================================
@@ -91,6 +99,7 @@ Class distribution:
 ```
 
 ### Detection Example
+
 ```
 Condition Detection Metrics (YOLO)
 ===================================
@@ -113,6 +122,7 @@ Class distribution:
 ## Advanced Options
 
 ### Use Symlinks (Large Datasets)
+
 ```bash
 python prepare_dataset.py --task classification \
   --source /external/drive/data --output datasets/skin_type \
@@ -120,6 +130,7 @@ python prepare_dataset.py --task classification \
 ```
 
 ### Custom Manifest Path
+
 ```bash
 python prepare_dataset.py --task classification \
   --source /data --output datasets/skin_type \
@@ -130,6 +141,7 @@ python prepare_dataset.py --task classification \
 ## Integration with Training
 
 ### Classification Training (PyTorch)
+
 ```python
 from torchvision import datasets, transforms
 
@@ -144,6 +156,7 @@ dataset = datasets.ImageFolder('datasets/skin_type/train', transform=transform)
 ```
 
 ### Detection Training (YOLOv8)
+
 ```bash
 # Use generated data.yaml
 yolo detect train model=yolov8n.pt data=datasets/conditions/data.yaml \
@@ -161,6 +174,7 @@ yolo detect train model=yolov8n.pt data=datasets/conditions/data.yaml \
 ## Data Format Reference
 
 ### Classification Directory Structure
+
 ```
 train/
 ├── normal/
@@ -173,6 +187,7 @@ train/
 ```
 
 ### YOLO Label Format
+
 ```
 class_id center_x center_y width height
 
@@ -182,6 +197,7 @@ Example:
 ```
 
 **Ranges**: All values are normalized (0 to 1)
+
 - `center_x`, `center_y`: Relative to image center
 - `width`, `height`: Relative to image size
 
@@ -224,6 +240,7 @@ python prepare_dataset.py \
 For detailed instructions, see **USAGE.md**
 
 For example workflows, run:
+
 ```bash
 python examples.py
 ```

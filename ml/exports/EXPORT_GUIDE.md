@@ -135,11 +135,13 @@ print(f"Class: {class_id}, Confidence: {confidence:.3f}")
 
 **Format**: `skin_classifier.tflite`  
 **Size**:
+
 - Float32: ~21 MB
 - Float16: ~11 MB
 - Int8: ~5.5 MB
 
 **Latency**:
+
 - CPU: 50-100ms
 - Mobile GPU: 20-30ms
 - Mobile NN Accelerator: 5-10ms
@@ -171,6 +173,7 @@ python ml/exports/export_models.py \
 #### Usage (TensorFlow Lite)
 
 **Python (Mobile/Edge)**:
+
 ```python
 import tensorflow as tf
 import numpy as np
@@ -209,6 +212,7 @@ print(f"Class: {class_id}, Confidence: {confidence:.3f}")
 ```
 
 **Kotlin (Android)**:
+
 ```kotlin
 import org.tensorflow.lite.Interpreter
 import java.nio.MappedByteBuffer
@@ -233,6 +237,7 @@ val confidence = output[0][classId]
 ```
 
 **Swift (iOS)**:
+
 ```swift
 import TensorFlowLite
 
@@ -283,6 +288,7 @@ python ml/exports/export_models.py \
 ```
 
 **How it works**:
+
 - Weights converted from float32 to float16 (2 bytes per value)
 - Model size reduced by ~50%
 - Minimal accuracy degradation
@@ -307,12 +313,14 @@ python ml/exports/export_models.py \
 ```
 
 **Calibration Dataset Requirements**:
+
 - **Size**: 50-200 images
 - **Diversity**: Representative of real-world inputs
 - **Format**: JPG, PNG (same as training data)
 - **Content**: Various skin types, lighting conditions, angles
 
 **How it works**:
+
 ```
 1. Load calibration images (representative dataset)
 2. Run inference on each image
@@ -322,6 +330,7 @@ python ml/exports/export_models.py \
 ```
 
 **Accuracy Comparison**:
+
 ```
 | Quantization | Model Size | Latency | Accuracy Drop |
 |--------------|-----------|---------|---------------|
@@ -457,6 +466,7 @@ Edge (RPI 4)    | 300ms   | N/A     | 100ms | 10 img/s
 **Error**: `RuntimeError: onnx export failed`
 
 **Solutions**:
+
 ```bash
 # Update ONNX
 pip install --upgrade onnx
@@ -473,6 +483,7 @@ python ml/exports/export_models.py --checkpoint ... --help
 **Error**: `ImportError: No module named 'onnx_tf'`
 
 **Solutions**:
+
 ```bash
 # Install onnx-tf
 pip install onnx-tf
@@ -486,7 +497,9 @@ pip install --upgrade tensorflow
 **Symptom**: Model predictions significantly worse after quantization
 
 **Solutions**:
+
 1. Use better calibration dataset:
+
    ```bash
    python ml/exports/export_models.py \
      --checkpoint ... \
@@ -495,6 +508,7 @@ pip install --upgrade tensorflow
    ```
 
 2. Fall back to float16:
+
    ```bash
    python ml/exports/export_models.py \
      --checkpoint ... \
@@ -521,20 +535,20 @@ from pathlib import Path
 class SkinClassifierONNX:
     def __init__(self, model_path: str = 'ml/exports/skin_classifier.onnx'):
         self.session = rt.InferenceSession(model_path)
-    
+
     def predict(self, image_path: str) -> dict:
         # Load and preprocess image
         image = preprocess_image(image_path)
-        
+
         # Infer
         input_name = self.session.get_inputs()[0].name
         output_name = self.session.get_outputs()[0].name
         logits = self.session.run([output_name], {input_name: image})[0]
-        
+
         # Post-process
         class_id = np.argmax(logits[0])
         confidence = softmax(logits[0])[class_id]
-        
+
         return {
             'class_id': int(class_id),
             'confidence': float(confidence),
@@ -545,6 +559,7 @@ class SkinClassifierONNX:
 ### Mobile Deployment
 
 **Android** (using TFLite):
+
 ```kotlin
 val classifier = SkinClassifier("skin_classifier.tflite")
 val result = classifier.predict(bitmap)
@@ -552,6 +567,7 @@ val result = classifier.predict(bitmap)
 ```
 
 **iOS** (using TFLite):
+
 ```swift
 let classifier = SkinClassifier(modelPath: "skin_classifier.tflite")
 let result = classifier.predict(image: uiImage)

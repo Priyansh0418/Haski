@@ -1,5 +1,4 @@
 import os
-from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -16,17 +15,10 @@ from .api.v1 import router as api_v1_router
 APP_TITLE = "SkinHairAI API"
 APP_VERSION = "0.1"
 
+# Create database tables on startup
+Base.metadata.create_all(bind=engine)
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # Startup
-    Base.metadata.create_all(bind=engine)
-    yield
-    # Shutdown
-    pass
-
-
-app = FastAPI(title=APP_TITLE, version=APP_VERSION, lifespan=lifespan)
+app = FastAPI(title=APP_TITLE, version=APP_VERSION)
 
 
 @app.get("/")
