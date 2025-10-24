@@ -7,6 +7,7 @@ The SkinHairAI Recommender System is an intelligent engine that transforms skin/
 ### Purpose
 
 Map analysis data + user profile → **personalized recommendations** that are:
+
 - ✅ **Safe** - No prescription medications, evidence-based
 - ✅ **Scalable** - Rule-based MVP, ML-powered optimization later
 - ✅ **Adaptive** - Learns from user feedback
@@ -66,14 +67,14 @@ Map analysis data + user profile → **personalized recommendations** that are:
 
 ### Components
 
-| Component | Purpose | Location |
-|-----------|---------|----------|
-| **Rule Engine** | Matches conditions to recommendations | `backend/app/recommender/engine.py` |
-| **Rules Repository** | YAML/JSON rules for each condition | `backend/app/recommender/rules.yml` |
-| **Product Database** | Products with tags, ingredients, safety flags | Database table `products` |
-| **Feedback Logger** | Records user responses | Database table `recommendation_feedback` |
-| **Safety Module** | Checks severity, escalations | `backend/app/recommender/safety.py` |
-| **API Endpoints** | HTTP interface | `backend/app/api/v1/recommender.py` |
+| Component            | Purpose                                       | Location                                 |
+| -------------------- | --------------------------------------------- | ---------------------------------------- |
+| **Rule Engine**      | Matches conditions to recommendations         | `backend/app/recommender/engine.py`      |
+| **Rules Repository** | YAML/JSON rules for each condition            | `backend/app/recommender/rules.yml`      |
+| **Product Database** | Products with tags, ingredients, safety flags | Database table `products`                |
+| **Feedback Logger**  | Records user responses                        | Database table `recommendation_feedback` |
+| **Safety Module**    | Checks severity, escalations                  | `backend/app/recommender/safety.py`      |
+| **API Endpoints**    | HTTP interface                                | `backend/app/api/v1/recommender.py`      |
 
 ---
 
@@ -97,6 +98,7 @@ backend/app/recommender/
 ### How It Works
 
 **Step 1: Load Rules**
+
 ```python
 rules = load_rules("backend/app/recommender/rules.yml")
 # rules[condition] = {
@@ -109,6 +111,7 @@ rules = load_rules("backend/app/recommender/rules.yml")
 ```
 
 **Step 2: Match Analysis to Rules**
+
 ```python
 for condition in analysis.conditions:
     if condition in rules:
@@ -116,6 +119,7 @@ for condition in analysis.conditions:
 ```
 
 **Step 3: Filter by User Profile**
+
 ```python
 filtered = filter_by_profile(
     recommendations,
@@ -127,6 +131,7 @@ filtered = filter_by_profile(
 ```
 
 **Step 4: Prioritize & Return**
+
 ```python
 ranked = rank_recommendations(filtered)
 response = format_response(ranked, safety_flags)
@@ -161,30 +166,30 @@ conditions:
         frequency: "Daily morning"
         duration_weeks: 0
         reason: "Prevents PIH (post-inflammatory hyperpigmentation)"
-    
+
     diet_tips:
       - "Increase water intake: 2-3L daily"
       - "Reduce dairy: linked to acne in 20% of population"
       - "Limit high-glycemic foods (white bread, sugar)"
       - "Include omega-3s: salmon, flax, walnuts"
       - "Avoid excess iodine: seaweed, iodized salt"
-    
+
     products:
       cleanser:
         tags: ["gentle", "acne-prone"]
         ingredients_to_avoid: ["alcohol", "fragrance"]
         recommended_ingredients: ["salicylic acid", "glycerin"]
-      
+
       treatment:
         tags: ["acne-fighting", "non-comedogenic"]
         ingredients_to_avoid: ["silicone", "heavy oils"]
         recommended_ingredients: ["niacinamide", "zinc"]
-      
+
       moisturizer:
         tags: ["lightweight", "oil-free"]
         ingredients_to_avoid: ["heavy oils", "lanolin"]
         recommended_ingredients: ["hyaluronic acid", "glycerin"]
-    
+
     escalation:
       severe_signs: ["cystic acne", "widespread", "resistant"]
       action: "See dermatologist for isotretinoin evaluation"
@@ -213,20 +218,20 @@ conditions:
         frequency: "1x weekly"
         duration_weeks: 0
         reason: "Intensive moisture boost"
-    
+
     diet_tips:
       - "Hydrate: 3-4L water daily"
       - "Include healthy fats: avocado, nuts, seeds"
       - "Increase collagen: bone broth, citrus"
       - "Add electrolytes: coconut water, mineral water"
       - "Limit caffeine: dehydrating effect"
-    
+
     products:
       cleanser:
         tags: ["hydrating", "gentle"]
         ingredients_to_avoid: ["sulfates", "alcohol"]
         recommended_ingredients: ["glycerin", "hyaluronic acid"]
-      
+
       moisturizer:
         tags: ["rich", "barrier-repair"]
         ingredients_to_avoid: ["fragrance", "alcohol"]
@@ -247,7 +252,7 @@ conditions:
         action: "Clay mask"
         frequency: "1x weekly"
         duration_weeks: 0
-    
+
     products:
       treatment:
         tags: ["exfoliating", "pore-cleansing"]
@@ -270,16 +275,16 @@ CREATE TABLE products (
     brand VARCHAR(100),
     price_usd DECIMAL(10, 2),
     url VARCHAR(500),
-    
+
     -- Safety & Ingredients
     ingredients TEXT,  -- JSON array
     safe_tags TEXT,    -- JSON array: ["acne-prone", "sensitive", "dry", ...]
     avoid_tags TEXT,   -- JSON array: conditions to avoid for
-    
+
     -- Ratings & Feedback
     avg_rating FLOAT DEFAULT 0.0,
     review_count INT DEFAULT 0,
-    
+
     -- Admin
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -299,17 +304,17 @@ CREATE TABLE recommendation_feedback (
     user_id INT NOT NULL,
     analysis_id INT NOT NULL,
     recommendation_id VARCHAR(100),  -- ID of recommendation set
-    
+
     -- Feedback
     helpful_rating INT,              -- 1-5: not helpful to very helpful
     product_satisfaction INT,        -- 1-5: not satisfied to very satisfied
     routine_completion_pct INT,      -- 0-100: % of routine they followed
     feedback_text TEXT,              -- User comments
-    
+
     -- Tracking
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
+
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (analysis_id) REFERENCES analysis(id)
 );
@@ -324,6 +329,7 @@ CREATE TABLE recommendation_feedback (
 **Endpoint**: `POST /api/v1/recommender/recommend`
 
 **Request** (Option A: Using Analysis ID):
+
 ```json
 {
   "analysis_id": 5,
@@ -333,6 +339,7 @@ CREATE TABLE recommendation_feedback (
 ```
 
 **Request** (Option B: Direct Analysis JSON):
+
 ```json
 {
   "analysis": {
@@ -357,12 +364,13 @@ CREATE TABLE recommendation_feedback (
 ```
 
 **Response** (201 Created):
+
 ```json
 {
   "recommendation_id": "rec_20251024_001",
   "analysis_id": 5,
   "user_id": 3,
-  
+
   "skincare_routine": {
     "duration_weeks": 4,
     "steps": [
@@ -396,7 +404,7 @@ CREATE TABLE recommendation_feedback (
       }
     ]
   },
-  
+
   "diet_recommendations": {
     "tips": [
       "Increase water: 2-3L daily",
@@ -417,7 +425,7 @@ CREATE TABLE recommendation_feedback (
       "High-iodine: seaweed"
     ]
   },
-  
+
   "product_recommendations": {
     "cleanser": {
       "name": "CeraVe Hydrating Cleanser",
@@ -432,7 +440,7 @@ CREATE TABLE recommendation_feedback (
     "treatment": {
       "name": "The Ordinary Salicylic Acid 2%",
       "brand": "Deciem",
-      "price_usd": 5.90,
+      "price_usd": 5.9,
       "url": "https://...",
       "why_recommended": "Affordable, effective BHA for acne",
       "ingredients": ["salicylic acid", "glycerin"],
@@ -452,14 +460,14 @@ CREATE TABLE recommendation_feedback (
     "sunscreen": {
       "name": "La Roche-Posay Anthelios Fluid",
       "brand": "La Roche-Posay",
-      "price_usd": 34.00,
+      "price_usd": 34.0,
       "url": "https://...",
       "why_recommended": "Lightweight, non-comedogenic",
       "rating": 4.4,
       "reviews": 890
     }
   },
-  
+
   "safety_flags": {
     "severe": false,
     "requires_professional": false,
@@ -468,9 +476,9 @@ CREATE TABLE recommendation_feedback (
     ],
     "escalation": null
   },
-  
+
   "created_at": "2025-10-24T20:55:00Z",
-  "expires_at": "2025-11-24T20:55:00Z"  // 30-day validity
+  "expires_at": "2025-11-24T20:55:00Z" // 30-day validity
 }
 ```
 
@@ -479,6 +487,7 @@ CREATE TABLE recommendation_feedback (
 **Endpoint**: `POST /api/v1/recommender/feedback`
 
 **Request**:
+
 ```json
 {
   "recommendation_id": "rec_20251024_001",
@@ -491,6 +500,7 @@ CREATE TABLE recommendation_feedback (
 ```
 
 **Response** (201 Created):
+
 ```json
 {
   "feedback_id": "fb_20251024_001",
@@ -506,6 +516,7 @@ CREATE TABLE recommendation_feedback (
 **Endpoint**: `GET /api/v1/recommender/history?user_id=3&limit=10`
 
 **Response** (200 OK):
+
 ```json
 {
   "user_id": 3,
@@ -533,7 +544,7 @@ CREATE TABLE recommendation_feedback (
 class SafetyChecker:
     def check_conditions(self, analysis):
         """Identify conditions requiring professional help"""
-        
+
         severe_conditions = {
             "severe_acne": {
                 "signs": ["cystic", "widespread", "resistant"],
@@ -551,7 +562,7 @@ class SafetyChecker:
                 "urgent": True
             }
         }
-        
+
         flags = []
         for condition, details in severe_conditions.items():
             if any(sign in analysis.conditions for sign in details["signs"]):
@@ -560,7 +571,7 @@ class SafetyChecker:
                     "action": details["action"],
                     "urgent": details["urgent"]
                 })
-        
+
         return flags
 ```
 
@@ -571,20 +582,20 @@ response = {
     "safety_flags": {
         "severe": bool(severe_conditions),
         "requires_professional": bool(escalation_needed),
-        
+
         "warnings": [
             "Salicylic acid may cause dryness - use moisturizer",
             "Niacinamide can cause flushing temporarily",
             "Sunscreen is CRITICAL with acne treatments"
         ],
-        
+
         "escalation": {
             "condition": "Severe cystic acne",
             "action": "Consult dermatologist for isotretinoin",
             "urgent": False,
             "dermatologist_referral_link": "https://..."
         } if severe else None,
-        
+
         "no_prescription_meds": True,  # Always true
         "disclaimer": "These recommendations are not medical advice..."
     }
@@ -594,12 +605,14 @@ response = {
 ### Prohibited Items
 
 ❌ **NEVER recommend:**
+
 - Prescription medications (Accutane, tretinoin, antibiotics)
 - Steroids (topical, oral)
 - Prescription treatments
 - Anything requiring medical supervision
 
 ✅ **CAN recommend:**
+
 - OTC skincare (BHA, AHA, retinol)
 - Natural ingredients (neem, tea tree with caveats)
 - Lifestyle changes (diet, sleep, stress)
@@ -610,17 +623,20 @@ response = {
 ## 🤖 Future ML Integration
 
 ### Phase 1: MVP (Current)
+
 - ✅ Rule-based engine
 - ✅ Fixed recommendation logic
 - ✅ Feedback collection
 
 ### Phase 2: ML Ranking (Next)
+
 - 📊 Use feedback data to train ranking model
 - 🎯 Learn which products work best for each user
 - 📈 Personalize routine recommendations
 - 💡 Predict product satisfaction before recommending
 
 ### Phase 3: Advanced (Future)
+
 - 🧬 Genetic factors (skin microbiome, genetic predisposition)
 - ⏰ Seasonal recommendations (summer vs winter)
 - 👥 Community-based collaborative filtering
@@ -658,6 +674,7 @@ ORDER BY helpful_rating DESC;
 ## 🚀 Deployment
 
 ### Prerequisites
+
 ```bash
 # Install dependencies
 pip install pyyaml pydantic sqlalchemy
@@ -667,6 +684,7 @@ python -m backend.app.db.init_db
 ```
 
 ### Load Initial Rules
+
 ```bash
 # Copy rules.yml to backend/app/recommender/
 cp rules.yml backend/app/recommender/
@@ -676,6 +694,7 @@ python backend/app/recommender/load_products.py
 ```
 
 ### Test Endpoints
+
 ```bash
 # Test recommendation generation
 curl -X POST "http://localhost:8000/api/v1/recommender/recommend" \
@@ -737,6 +756,7 @@ backend/app/recommender/
 1. **User takes photo** → API analyzes → Result: acne + dry skin
 
 2. **Frontend calls recommend endpoint**:
+
 ```bash
 POST /api/v1/recommender/recommend
 {
@@ -747,6 +767,7 @@ POST /api/v1/recommender/recommend
 ```
 
 3. **Backend processes**:
+
    - Loads user profile
    - Loads analysis results
    - Applies rules for: acne + dry skin
@@ -755,12 +776,14 @@ POST /api/v1/recommender/recommend
    - Ranks by rating + relevance
 
 4. **Frontend displays**:
+
    - ✅ 4-week skincare routine (with timing, reasons)
    - ✅ 5 diet tips (backed by science)
    - ✅ 4 product recommendations (with prices, links)
    - ✅ Safety disclaimer + warnings
 
 5. **User follows routine** → After 2 weeks, submits feedback:
+
 ```bash
 POST /api/v1/recommender/feedback
 {

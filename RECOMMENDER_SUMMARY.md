@@ -6,12 +6,12 @@ This package contains the complete design and specification for the SkinHairAI R
 
 ### Documentation Files
 
-| File | Purpose | Details |
-|------|---------|---------|
-| **RECOMMENDER_DESIGN.md** | Complete system design | 300+ lines, architecture, safety, ML roadmap |
-| **RECOMMENDER_QUICK_START.md** | Quick reference guide | 200 lines, workflow overview, implementation checklist |
-| **RECOMMENDER_API_SPEC.md** | Full API specifications | 400+ lines, endpoints, schemas, examples |
-| **rules.yml** | Recommendation rules | YAML format, 3 example conditions with full details |
+| File                           | Purpose                 | Details                                                |
+| ------------------------------ | ----------------------- | ------------------------------------------------------ |
+| **RECOMMENDER_DESIGN.md**      | Complete system design  | 300+ lines, architecture, safety, ML roadmap           |
+| **RECOMMENDER_QUICK_START.md** | Quick reference guide   | 200 lines, workflow overview, implementation checklist |
+| **RECOMMENDER_API_SPEC.md**    | Full API specifications | 400+ lines, endpoints, schemas, examples               |
+| **rules.yml**                  | Recommendation rules    | YAML format, 3 example conditions with full details    |
 
 ### Code Artifacts
 
@@ -31,16 +31,19 @@ backend/app/recommender/
 ## 🚀 Quick Overview
 
 ### Purpose
+
 Transform skin/hair analysis + user profile → **personalized recommendations** that are safe, actionable, and effective.
 
 ### Three Key Features
 
 1. **Skincare Routine Generator**
+
    - Step-by-step routine with timing
    - Ingredient recommendations
    - Expected results timeline
 
 2. **Diet & Lifestyle Tips**
+
    - Foods to add for skin health
    - Foods to limit
    - Hydration, sleep, stress management
@@ -55,7 +58,7 @@ Transform skin/hair analysis + user profile → **personalized recommendations**
 ✅ **Safe**: No prescription meds, evidence-based recommendations  
 ✅ **Smart**: Escalates severe cases to dermatologist  
 ✅ **Scalable**: Rule-based MVP, ML-enhanced later  
-✅ **Compliant**: Clear disclaimers and warnings  
+✅ **Compliant**: Clear disclaimers and warnings
 
 ---
 
@@ -94,6 +97,7 @@ Analysis Result          User Profile              Recommendation Engine
 ### Rule-Based Engine (MVP)
 
 **How it works:**
+
 1. Load condition → lookup rule in `rules.yml`
 2. Get recommended steps, diet, products
 3. Filter by user profile (budget, allergies, age)
@@ -102,6 +106,7 @@ Analysis Result          User Profile              Recommendation Engine
 6. Return formatted response
 
 **Example**: User has "dry skin"
+
 - Load rules[dry_skin]
 - Get: 4-step routine, hydration tips, rich moisturizers
 - Filter: budget-friendly (<$50), avoid fragrance
@@ -111,16 +116,19 @@ Analysis Result          User Profile              Recommendation Engine
 ### Feedback Loop
 
 **Collect user data:**
+
 - Helpfulness rating (1-5)
 - Product satisfaction (1-5)
 - Routine completion % (0-100)
 - User comments
 
 **Store in database:**
+
 - recommendation_feedback table
 - Links analysis → user → recommendation
 
 **Future ML use:**
+
 - Train model to predict best products
 - Learn which routines users actually follow
 - Personalize recommendations per user
@@ -131,6 +139,7 @@ Analysis Result          User Profile              Recommendation Engine
 ## 📊 Database Schema
 
 ### products table
+
 ```sql
 ┌─────────────────────────────────┐
 │ id    | name    | brand | price │
@@ -144,6 +153,7 @@ Analysis Result          User Profile              Recommendation Engine
 ```
 
 ### recommendation_feedback table
+
 ```sql
 ┌──────────────────────────────────────────┐
 │ id  | user_id | recommendation_id        │
@@ -161,6 +171,7 @@ Analysis Result          User Profile              Recommendation Engine
 ## 🔌 API Endpoints
 
 ### 1. Generate Recommendations
+
 ```
 POST /api/v1/recommender/recommend
 Input: {analysis_id: 5} or {analysis: {...}, profile: {...}}
@@ -169,6 +180,7 @@ Status: 201 Created
 ```
 
 ### 2. Submit Feedback
+
 ```
 POST /api/v1/recommender/feedback
 Input: {recommendation_id, helpful_rating, product_satisfaction, ...}
@@ -177,6 +189,7 @@ Status: 201 Created
 ```
 
 ### 3. Get History
+
 ```
 GET /api/v1/recommender/history?user_id=3&limit=10
 Output: [past_recommendations with feedback]
@@ -188,6 +201,7 @@ Status: 200 OK
 ## ⚡ Example: Full Workflow
 
 ### Step 1: User Analysis
+
 ```json
 {
   "skin_type": "dry",
@@ -197,12 +211,14 @@ Status: 200 OK
 ```
 
 ### Step 2: Frontend Calls API
+
 ```bash
 POST /api/v1/recommender/recommend
 { "analysis_id": 5 }
 ```
 
 ### Step 3: Backend Returns
+
 ```json
 {
   "recommendation_id": "rec_20251024_001",
@@ -224,12 +240,14 @@ POST /api/v1/recommender/recommend
 ```
 
 ### Step 4: User Follows Routine
+
 - Day 1-7: Start gentle cleanser + moisturizer
 - Week 2: Add salicylic acid 1x/week
 - Week 3-4: Increase to 2-3x/week
 - Improve diet (add salmon, berries, etc.)
 
 ### Step 5: User Submits Feedback
+
 ```bash
 POST /api/v1/recommender/feedback
 {
@@ -242,6 +260,7 @@ POST /api/v1/recommender/feedback
 ```
 
 ### Step 6: System Learns
+
 - Records feedback in DB
 - Updates product ratings
 - Improves next recommendation
@@ -252,10 +271,12 @@ POST /api/v1/recommender/feedback
 ## 🛡️ Safety Features
 
 ### No Prescription Medications
+
 ✅ Safe: Salicylic acid, niacinamide, glycerin, hyaluronic acid  
-❌ Never: Tretinoin, Accutane, oral antibiotics, steroids  
+❌ Never: Tretinoin, Accutane, oral antibiotics, steroids
 
 ### Escalation Rules
+
 ```
 Severe acne → "See dermatologist for isotretinoin"
 Skin infection → "Seek medical attention immediately"
@@ -264,6 +285,7 @@ Unknown condition → "Professional assessment needed"
 ```
 
 ### Warnings & Disclaimers
+
 - "These are NOT medical recommendations"
 - "Patch test before full application"
 - "Stop if allergic reaction occurs"
@@ -275,20 +297,21 @@ Unknown condition → "Professional assessment needed"
 
 Track these to measure effectiveness:
 
-| Metric | Target | Current |
-|--------|--------|---------|
-| Feedback collection rate | >40% of users | TBD |
-| Recommendation helpfulness | 4+/5 rating | TBD |
-| Product satisfaction | 4+/5 rating | TBD |
-| Routine completion rate | >60% average | TBD |
-| User retention | 70%+ repeat visits | TBD |
-| Safety incidents | 0 | 0 ✅ |
+| Metric                     | Target             | Current |
+| -------------------------- | ------------------ | ------- |
+| Feedback collection rate   | >40% of users      | TBD     |
+| Recommendation helpfulness | 4+/5 rating        | TBD     |
+| Product satisfaction       | 4+/5 rating        | TBD     |
+| Routine completion rate    | >60% average       | TBD     |
+| User retention             | 70%+ repeat visits | TBD     |
+| Safety incidents           | 0                  | 0 ✅    |
 
 ---
 
 ## 🔮 Future Phases
 
 ### Phase 1: MVP (Current - Design Complete)
+
 - ✅ Rule-based engine
 - ✅ YAML rules for 3+ conditions
 - ✅ Product DB with 500+ items
@@ -297,6 +320,7 @@ Track these to measure effectiveness:
 - Target: Launch in 2-3 months
 
 ### Phase 2: ML-Enhanced (Next)
+
 - 📊 Train ranking model on feedback
 - 🎯 Predict product satisfaction
 - 🧬 Learn personalized preferences
@@ -304,6 +328,7 @@ Track these to measure effectiveness:
 - Target: 6 months after MVP
 
 ### Phase 3: Advanced (Future)
+
 - 🧬 Genetic factors
 - ⏰ Seasonal recommendations
 - 👥 Community insights
@@ -315,15 +340,18 @@ Track these to measure effectiveness:
 ## 📚 Files in This Package
 
 ### Documentation
+
 - `RECOMMENDER_DESIGN.md` - Complete design (this is the main document)
 - `RECOMMENDER_QUICK_START.md` - Quick reference
 - `RECOMMENDER_API_SPEC.md` - API documentation
 - `RECOMMENDER_SUMMARY.md` - This file
 
 ### Configuration
+
 - `backend/app/recommender/rules.yml` - Recommendation rules
 
 ### To Be Implemented
+
 - `backend/app/recommender/engine.py` - Core logic (500+ lines)
 - `backend/app/recommender/safety.py` - Safety checks (200+ lines)
 - `backend/app/recommender/products.py` - DB queries (150+ lines)
@@ -335,36 +363,42 @@ Track these to measure effectiveness:
 ## ✅ Implementation Checklist
 
 **Phase 1: Setup** (Week 1)
+
 - [ ] Create `backend/app/recommender/` directory
 - [ ] Create base files: `__init__.py`, `schemas.py`, `models.py`
 - [ ] Define SQLAlchemy models: Product, RecommendationFeedback
 - [ ] Load sample products to database
 
 **Phase 2: Core Engine** (Week 2-3)
+
 - [ ] Implement `engine.py` RecommendationEngine class
 - [ ] Implement `safety.py` SafetyChecker class
 - [ ] Implement `products.py` database queries
 - [ ] Write unit tests for engine
 
 **Phase 3: API Integration** (Week 4)
+
 - [ ] Create `api/v1/recommender.py` endpoints
 - [ ] Add authentication checks
 - [ ] Implement error handling
 - [ ] Add rate limiting
 
 **Phase 4: Testing & Deployment** (Week 5-6)
+
 - [ ] Integration tests
 - [ ] Load test (10+ concurrent users)
 - [ ] User acceptance testing
 - [ ] Deploy to production
 
 **Phase 5: Frontend Integration** (Week 6-7)
+
 - [ ] Display recommendations in UI
 - [ ] Add feedback form
 - [ ] Add routine timer/tracker
 - [ ] Track user interactions
 
 **Phase 6: Monitoring** (Ongoing)
+
 - [ ] Track feedback collection rate
 - [ ] Monitor recommendation quality
 - [ ] Analyze user behavior
@@ -388,6 +422,7 @@ Track these to measure effectiveness:
 ## 📞 Questions?
 
 Refer to the detailed documents:
+
 - **"How does it work?"** → Read RECOMMENDER_DESIGN.md
 - **"What APIs are available?"** → Read RECOMMENDER_API_SPEC.md
 - **"How do I implement it?"** → Read RECOMMENDER_QUICK_START.md
@@ -412,7 +447,7 @@ Refer to the detailed documents:
 
 **Current Date**: 2025-10-24  
 **Version**: MVP Design v1.0  
-**Last Updated**: 2025-10-24  
+**Last Updated**: 2025-10-24
 
 ---
 

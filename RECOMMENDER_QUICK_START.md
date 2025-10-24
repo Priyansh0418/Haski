@@ -3,12 +3,14 @@
 ## Quick Reference
 
 ### What It Does
+
 - Maps analysis results (skin type, conditions) → personalized recommendations
 - Provides skincare routines, diet tips, product suggestions
 - Tracks user feedback for continuous improvement
 - Escalates severe conditions to dermatologists
 
 ### MVP Architecture
+
 - **Rule-based** (not ML-based yet)
 - **YAML rules** for each condition
 - **Database products** with safety tags
@@ -18,13 +20,13 @@
 
 ## Key Files Created
 
-| File | Purpose |
-|------|---------|
-| `RECOMMENDER_DESIGN.md` | Full system design & architecture |
+| File                                | Purpose                             |
+| ----------------------------------- | ----------------------------------- |
+| `RECOMMENDER_DESIGN.md`             | Full system design & architecture   |
 | `backend/app/recommender/rules.yml` | Recommendation rules (created next) |
-| `backend/app/recommender/engine.py` | Core recommendation engine |
-| `backend/app/recommender/safety.py` | Safety checks & escalation |
-| `backend/app/api/v1/recommender.py` | API endpoints |
+| `backend/app/recommender/engine.py` | Core recommendation engine          |
+| `backend/app/recommender/safety.py` | Safety checks & escalation          |
+| `backend/app/api/v1/recommender.py` | API endpoints                       |
 
 ---
 
@@ -66,6 +68,7 @@
 ## Three Key Endpoints
 
 ### 1. Generate Recommendations
+
 ```
 POST /api/v1/recommender/recommend
 Input: {analysis_id: 5} OR {analysis: {...}, profile: {...}}
@@ -74,6 +77,7 @@ Time: ~500ms
 ```
 
 ### 2. Submit Feedback
+
 ```
 POST /api/v1/recommender/feedback
 Input: {recommendation_id, helpful_rating, product_satisfaction, routine_completion_pct}
@@ -82,6 +86,7 @@ Time: ~100ms
 ```
 
 ### 3. Get History
+
 ```
 GET /api/v1/recommender/history
 Input: {user_id, limit: 10}
@@ -94,18 +99,21 @@ Time: ~200ms
 ## Safety Guarantees
 
 ### ✅ SAFE (Recommended)
+
 - OTC skincare: BHA, AHA, retinol, niacinamide
 - Natural ingredients: tea tree oil, aloe (with disclaimers)
 - Lifestyle: diet, sleep, hydration, stress
 - Professional: dermatologist referral
 
 ### ❌ NOT SAFE (Never Recommend)
+
 - Prescription meds: Accutane, tretinoin, antibiotics
 - Steroids: topical, oral
 - Medical procedures
 - Anything requiring prescription
 
 ### 🚨 ESCALATION (Flag for Professional)
+
 - Severe acne → dermatologist
 - Skin infections → doctor immediately
 - Allergic reactions → ER if severe
@@ -116,6 +124,7 @@ Time: ~200ms
 ## Database Tables
 
 ### products
+
 ```sql
 CREATE TABLE products (
     id SERIAL PRIMARY KEY,
@@ -124,32 +133,33 @@ CREATE TABLE products (
     brand VARCHAR(100),
     price_usd DECIMAL(10, 2),
     url VARCHAR(500),
-    
+
     ingredients TEXT,            -- JSON array
     safe_tags TEXT,              -- ["acne", "dry", "sensitive"]
     avoid_tags TEXT,             -- ["pregnancy", "breastfeeding"]
-    
+
     avg_rating FLOAT,
     review_count INT,
-    
+
     created_at TIMESTAMP,
     updated_at TIMESTAMP
 );
 ```
 
 ### recommendation_feedback
+
 ```sql
 CREATE TABLE recommendation_feedback (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
     analysis_id INT NOT NULL,
     recommendation_id VARCHAR(100),
-    
+
     helpful_rating INT,          -- 1-5
     product_satisfaction INT,    -- 1-5
     routine_completion_pct INT,  -- 0-100
     feedback_text TEXT,
-    
+
     created_at TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (analysis_id) REFERENCES analysis(id)
@@ -161,6 +171,7 @@ CREATE TABLE recommendation_feedback (
 ## Example: Acne Recommendation
 
 ### Input
+
 ```json
 {
   "skin_type": "dry",
@@ -172,6 +183,7 @@ CREATE TABLE recommendation_feedback (
 ```
 
 ### Processing
+
 1. Look up `rules[acne]` → 4-step routine
 2. Look up `rules[dry]` → additional hydration
 3. Merge routines (prioritize acne)
@@ -185,6 +197,7 @@ CREATE TABLE recommendation_feedback (
 7. Check safety → warn about dryness
 
 ### Output
+
 ```json
 {
   "routine": [
@@ -213,27 +226,25 @@ CREATE TABLE recommendation_feedback (
       "reason": "Prevents post-inflammatory hyperpigmentation"
     }
   ],
-  
+
   "products": {
-    "cleanser": {"name": "CeraVe", "price": 8.99},
-    "treatment": {"name": "The Ordinary SA 2%", "price": 5.90},
-    "moisturizer": {"name": "Vanicream", "price": 7.99},
-    "sunscreen": {"name": "La Roche-Posay", "price": 34.00}
+    "cleanser": { "name": "CeraVe", "price": 8.99 },
+    "treatment": { "name": "The Ordinary SA 2%", "price": 5.9 },
+    "moisturizer": { "name": "Vanicream", "price": 7.99 },
+    "sunscreen": { "name": "La Roche-Posay", "price": 34.0 }
   },
-  
+
   "diet_tips": [
     "Increase water: 2-3L daily",
     "Reduce dairy: linked to acne",
     "Add omega-3s: salmon, walnuts",
     "Avoid high-glycemic: white bread, sugar"
   ],
-  
+
   "safety": {
     "severe": false,
     "escalation": null,
-    "warnings": [
-      "Salicylic acid may cause initial dryness - use moisturizer"
-    ]
+    "warnings": ["Salicylic acid may cause initial dryness - use moisturizer"]
   }
 }
 ```
@@ -277,6 +288,7 @@ CREATE TABLE recommendation_feedback (
 ## Files to Create
 
 **Next Priority:**
+
 ```
 backend/app/recommender/
 ├── __init__.py
@@ -290,12 +302,14 @@ backend/app/recommender/
 ```
 
 **API Integration:**
+
 ```
 backend/app/api/v1/
 └── recommender.py          # ← Then here
 ```
 
 **Testing:**
+
 ```
 tests/
 └── test_recommender.py

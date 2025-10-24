@@ -18,9 +18,9 @@ The Recommender API translates skin/hair analysis + user profile → actionable 
 
 ```json
 {
-  "method": "analysis_id",  // or "direct_analysis"
-  "analysis_id": 5,         // if using analysis_id method
-  
+  "method": "analysis_id", // or "direct_analysis"
+  "analysis_id": 5, // if using analysis_id method
+
   // OR provide direct analysis:
   "analysis": {
     "skin_type": "dry",
@@ -32,18 +32,18 @@ The Recommender API translates skin/hair analysis + user profile → actionable 
       "blackheads": 0.65
     }
   },
-  
+
   // User profile (optional if analysis_id provided):
   "user_profile": {
     "age": 28,
     "gender": "F",
-    "budget": "medium",           // "low", "medium", "high"
+    "budget": "medium", // "low", "medium", "high"
     "allergies": ["sulfates", "fragrance"],
-    "skin_tone": "medium",        // "light", "medium", "dark"
+    "skin_tone": "medium", // "light", "medium", "dark"
     "skin_sensitivity": "normal",
     "pregnancy_status": "not_pregnant"
   },
-  
+
   // Options:
   "include_skincare": true,
   "include_diet": true,
@@ -61,14 +61,14 @@ The Recommender API translates skin/hair analysis + user profile → actionable 
   "user_id": 3,
   "created_at": "2025-10-24T20:55:00Z",
   "expires_at": "2025-11-24T20:55:00Z",
-  
+
   "analysis_summary": {
     "skin_type": "dry",
     "hair_type": "coily",
     "conditions": ["acne", "blackheads"],
     "severity_overall": "moderate"
   },
-  
+
   "skincare_routine": {
     "duration_weeks": 4,
     "difficulty": "easy",
@@ -124,7 +124,7 @@ The Recommender API translates skin/hair analysis + user profile → actionable 
       }
     ]
   },
-  
+
   "diet_recommendations": {
     "hydration": {
       "target": "2.5-3L water daily",
@@ -180,7 +180,7 @@ The Recommender API translates skin/hair analysis + user profile → actionable 
       }
     ]
   },
-  
+
   "product_recommendations": {
     "cleanser": {
       "product_id": 42,
@@ -198,18 +198,18 @@ The Recommender API translates skin/hair analysis + user profile → actionable 
       "alternatives": [
         {
           "name": "Vanicream Gentle Facial Cleanser",
-          "price_usd": 7.50,
+          "price_usd": 7.5,
           "reason": "Even gentler, more budget-friendly"
         }
       ]
     },
-    
+
     "treatment": {
       "product_id": 156,
       "name": "The Ordinary Salicylic Acid 2%",
       "brand": "Deciem",
       "category": "acne treatment",
-      "price_usd": 5.90,
+      "price_usd": 5.9,
       "url": "https://theordinary.deciem.com/product/rbn-salicylic-acid-2pct-solution-30ml",
       "why_recommended": "Affordable, effective BHA for blackheads and acne. No fragrance or essential oils.",
       "ingredients": ["salicylic acid", "glycerin"],
@@ -221,12 +221,12 @@ The Recommender API translates skin/hair analysis + user profile → actionable 
       "alternatives": [
         {
           "name": "Paula's Choice 2% BHA Liquid",
-          "price_usd": 44.00,
+          "price_usd": 44.0,
           "reason": "Premium option, slower acting but gentler"
         }
       ]
     },
-    
+
     "moisturizer": {
       "product_id": 89,
       "name": "Vanicream Moisturizing Cream",
@@ -248,13 +248,13 @@ The Recommender API translates skin/hair analysis + user profile → actionable 
         }
       ]
     },
-    
+
     "sunscreen": {
       "product_id": 203,
       "name": "La Roche-Posay Anthelios Fluid SPF 60",
       "brand": "La Roche-Posay",
       "category": "sunscreen",
-      "price_usd": 34.00,
+      "price_usd": 34.0,
       "url": "https://www.laroche-posay.com/products/sun-care/anthelios",
       "why_recommended": "Lightweight, non-comedogenic, mineral + chemical hybrid, prevents PIH (dark marks)",
       "ingredients": ["zinc oxide", "avobenzone", "niacinamide"],
@@ -265,13 +265,13 @@ The Recommender API translates skin/hair analysis + user profile → actionable 
       "note": "Sunscreen is CRITICAL when using acne treatments"
     }
   },
-  
+
   "total_estimated_cost": {
-    "initial_setup": 56.88,  // All products
-    "monthly_replacement": 18.50,
+    "initial_setup": 56.88, // All products
+    "monthly_replacement": 18.5,
     "currency": "USD"
   },
-  
+
   "lifestyle_recommendations": [
     {
       "category": "sleep",
@@ -294,32 +294,32 @@ The Recommender API translates skin/hair analysis + user profile → actionable 
       "why": "Prevents bacteria transfer to face"
     }
   ],
-  
+
   "safety_flags": {
     "severe_condition": false,
     "requires_professional": false,
     "escalation_needed": false,
-    
+
     "warnings": [
       "Salicylic acid may cause initial dryness or 'purging' - this is normal",
       "Always wear sunscreen when using acne treatments to prevent dark marks",
       "Avoid combining multiple exfoliants - use only salicylic acid"
     ],
-    
-    "escalation": null,  // null if no escalation needed
-    
+
+    "escalation": null, // null if no escalation needed
+
     "disclaimer": "These recommendations are NOT medical advice. If conditions worsen or persist after 8 weeks, consult a dermatologist. For severe reactions, seek immediate medical attention."
   },
-  
+
   "timeline": {
     "week_1": "Skin adjusts, may see increased oiliness as barrier stabilizes",
     "week_2": "Possible 'purging' as salicylic acid brings congestion to surface",
     "week_3": "Improvement in blackheads and congestion becomes visible",
     "week_4": "Significant improvement in acne, skin tone more even"
   },
-  
+
   "what_to_expect": "Follow this routine for 4 weeks before assessing results. Some people see improvement earlier, others take full 4-6 weeks.",
-  
+
   "next_steps": [
     "Start routine immediately",
     "Take 'before' photo for comparison",
@@ -343,13 +343,13 @@ The Recommender API translates skin/hair analysis + user profile → actionable 
 ```json
 {
   "recommendation_id": "rec_20251024_001",
-  "helpful_rating": 4,                    // 1-5: not helpful to very helpful
-  "product_satisfaction": 4,              // 1-5: not satisfied to very satisfied
-  "routine_completion_pct": 75,           // 0-100: % of routine followed
-  "timeframe": "2_weeks",                 // "1_week", "2_weeks", "4_weeks", "8_weeks"
+  "helpful_rating": 4, // 1-5: not helpful to very helpful
+  "product_satisfaction": 4, // 1-5: not satisfied to very satisfied
+  "routine_completion_pct": 75, // 0-100: % of routine followed
+  "timeframe": "2_weeks", // "1_week", "2_weeks", "4_weeks", "8_weeks"
   "feedback_text": "Great recommendations! The cleanser worked well for my dry skin. Will update after full 4 weeks.",
   "improvement_suggestions": "Could suggest more budget-friendly alternatives",
-  "adverse_reactions": null,              // Any negative reactions
+  "adverse_reactions": null, // Any negative reactions
   "would_recommend": true,
   "product_ratings": {
     "cleanser": 5,
@@ -434,6 +434,7 @@ The Recommender API translates skin/hair analysis + user profile → actionable 
 ## Error Handling
 
 ### 400 Bad Request
+
 ```json
 {
   "error": "Invalid request",
@@ -442,6 +443,7 @@ The Recommender API translates skin/hair analysis + user profile → actionable 
 ```
 
 ### 404 Not Found
+
 ```json
 {
   "error": "Not found",
@@ -450,6 +452,7 @@ The Recommender API translates skin/hair analysis + user profile → actionable 
 ```
 
 ### 422 Unprocessable Entity
+
 ```json
 {
   "error": "Validation error",
@@ -458,6 +461,7 @@ The Recommender API translates skin/hair analysis + user profile → actionable 
 ```
 
 ### 500 Internal Server Error
+
 ```json
 {
   "error": "Internal server error",
@@ -536,39 +540,39 @@ curl "http://localhost:8000/api/v1/recommender/history?limit=10" \
 ```typescript
 // TypeScript example
 const generateRecommendations = async (analysisId: number) => {
-  const response = await fetch('/api/v1/recommender/recommend', {
-    method: 'POST',
+  const response = await fetch("/api/v1/recommender/recommend", {
+    method: "POST",
     headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       analysis_id: analysisId,
       include_diet: true,
-      include_products: true
-    })
+      include_products: true,
+    }),
   });
-  
+
   const data = await response.json();
-  return data;  // Full recommendation object
+  return data; // Full recommendation object
 };
 
 const submitFeedback = async (recommendationId: string, rating: number) => {
-  const response = await fetch('/api/v1/recommender/feedback', {
-    method: 'POST',
+  const response = await fetch("/api/v1/recommender/feedback", {
+    method: "POST",
     headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       recommendation_id: recommendationId,
       helpful_rating: rating,
       product_satisfaction: rating,
       routine_completion_pct: 75,
-      feedback_text: "Helpful recommendations!"
-    })
+      feedback_text: "Helpful recommendations!",
+    }),
   });
-  
+
   return await response.json();
 };
 ```

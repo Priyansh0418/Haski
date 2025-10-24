@@ -4,23 +4,23 @@
 
 conditions:
   # ===== SKIN CONDITIONS =====
-  
+
   acne:
     severity: moderate
     description: "Bacterial and comedonal inflammation of skin"
-    
+
     skincare_routine:
       duration_weeks: 4
       steps:
         - step: 1
           action: "Gentle facial cleanser (non-stripping)"
           frequency: "2x daily (morning & night)"
-          duration_in_routine: 1  # week to start seeing benefits
+          duration_in_routine: 1 # week to start seeing benefits
           reason: "Removes excess sebum without disrupting skin barrier"
           expected_results: "Reduced excess oil in 1 week"
           ingredients_to_include: ["glycerin", "salicylic acid"]
           ingredients_to_avoid: ["alcohol", "fragrance"]
-          
+
         - step: 2
           action: "Salicylic acid (BHA) treatment"
           frequency: "1-3x weekly (start slow)"
@@ -30,7 +30,7 @@ conditions:
           ingredients_to_include: ["salicylic acid", "glycerin"]
           ingredients_to_avoid: ["essential oils", "fragrance"]
           warning: "May cause initial dryness or purging; use moisturizer"
-          
+
         - step: 3
           action: "Lightweight non-comedogenic moisturizer"
           frequency: "2x daily (after cleanser and treatment)"
@@ -39,14 +39,15 @@ conditions:
           expected_results: "Less irritation, improved tolerance"
           ingredients_to_include: ["hyaluronic acid", "glycerin", "ceramides"]
           ingredients_to_avoid: ["heavy oils", "lanolin", "silicones"]
-          
+
         - step: 4
           action: "Broad-spectrum SPF 30+ sunscreen"
           frequency: "Daily (morning, reapply every 2 hours if outdoors)"
-          duration_in_routine: 0  # lifelong
+          duration_in_routine: 0 # lifelong
           reason: "Prevents post-inflammatory hyperpigmentation (PIH) marks"
           expected_results: "Prevents dark marks, maintains even skin tone"
-          ingredients_to_include: ["zinc oxide", "titanium dioxide", "niacinamide"]
+          ingredients_to_include:
+            ["zinc oxide", "titanium dioxide", "niacinamide"]
           ingredients_to_avoid: ["oxybenzone", "avobenzone"]
 
     diet_recommendations:
@@ -58,7 +59,7 @@ conditions:
         - "Avoid excess iodine: seaweed, iodized salt (can trigger acne)"
         - "Include antioxidant-rich foods: berries, green tea, dark chocolate"
         - "Reduce inflammatory foods: processed foods, excess alcohol"
-      
+
       foods_to_add:
         - name: "Wild salmon"
           why: "Rich in omega-3 fatty acids, anti-inflammatory"
@@ -78,7 +79,7 @@ conditions:
         - name: "Bone broth"
           why: "Collagen, amino acids for skin repair"
           frequency: "3-4x per week"
-      
+
       foods_to_limit:
         - "Milk & dairy cheese (high lactose + casein)"
         - "Whey protein powder (can trigger in some)"
@@ -92,29 +93,31 @@ conditions:
         category: "facial cleanser"
         tags: ["gentle", "acne-prone", "sulfate-free"]
         ingredients_to_include: ["glycerin", "salicylic acid", "niacinamide"]
-        ingredients_to_avoid: ["sulfates", "alcohol", "fragrance", "essential oils"]
+        ingredients_to_avoid:
+          ["sulfates", "alcohol", "fragrance", "essential oils"]
         budget_friendly: true
-      
+
       treatment:
         category: "acne treatment"
         tags: ["exfoliating", "pore-cleansing", "BHA"]
         ingredients_to_include: ["salicylic acid", "glycerin", "allantoin"]
         ingredients_to_avoid: ["benzoyl peroxide", "essential oils"]
         budget_friendly: true
-      
+
       moisturizer:
         category: "moisturizer"
         tags: ["lightweight", "oil-free", "non-comedogenic"]
-        ingredients_to_include: ["hyaluronic acid", "glycerin", "ceramides", "niacinamide"]
+        ingredients_to_include:
+          ["hyaluronic acid", "glycerin", "ceramides", "niacinamide"]
         ingredients_to_avoid: ["heavy oils", "lanolin", "silicones"]
         budget_friendly: true
-      
+
       sunscreen:
         category: "sunscreen"
         tags: ["broad-spectrum", "non-comedogenic", "SPF 30+"]
         ingredients_to_include: ["zinc oxide", "niacinamide", "hyaluronic acid"]
         ingredients_to_avoid: ["oxybenzone", "avobenzone"]
-        budget_friendly: false  # Medical grade recommended
+        budget_friendly: false # Medical grade recommended
 
     escalation:
       severity: "moderate"
@@ -130,9 +133,9 @@ conditions:
   dry_skin:
     severity: mild
     description: "Skin lacking sufficient moisture and oil"
-    
+
     skincare_routine:
-      duration_weeks: 0  # Ongoing
+      duration_weeks: 0 # Ongoing
       steps:
         - step: 1
           action: "Creamy, non-stripping cleanser"
@@ -140,21 +143,22 @@ conditions:
           reason: "Preserves natural oils on skin surface"
           ingredients_to_include: ["glycerin", "ceramides", "hyaluronic acid"]
           ingredients_to_avoid: ["sulfates", "alcohol"]
-          
+
         - step: 2
           action: "Hydrating toner or essence"
           frequency: "2x daily (after cleanser, before moisturizer)"
           reason: "Adds an extra layer of hydration"
           ingredients_to_include: ["glycerin", "hyaluronic acid", "rose water"]
           ingredients_to_avoid: ["alcohol"]
-          
+
         - step: 3
           action: "Rich moisturizer with ceramides"
           frequency: "2x daily"
           reason: "Seals in moisture, repairs skin barrier"
-          ingredients_to_include: ["ceramides", "peptides", "hyaluronic acid", "glycerin"]
+          ingredients_to_include:
+            ["ceramides", "peptides", "hyaluronic acid", "glycerin"]
           ingredients_to_avoid: ["alcohol", "fragrance"]
-          
+
         - step: 4
           action: "Weekly hydrating sheet mask"
           frequency: "1x weekly"
@@ -170,7 +174,7 @@ conditions:
         - "Add electrolytes: coconut water, mineral water"
         - "Reduce caffeine: dehydrating effect"
         - "Include omega-3 sources: fatty fish, ground flax"
-      
+
       foods_to_add:
         - name: "Avocados"
           why: "Healthy fats, vitamin E for skin barrier"
@@ -187,7 +191,7 @@ conditions:
         - name: "Nuts & seeds"
           why: "Omega-3s, vitamin E"
           frequency: "Daily (handful)"
-      
+
       foods_to_limit:
         - "Caffeine (coffee, tea in excess)"
         - "Alcohol (dehydrating)"
@@ -200,14 +204,15 @@ conditions:
         ingredients_to_include: ["glycerin", "hyaluronic acid", "ceramides"]
         ingredients_to_avoid: ["sulfates", "alcohol"]
         budget_friendly: true
-      
+
       moisturizer:
         category: "rich moisturizer"
         tags: ["rich", "barrier-repair", "hydrating"]
-        ingredients_to_include: ["ceramides", "peptides", "hyaluronic acid", "glycerin"]
+        ingredients_to_include:
+          ["ceramides", "peptides", "hyaluronic acid", "glycerin"]
         ingredients_to_avoid: ["alcohol", "fragrance"]
         budget_friendly: false
-      
+
       mask:
         category: "sheet mask"
         tags: ["hydrating", "intensive"]
@@ -225,7 +230,7 @@ conditions:
   blackheads:
     severity: mild
     description: "Clogged pores with oxidized sebum"
-    
+
     skincare_routine:
       duration_weeks: 4
       steps:
@@ -234,13 +239,13 @@ conditions:
           frequency: "1x daily (preferably evening)"
           reason: "Unclogs pores, removes dead skin cells"
           ingredients_to_include: ["salicylic acid", "lactic acid", "glycerin"]
-          
+
         - step: 2
           action: "Clay mask (kaolin or bentonite)"
           frequency: "1x weekly"
           reason: "Draws out oil and impurities from pores"
           ingredients_to_include: ["kaolin", "bentonite"]
-          
+
         - step: 3
           action: "Non-comedogenic moisturizer"
           frequency: "Daily"
@@ -260,7 +265,7 @@ conditions:
         tags: ["exfoliating", "pore-cleansing"]
         ingredients_to_include: ["salicylic acid", "glycerin"]
         budget_friendly: true
-      
+
       mask:
         category: "clay mask"
         tags: ["detoxifying", "oil-control"]
@@ -277,7 +282,7 @@ conditions:
   dry_hair:
     severity: mild
     description: "Hair lacking moisture and natural oils"
-    
+
     hair_routine:
       frequency: "3-4x per week"
       steps:
@@ -285,12 +290,12 @@ conditions:
           action: "Sulfate-free, hydrating shampoo"
           frequency: "3-4x per week"
           reason: "Gentle cleansing without stripping oils"
-          
+
         - step: 2
           action: "Deep conditioner"
           frequency: "3-4x per week (after shampoo)"
           reason: "Restores moisture to hair shaft"
-          
+
         - step: 3
           action: "Leave-in conditioner or hair oil"
           frequency: "2-3x per week"
@@ -315,29 +320,29 @@ conditions:
   damaged_hair:
     severity: moderate
     description: "Hair with breakage, frizz, dullness from heat/chemicals"
-    
+
     hair_routine:
       frequency: "2-3x per week"
       steps:
         - step: 1
           action: "Gentle sulfate-free shampoo"
           frequency: "2-3x per week"
-          
+
         - step: 2
           action: "Protein-rich treatment"
           frequency: "1x weekly"
           reason: "Rebuilds protein structure, strengthens"
-          
+
         - step: 3
           action: "Deep moisturizing mask"
           frequency: "1x weekly"
           reason: "Restores elasticity and shine"
-        
+
         - step: 4
           action: "Heat protectant spray"
           frequency: "Before heat styling"
           reason: "Prevents further damage"
-      
+
       lifestyle:
         - "Minimize heat styling: air dry when possible"
         - "Get regular trims: every 6-8 weeks"
@@ -378,7 +383,7 @@ safety:
   no_prescription_meds: true
   no_steroids: true
   no_surgical_procedures: true
-  
+
   severe_conditions_requiring_professional:
     - "Severe acne with scarring"
     - "Cystic acne"
@@ -388,7 +393,7 @@ safety:
     - "Severe allergic reactions"
     - "Skin cancer symptoms"
     - "Hair loss (sudden or severe)"
-  
+
   warnings:
     - "These recommendations are NOT medical advice"
     - "Patch test all new products first"
@@ -400,13 +405,13 @@ safety:
 disclaimer: |
   The SkinHairAI Recommender System provides personalized skincare and haircare
   recommendations based on AI analysis and established skincare principles.
-  
+
   IMPORTANT:
   - This is NOT a substitute for professional medical advice
   - These recommendations do NOT diagnose or treat medical conditions
   - If you have severe skin conditions, consult a dermatologist
   - If you experience allergic reactions, stop use immediately
   - Always patch test new products before full application
-  
+
   For severe or persistent skin/hair conditions, please consult a licensed
   dermatologist or healthcare professional.
