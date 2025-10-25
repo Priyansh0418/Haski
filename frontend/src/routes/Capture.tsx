@@ -9,11 +9,124 @@ type Analysis = {
   confidence_scores: Record<string, number>;
 };
 
+// API Configuration
 const API_BASE = (() => {
   const envUrl = (import.meta as any).env.VITE_API_URL;
   if (envUrl) return envUrl;
-  return "http://" + window.location.hostname + ":8000";
+  return "http://" + window.location.hostname + ":8000/api/v1";
 })();
+
+/**
+ * Resize image to reduce payload size while maintaining quality
+ * @param file - Original image file
+ * @param maxWidth - Maximum width (default: 1024px)
+ * @param maxHeight - Maximum height (default: 1024px)
+ * @param quality - JPEG quality (default: 0.9)
+ * @returns Promise resolving to resized File
+ */
+async function resizeImage(
+  file: File,
+  maxWidth: number = 1024,
+  maxHeight: number = 1024,
+  quality: number = 0.9
+): Promise<File> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target?.result as string;
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        let width = img.width;
+        let height = img.height;
+
+        // Calculate new dimensions maintaining aspect ratio
+        if (width > height) {
+          if (width > maxWidth) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxHeight) {
+            width = Math.round((width * maxHeight) / height);
+            height = maxHeight;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) {
+          reject(new Error("Failed to get canvas context"));
+          return;
+        }
+
+        ctx.drawImage(img, 0, 0, width, height);
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) {
+              reject(new Error("Failed to create blob"));
+              return;
+            }
+            const resizedFile = new File([blob], file.name, {
+              type: "image/jpeg",
+              lastModified: Date.now(),
+            });
+            resolve(resizedFile);
+          },
+          "image/jpeg",
+          quality
+        );
+      };
+      img.onerror = () => reject(new Error("Failed to load image"));
+    };
+    reader.onerror = () => reject(new Error("Failed to read file"));
+  });
+}
+
+/**
+ * Analyze image by sending to backend API
+ * Automatically resizes image to keep payload < 2MB
+ * @param file - Image file to analyze
+ * @returns Promise resolving to analysis results
+ */
+async function analyzeImageFile(file: File) {
+  // Resize image to optimize payload size
+  const optimizedFile = await resizeImage(file);
+  console.log(
+    `Image resized: ${(file.size / 1024 / 1024).toFixed(2)}MB → ${(
+      optimizedFile.size /
+      1024 /
+      1024
+    ).toFixed(2)}MB`
+  );
+
+  const form = new FormData();
+  // Note: Do NOT set Content-Type header for FormData
+  // Browser will automatically set multipart/form-data with correct boundary
+  form.append("image", optimizedFile);
+
+  const response = await fetch(`${API_BASE}/analyze/image`, {
+    method: "POST",
+    body: form,
+    // Do NOT include Content-Type header - browser handles it
+    headers: {
+      Accept: "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(
+      errorData?.detail ||
+        errorData?.error ||
+        `HTTP ${response.status}: ${response.statusText}`
+    );
+  }
+
+  return response.json();
+}
 
 export default function Capture() {
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
@@ -26,67 +139,20 @@ export default function Capture() {
     const sep = "=".repeat(50);
     console.log(sep, "CAPTURE START", sep);
     try {
-      console.log("1. File received:", file);
-      console.log("   Name:", file.name);
-      console.log("   Size:", file.size, "bytes");
+      console.log("1. File received:", file.name);
+      console.log("   Size:", (file.size / 1024 / 1024).toFixed(2), "MB");
       console.log("   Type:", file.type);
 
-      const form = new FormData();
-      form.append("image", file);
-      console.log("2. FormData created with image field");
+      console.log("2. Analyzing image...");
+      const json = await analyzeImageFile(file);
 
-      const url = API_BASE + "/api/v1/analyze/image";
-      console.log("3. API_BASE config:", API_BASE);
-      console.log("4. Full URL:", url);
-      console.log("5. Fetching with 60s timeout...");
-
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 60000);
-
-      const resp = await fetch(url, {
-        method: "POST",
-        body: form,
-        headers: {
-          Accept: "application/json",
-        },
-        signal: controller.signal,
-      });
-
-      clearTimeout(timeoutId);
-
-      console.log("6. Response received!");
-      console.log("   Status:", resp.status);
-      console.log("   Status text:", resp.statusText);
-      console.log("   Headers:", {
-        "content-type": resp.headers.get("content-type"),
-        "content-length": resp.headers.get("content-length"),
-      });
-
-      console.log("7. Reading response body...");
-      let json: any;
-      try {
-        json = await resp.json();
-        console.log("   Response JSON parsed:", json);
-      } catch (parseErr) {
-        console.error("   Failed to parse JSON:", parseErr);
-        throw new Error("Failed to parse response: " + String(parseErr));
-      }
-
-      if (!resp.ok) {
-        console.log("8. Response NOT OK, throwing error...");
-        const errorMsg = json?.detail || json?.error || "HTTP " + resp.status;
-        console.error("   Error message:", errorMsg);
-        throw new Error(errorMsg);
-      }
-
-      console.log("8. Success! Analysis result:", json);
+      console.log("3. Analysis complete!");
+      console.log("   Result:", json);
       console.log(sep, "CAPTURE SUCCESS", sep);
       setAnalysis(json);
     } catch (err: any) {
       console.error("ERROR CAUGHT:", err);
-      console.error("   Error type:", err.constructor.name);
       console.error("   Error message:", err.message);
-      console.error("   Full error:", err);
       console.log(sep, "CAPTURE FAILED", sep);
       const errorMsg = err?.message || String(err) || "Unknown error";
       setError(errorMsg);

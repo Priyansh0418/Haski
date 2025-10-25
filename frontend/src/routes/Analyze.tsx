@@ -3,16 +3,20 @@ import { useNavigate } from "react-router-dom";
 import CameraCapture from "../components/CameraCapture";
 import ResultCard from "../components/ResultCard";
 import { useAuth } from "../context/useAuth";
+import { useToast } from "../context/ToastContext";
+import * as api from "../lib/api";
 
 export default function Analyze() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const { token } = useAuth();
+  const toastApi = useToast();
   const navigate = useNavigate();
 
   const handleCapture = async (file: File) => {
     if (!token) {
+      toastApi.error("Please log in to analyze photos");
       navigate("/login");
       return;
     }
@@ -20,29 +24,18 @@ export default function Analyze() {
     setIsAnalyzing(true);
     setError(null);
     try {
-      const formData = new FormData();
-      formData.append("image", file);
+      console.log("Starting analysis for file:", file.name);
+      const data = await api.analyzeImageFile(file);
+      console.log("Analysis complete:", data);
 
-      const apiUrl =
-        import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
-      const response = await fetch(apiUrl + "/api/v1/analyze/image", {
-        method: "POST",
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error("Analysis failed");
-      }
-
-      const data = await response.json();
       setResult(data);
+      toastApi.success("Photo analyzed successfully! 🎉");
     } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : "Unknown error";
+      const errorMsg =
+        err instanceof Error ? err.message : "Unknown error occurred";
       console.error("Analysis error:", err);
       setError(errorMsg);
+      toastApi.error(`Analysis failed: ${errorMsg}`);
     } finally {
       setIsAnalyzing(false);
     }

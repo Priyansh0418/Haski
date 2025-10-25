@@ -27,10 +27,17 @@ def get_demo_user(db: Session) -> User:
     demo_email = "demo@example.com"
     user = db.query(User).filter(User.email == demo_email).first()
     if not user:
-        user = User(username="demo", email=demo_email)
-        db.add(user)
-        db.commit()
-        db.refresh(user)
+        try:
+            user = User(username="demo", email=demo_email)
+            db.add(user)
+            db.commit()
+            db.refresh(user)
+        except Exception:
+            # If demo user already exists (constraint violation), fetch it
+            db.rollback()
+            user = db.query(User).filter(User.email == demo_email).first()
+            if not user:
+                user = db.query(User).filter(User.username == "demo").first()
     return user
 
 
