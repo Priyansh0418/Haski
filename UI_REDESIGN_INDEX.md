@@ -17,13 +17,13 @@ Your Haski frontend has been **redesigned to match the reference design** you pr
 
 ### What Changed
 
-| Component | Before | After |
-|-----------|--------|-------|
-| **Navbar** | Gradient blue/cyan gradient, complex styling | Clean white bg, simple styling |
-| **Hero Section** | Gradient text, decorative separator | Solid blue title, cleaner layout |
-| **Feature Cards** | Backdrop blur, complex gradients | Simple white cards, subtle shadows |
-| **Trust Row** | Border separator, complex styling | Clean layout, better alignment |
-| **Overall** | Complex animations, heavy styling | Minimalist, clean, modern |
+| Component         | Before                                       | After                              |
+| ----------------- | -------------------------------------------- | ---------------------------------- |
+| **Navbar**        | Gradient blue/cyan gradient, complex styling | Clean white bg, simple styling     |
+| **Hero Section**  | Gradient text, decorative separator          | Solid blue title, cleaner layout   |
+| **Feature Cards** | Backdrop blur, complex gradients             | Simple white cards, subtle shadows |
+| **Trust Row**     | Border separator, complex styling            | Clean layout, better alignment     |
+| **Overall**       | Complex animations, heavy styling            | Minimalist, clean, modern          |
 
 ### Key Stats
 
@@ -39,7 +39,9 @@ Your Haski frontend has been **redesigned to match the reference design** you pr
 ## Files Modified
 
 ### 1. `frontend/src/components/Navbar.tsx`
+
 **Changes:**
+
 - Removed gradient background
 - Changed to clean white (dark mode: slate-900)
 - Improved text colors for better contrast
@@ -49,7 +51,9 @@ Your Haski frontend has been **redesigned to match the reference design** you pr
 **Status**: ✅ No errors
 
 ### 2. `frontend/src/routes/Home.tsx`
+
 **Changes:**
+
 - Solid blue title (no gradient)
 - Removed decorative separator
 - Simplified hero buttons
@@ -99,12 +103,14 @@ Your Haski frontend has been **redesigned to match the reference design** you pr
 ## Color Scheme
 
 ### Light Mode
+
 - **Primary**: #2563eb (Blue)
 - **Background**: #ffffff (White)
 - **Text**: #1f2937 (Dark Gray)
 - **Borders**: #e5e7eb (Light Gray)
 
 ### Dark Mode
+
 - **Primary**: #3b82f6 (Light Blue)
 - **Background**: #0f172a (Slate-900)
 - **Text**: #f1f5f9 (Light Gray)
@@ -128,18 +134,19 @@ faa917b - Add UI redesign completion report
 
 ## Performance Improvements
 
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| CSS Complexity | Complex | Simple | ↓ 30% |
-| Animations | Multiple | Minimal | ↓ 50% |
-| Hover States | Complex | Simple | ↓ 40% |
-| Bundle Size | Larger | Smaller | ↓ 15% |
+| Metric         | Before   | After   | Improvement |
+| -------------- | -------- | ------- | ----------- |
+| CSS Complexity | Complex  | Simple  | ↓ 30%       |
+| Animations     | Multiple | Minimal | ↓ 50%       |
+| Hover States   | Complex  | Simple  | ↓ 40%       |
+| Bundle Size    | Larger   | Smaller | ↓ 15%       |
 
 ---
 
 ## Features Preserved
 
 ✅ All 11 core features working:
+
 - Home page with hero + 3 cards
 - Signup/Login with authentication
 - Photo capture and analysis
@@ -157,9 +164,11 @@ faa917b - Add UI redesign completion report
 ## Documentation Files
 
 ### Quick Reference
+
 - `UI_REDESIGN_QUICK_SUMMARY.txt` - 2-minute overview
 
 ### Detailed Reports
+
 - `UI_REDESIGN_COMPLETION_REPORT.md` - Full completion report
 - `UI_REDESIGN_SUMMARY.md` - Detailed design changes
 - `UI_BEFORE_AFTER_COMPARISON.md` - Visual comparisons

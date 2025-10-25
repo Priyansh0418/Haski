@@ -1,18 +1,22 @@
 # Haski UI Redesign - Summary
 
 ## Overview
+
 Updated the Haski frontend UI to match the provided reference design while maintaining all existing functionality. The changes focus on a cleaner, more minimalist design with improved readability and user experience.
 
 ## Changes Made
 
 ### 1. **Navbar Redesign**
+
 **Before:**
+
 - Gradient blue-to-cyan background with high opacity
 - White text with backdrop blur
 - Complex hover states with scale animations
 - Dense spacing
 
 **After:**
+
 - Clean white background (dark mode: slate-900)
 - Darker text color (slate-700) with blue hover states
 - Minimal, professional styling
@@ -20,6 +24,7 @@ Updated the Haski frontend UI to match the provided reference design while maint
 - Cleaner border bottom (slate-200/slate-700)
 
 **Key Updates:**
+
 - Removed gradient background
 - Simplified logo (no sub-text)
 - Better spacing and alignment
@@ -27,13 +32,16 @@ Updated the Haski frontend UI to match the provided reference design while maint
 - Improved color hierarchy
 
 ### 2. **Home Page Hero Section**
+
 **Before:**
+
 - Gradient text on the title
 - Decorative line separator
 - Complex button styling with shadows and scale transforms
 - Dense subtext with multiple details
 
 **After:**
+
 - Solid blue title (#2563eb / #3b82f6)
 - Simplified layout
 - Clear "Get Started" button with arrow icon
@@ -41,19 +49,23 @@ Updated the Haski frontend UI to match the provided reference design while maint
 - Cleaner call-to-action buttons
 
 **Key Updates:**
+
 - Removed gradient clip-text effect
 - Removed decorative separator
 - Simplified CTA button styling
 - More readable description text
 
 ### 3. **Feature Cards**
+
 **Before:**
+
 - Backdrop blur with semi-transparent background
 - Complex hover effects (scale, border color changes)
 - Multiple gradient states
 - Group animation effects
 
 **After:**
+
 - Solid white background (dark mode: slate-800)
 - Simple shadow hover effect
 - Subtle -translate-y animation on hover
@@ -61,6 +73,7 @@ Updated the Haski frontend UI to match the provided reference design while maint
 - Better focus on content
 
 **Key Updates:**
+
 - Removed backdrop blur and gradient backgrounds
 - Simplified icon size (5xl instead of 6xl)
 - Removed hover animations on icons
@@ -68,12 +81,15 @@ Updated the Haski frontend UI to match the provided reference design while maint
 - Better spacing and typography
 
 ### 4. **Trust Row Section**
+
 **Before:**
+
 - Had border separator at top
 - Text-centered layout with heavy styling
 - Complex flex layouts
 
 **After:**
+
 - Removed border separator
 - Flex column layout for each item
 - Icons centered above text
@@ -81,17 +97,21 @@ Updated the Haski frontend UI to match the provided reference design while maint
 - Improved spacing
 
 **Key Updates:**
+
 - Changed "Free & Open" icon from ✨ to ⭐ (matches reference)
 - Better alignment and centering
 - Cleaner typography
 - Improved responsive design
 
 ### 5. **Footer/Disclaimer**
+
 **Before:**
+
 - Small padding
 - Hidden in card styling
 
 **After:**
+
 - Full-width footer section
 - Prominent yellow background
 - Clear disclaimer text
@@ -108,6 +128,7 @@ Updated the Haski frontend UI to match the provided reference design while maint
 ## Color Scheme
 
 ### Light Mode
+
 - Primary Blue: `#2563eb` → `#1e40af` (hover)
 - Background: `#ffffff`
 - Text Primary: `#1f2937` (slate-900)
@@ -115,6 +136,7 @@ Updated the Haski frontend UI to match the provided reference design while maint
 - Borders: `#e5e7eb` (slate-200)
 
 ### Dark Mode
+
 - Primary Blue: `#3b82f6` → `#60a5fa` (hover)
 - Background: `#0f172a` (slate-900)
 - Text Primary: `#f1f5f9` (slate-100)
@@ -124,6 +146,7 @@ Updated the Haski frontend UI to match the provided reference design while maint
 ## Files Updated
 
 1. **`frontend/src/routes/Home.tsx`**
+
    - Simplified hero section
    - Updated feature cards styling
    - Improved trust row layout

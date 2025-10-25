@@ -4,27 +4,23 @@ export default {
   darkMode: "media",
   theme: {
     fontFamily: {
-      sans: ["Inter", "system-ui", "sans-serif"],
+      sans: ["Inter", "system-ui", "-apple-system", "sans-serif"],
     },
     extend: {
       colors: {
         primary: {
-          light: "#38bdf8",
-          DEFAULT: "#0ea5e9",
-          dark: "#0284c7",
+          DEFAULT: "#2563eb",
+          600: "#1d4ed8",
         },
-        cyan: {
-          350: "#38bdf8",
-          450: "#0ea5e9",
-        },
+        surface: "#f7f8fb",
+        ink: "#0f172a",
       },
       borderRadius: {
-        "2xl": "1rem",
-        "3xl": "1.5rem",
+        xl: "1rem",
+        "2xl": "1.25rem",
       },
       boxShadow: {
-        md: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-        lg: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+        lift: "0 8px 24px -8px rgba(2,6,23,0.15)",
       },
     },
   },

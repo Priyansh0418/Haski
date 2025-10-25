@@ -5,7 +5,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  transition: all 0.2s ease;
 }
 
 :root {
@@ -13,7 +12,6 @@
   line-height: 1.5;
   font-weight: 400;
   color-scheme: light dark;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -24,13 +22,20 @@ html {
   overflow-x: hidden;
 }
 
-/* Light mode (default) */
 body {
-  color: #1f2937;
-  background: linear-gradient(135deg, #f8fafc 0%, #f0f9ff 100%);
+  background: linear-gradient(to bottom, white, #f1f5f9);
+  color: #0f172a;
   overflow-x: hidden;
-  transition: background 0.3s ease;
   min-height: 100vh;
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+*:focus-visible {
+  outline: none;
+  ring: 2px;
+  ring-offset: 2px;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
 }
 
 a {
@@ -39,50 +44,45 @@ a {
   transition: color 0.2s ease;
 }
 
-a:hover {
-  color: #0ea5e9;
-}
-
 button {
   cursor: pointer;
   font-family: inherit;
-  transition: all 0.2s ease;
 }
 
-/* Card utility class */
 .card {
-  border-radius: 1rem;
-  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  border: 1px solid #f3f4f6;
+  border-radius: 1.25rem;
+  border: 1px solid #e2e8f0;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s ease;
 }
 
 .card:hover {
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  box-shadow: 0 8px 24px -8px rgba(2, 6, 23, 0.15);
 }
 
-/* Dark mode support via prefers-color-scheme */
+.muted {
+  color: #64748b;
+}
+
+.headline {
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
 @media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-  }
-
   body {
-    color: #f3f4f6;
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  }
-
-  a:hover {
-    color: #38bdf8;
+    background: linear-gradient(to bottom, #0f172a, #1e293b);
+    color: #f1f5f9;
   }
 
   .card {
-    border-color: #374151;
-    background-color: rgba(30, 41, 59, 0.5);
+    border-color: #334155;
+    background: #1e293b;
   }
 
-  .card:hover {
-    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.3);
+  .muted {
+    color: #94a3b8;
   }
 }
 
@@ -92,7 +92,6 @@ button {
   flex-direction: column;
 }
 
-/* Scrollbar styling for better UX */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;

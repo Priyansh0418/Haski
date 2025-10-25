@@ -228,7 +228,7 @@ export default function CameraCapture({
                   setPermissionState("idle");
                   startCamera();
                 }}
-                className="bg-yellow-600 hover:bg-yellow-700 dark:bg-yellow-700 dark:hover:bg-yellow-800 text-white font-semibold py-2 px-4 rounded-lg transition mr-2"
+                className="bg-primary hover:bg-primary-600 dark:bg-primary-600 dark:hover:bg-primary text-white font-semibold py-2 px-4 rounded-lg transition mr-2"
               >
                 🔄 Retry
               </button>

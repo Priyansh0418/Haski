@@ -7,13 +7,23 @@ interface ProtectedRouteProps {
 
 /**
  * ProtectedRoute component that redirects to /login if user is not authenticated.
- * Checks for auth token in localStorage and verifies user context.
+ * Checks auth context for valid token and authentication status.
  */
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { isAuthenticated } = useAuth();
-  const token = localStorage.getItem("authToken");
+  const { isAuthenticated, isLoading } = useAuth();
 
-  if (!isAuthenticated && !token) {
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin text-4xl mb-4">⏳</div>
+          <p className="text-slate-600 dark:text-slate-400">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 

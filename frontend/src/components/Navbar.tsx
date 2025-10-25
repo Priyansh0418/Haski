@@ -1,14 +1,15 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
 
 export default function Navbar() {
   const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAvatarOpen, setIsAvatarOpen] = useState(false);
 
-  const token = localStorage.getItem("authToken");
+  const token = localStorage.getItem("skinhairai_token");
 
   const handleLogout = () => {
     logout();
@@ -25,32 +26,60 @@ export default function Navbar() {
     setIsAvatarOpen(!isAvatarOpen);
   };
 
+  // Determine if a nav link is active
+  const isActive = (path: string) => location.pathname === path;
+
   return (
-    <nav className="sticky top-0 z-50 bg-white dark:bg-slate-900 shadow-md border-b border-slate-200 dark:border-slate-700">
+    <nav className="sticky top-0 z-50 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 w-full">
         <div className="flex justify-between items-center h-16">
           {/* Brand Logo */}
           <Link to="/" className="flex items-center space-x-2 flex-shrink-0">
-            <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+            <span className="text-2xl font-bold text-primary dark:text-primary">
               Haski
             </span>
           </Link>
 
           {/* Desktop Navigation Links */}
-          <div className="hidden md:flex items-center space-x-8 text-lg">
-            <a href="/" className="text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition">
+          <div className="hidden md:flex items-center space-x-1">
+            <Link
+              to="/"
+              className={`px-3 py-2 text-sm font-semibold transition-colors border-b-2 ${
+                isActive("/")
+                  ? "text-primary border-primary"
+                  : "text-slate-600 dark:text-slate-400 border-transparent hover:text-primary dark:hover:text-primary"
+              }`}
+            >
               Home
-            </a>
-            <a href="/analyze" className="text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition">
-              Analyze
-            </a>
-            <a href="/dashboard" className="text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition">
-              Dashboard
-            </a>
+            </Link>
+            {isAuthenticated && (
+              <>
+                <Link
+                  to="/analyze"
+                  className={`px-3 py-2 text-sm font-semibold transition-colors border-b-2 ${
+                    isActive("/analyze")
+                      ? "text-primary border-primary"
+                      : "text-slate-600 dark:text-slate-400 border-transparent hover:text-primary dark:hover:text-primary"
+                  }`}
+                >
+                  Analyze
+                </Link>
+                <Link
+                  to="/dashboard"
+                  className={`px-3 py-2 text-sm font-semibold transition-colors border-b-2 ${
+                    isActive("/dashboard")
+                      ? "text-primary border-primary"
+                      : "text-slate-600 dark:text-slate-400 border-transparent hover:text-primary dark:hover:text-primary"
+                  }`}
+                >
+                  Dashboard
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Desktop Right Section */}
-          <div className="hidden md:flex items-center ml-8">
+          <div className="hidden md:flex items-center ml-8 space-x-4">
             {token ? (
               <>
                 {/* Avatar Dropdown */}
@@ -58,8 +87,10 @@ export default function Navbar() {
                   <button
                     onClick={toggleAvatarDropdown}
                     className="flex items-center space-x-2 hover:bg-slate-100 dark:hover:bg-slate-800 px-3 py-2 rounded-lg transition"
+                    aria-label="User menu"
+                    aria-expanded={isAvatarOpen}
                   >
-                    <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-sm font-bold text-white">
+                    <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-xs font-bold text-white">
                       {user?.username?.[0]?.toUpperCase() ||
                         user?.email?.[0]?.toUpperCase() ||
                         "U"}
@@ -103,18 +134,18 @@ export default function Navbar() {
               </>
             ) : (
               <>
-                <a
-                  href="/login"
-                  className="px-4 py-2 text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 font-semibold transition"
+                <Link
+                  to="/login"
+                  className="px-4 py-2 text-slate-700 dark:text-slate-300 hover:text-primary dark:hover:text-primary font-semibold transition"
                 >
                   Login
-                </a>
-                <a
-                  href="/signup"
-                  className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition ml-2"
+                </Link>
+                <Link
+                  to="/signup"
+                  className="px-6 py-2 bg-primary hover:bg-primary-600 text-white rounded-lg font-semibold transition"
                 >
                   Sign Up
-                </a>
+                </Link>
               </>
             )}
           </div>
@@ -123,6 +154,8 @@ export default function Navbar() {
           <button
             onClick={toggleMenu}
             className="md:hidden inline-flex items-center justify-center p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+            aria-label="Menu"
+            aria-expanded={isMenuOpen}
           >
             <svg
               className="w-6 h-6 text-slate-900 dark:text-white"
@@ -152,30 +185,42 @@ export default function Navbar() {
         {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="md:hidden pb-4 space-y-1 border-t border-slate-200 dark:border-slate-700">
-            <a
-              href="/"
-              className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+            <Link
+              to="/"
+              className={`block px-3 py-2 rounded-md text-base font-medium transition ${
+                isActive("/")
+                  ? "bg-primary/10 text-primary"
+                  : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+              }`}
               onClick={() => setIsMenuOpen(false)}
             >
               Home
-            </a>
+            </Link>
 
             {isAuthenticated && (
               <>
-                <a
-                  href="/analyze"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                <Link
+                  to="/analyze"
+                  className={`block px-3 py-2 rounded-md text-base font-medium transition ${
+                    isActive("/analyze")
+                      ? "bg-primary/10 text-primary"
+                      : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+                  }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Analyze
-                </a>
-                <a
-                  href="/dashboard"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                </Link>
+                <Link
+                  to="/dashboard"
+                  className={`block px-3 py-2 rounded-md text-base font-medium transition ${
+                    isActive("/dashboard")
+                      ? "bg-primary/10 text-primary"
+                      : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+                  }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Dashboard
-                </a>
+                </Link>
               </>
             )}
 
@@ -205,20 +250,20 @@ export default function Navbar() {
                 </>
               ) : (
                 <>
-                  <a
-                    href="/login"
+                  <Link
+                    to="/login"
                     className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Login
-                  </a>
-                  <a
-                    href="/signup"
-                    className="block px-3 py-2 rounded-md text-base font-medium bg-blue-600 text-white hover:bg-blue-700 font-semibold rounded-lg transition mt-1"
+                  </Link>
+                  <Link
+                    to="/signup"
+                    className="block px-3 py-2 rounded-md text-base font-medium bg-primary text-white hover:bg-primary-600 font-semibold rounded-lg transition mt-1"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Sign Up
-                  </a>
+                  </Link>
                 </>
               )}
             </div>

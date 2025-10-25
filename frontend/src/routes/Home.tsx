@@ -1,129 +1,139 @@
+// Feature Card Component
+function FeatureCard({
+  icon,
+  title,
+  description,
+}: {
+  icon: string;
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="card p-8 md:p-10 h-full flex flex-col items-center text-center hover:shadow-lift transition-shadow duration-300">
+      <div className="text-5xl md:text-6xl mb-4">{icon}</div>
+      <h3 className="headline text-xl md:text-2xl mb-3 text-slate-900 dark:text-white">
+        {title}
+      </h3>
+      <p className="muted text-sm md:text-base leading-relaxed">
+        {description}
+      </p>
+    </div>
+  );
+}
+
+// Info Badge Component
+function InfoBadge({
+  icon,
+  title,
+  description,
+}: {
+  icon: string;
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="flex flex-col items-center text-center">
+      <div className="text-4xl md:text-5xl mb-3">{icon}</div>
+      <h4 className="headline text-lg md:text-xl mb-2 text-slate-900 dark:text-white">
+        {title}
+      </h4>
+      <p className="muted text-sm md:text-base">
+        {description}
+      </p>
+    </div>
+  );
+}
+
 export default function Home() {
   return (
     <div className="min-h-screen flex flex-col">
-      <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col justify-center py-16 md:py-20">
-        {/* Hero Section */}
-        <div className="mb-12 sm:mb-16 lg:mb-20">
-          {/* Headline */}
-          <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold text-blue-600 dark:text-blue-500 mb-4">
+      {/* Hero Section */}
+      <main className="flex-1 flex flex-col justify-center py-16 md:py-24 px-4 md:px-6">
+        <div className="max-w-4xl mx-auto w-full text-center">
+          {/* Hero Headline */}
+          <h1 className="headline text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-primary dark:text-primary mb-6">
             Haski
           </h1>
 
           {/* Subtitle */}
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-slate-900 dark:text-slate-100 mb-2">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-slate-900 dark:text-slate-100 mb-4">
             AI-powered skin and hair analysis in seconds
           </h2>
 
           {/* Description */}
-          <p className="text-base md:text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-8">
+          <p className="muted text-base md:text-lg max-w-2xl mx-auto mb-10">
             Upload a photo and get instant AI-powered insights about your skin
             and hair health. Simple, fast, and accurate.
           </p>
 
-          {/* Primary CTA */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6">
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <a
               href="/analyze"
-              className="bg-blue-600 hover:bg-blue-700 text-white py-3 px-8 rounded-lg font-semibold text-lg transition-colors flex items-center justify-center gap-2"
+              className="bg-primary hover:bg-primary-600 text-white px-8 md:px-10 py-3 md:py-4 rounded-lg font-bold text-lg transition-colors flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
             >
               Get Started
-              <span className="text-xl">→</span>
+              <span>→</span>
             </a>
             <a
               href="/login"
-              className="text-blue-600 dark:text-blue-400 font-semibold text-lg hover:underline"
+              className="text-primary dark:text-primary font-bold text-lg hover:underline transition-colors"
             >
               Sign In
             </a>
           </div>
         </div>
-
-        {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 sm:mb-16">
-          {/* Feature 1: Capture */}
-          <div className="bg-white dark:bg-slate-800 p-8 rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-            <div className="flex justify-center mb-4">
-              <span className="text-5xl">📸</span>
-            </div>
-            <h3 className="text-2xl font-semibold text-slate-900 dark:text-white mb-2">
-              Capture
-            </h3>
-            <p className="text-slate-600 dark:text-slate-400 text-sm">
-              Take photos directly from your camera or upload existing images
-              from your device in seconds.
-            </p>
-          </div>
-
-          {/* Feature 2: Analyze */}
-          <div className="bg-white dark:bg-slate-800 p-8 rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-            <div className="flex justify-center mb-4">
-              <span className="text-5xl">⚡</span>
-            </div>
-            <h3 className="text-2xl font-semibold text-slate-900 dark:text-white mb-2">
-              Analyze
-            </h3>
-            <p className="text-slate-600 dark:text-slate-400 text-sm">
-              Advanced AI algorithms analyze your photos with machine learning
-              to detect skin and hair conditions.
-            </p>
-          </div>
-
-          {/* Feature 3: Insights */}
-          <div className="bg-white dark:bg-slate-800 p-8 rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-            <div className="flex justify-center mb-4">
-              <span className="text-5xl">💡</span>
-            </div>
-            <h3 className="text-2xl font-semibold text-slate-900 dark:text-white mb-2">
-              Insights
-            </h3>
-            <p className="text-slate-600 dark:text-slate-400 text-sm">
-              Get personalized recommendations and actionable insights to
-              improve your skin and hair health.
-            </p>
-          </div>
-        </div>
-
-        {/* Trust Row - Disclaimers */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8">
-          {/* Privacy First */}
-          <div className="flex flex-col items-center">
-            <div className="text-4xl mb-3">🔒</div>
-            <h4 className="font-semibold text-slate-900 dark:text-white mb-2">
-              Privacy First
-            </h4>
-            <p className="text-sm text-slate-600 dark:text-slate-400">
-              Your data is encrypted and never shared. 100% private analysis.
-            </p>
-          </div>
-
-          {/* No Medical Advice */}
-          <div className="flex flex-col items-center">
-            <div className="text-4xl mb-3">⚠️</div>
-            <h4 className="font-semibold text-slate-900 dark:text-white mb-2">
-              Not Medical Advice
-            </h4>
-            <p className="text-sm text-slate-600 dark:text-slate-400">
-              Haski is for informational purposes only. Consult a
-              dermatologist for medical advice.
-            </p>
-          </div>
-
-          {/* Free & Open */}
-          <div className="flex flex-col items-center">
-            <div className="text-4xl mb-3">⭐</div>
-            <h4 className="font-semibold text-slate-900 dark:text-white mb-2">
-              Free to Start
-            </h4>
-            <p className="text-sm text-slate-600 dark:text-slate-400">
-              No signup required for basic analysis. Start using Haski today.
-            </p>
-          </div>
-        </div>
       </main>
 
-      {/* Footer Disclaimer */}
-      <footer className="bg-yellow-100 dark:bg-yellow-900 p-4">
-        <div className="container mx-auto text-center text-yellow-800 dark:text-yellow-200 text-sm">
+      {/* Features Grid Section */}
+      <section className="py-16 md:py-24 px-4 md:px-6 bg-gradient-to-b from-transparent via-slate-50/50 to-transparent dark:via-slate-900/50">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            <FeatureCard
+              icon="📸"
+              title="Capture"
+              description="Take photos directly from your camera or upload existing images from your device in seconds."
+            />
+            <FeatureCard
+              icon="⚡"
+              title="Analyze"
+              description="Advanced AI algorithms analyze your photos with machine learning to detect skin and hair conditions."
+            />
+            <FeatureCard
+              icon="💡"
+              title="Insights"
+              description="Get personalized recommendations and actionable insights to improve your skin and hair health."
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Info Badges Section */}
+      <section className="py-16 md:py-20 px-4 md:px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+            <InfoBadge
+              icon="🔒"
+              title="Privacy First"
+              description="Your data is encrypted and never shared. 100% private analysis."
+            />
+            <InfoBadge
+              icon="⚠️"
+              title="Not Medical Advice"
+              description="Haski is for informational purposes only. Consult a dermatologist for medical advice."
+            />
+            <InfoBadge
+              icon="⭐"
+              title="Free to Start"
+              description="No signup required for basic analysis. Start using Haski today."
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Disclaimer Footer */}
+      <footer className="bg-yellow-50 dark:bg-yellow-900/30 border-t border-yellow-200 dark:border-yellow-800 py-6 px-4 md:px-6 mt-auto">
+        <div className="max-w-6xl mx-auto text-center text-yellow-900 dark:text-yellow-100 text-sm leading-relaxed">
           <p>
             <strong>Disclaimer:</strong> Haski provides AI-powered analysis for
             educational purposes only and is not a substitute for professional
