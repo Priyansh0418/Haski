@@ -3,23 +3,20 @@
 # This script tests all endpoints with curl/Invoke-WebRequest
 # Usage: .\test_api.ps1 -Token "YOUR_JWT_TOKEN" -AdminToken "ADMIN_JWT_TOKEN"
 
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "",
+    Justification="Tokens are consumed via PowerShell's case-insensitive parameter binding and lower-case references.")]
 param(
     [string]$Token = "",
     [string]$AdminToken = "",
     [string]$BaseUrl = "http://localhost:8000"
 )
 
-# Colors
-$Success = "Green"
-$Error = "Red"
-$Warning = "Yellow"
-
 # Test counters
 $TestsPassed = 0
 $TestsFailed = 0
 
-# Helper function to print headers
-function Print-Header {
+# Helper function to show headers
+function Write-HaskiHeader {
     param([string]$Title)
     Write-Host ""
     Write-Host ("╔" + "═" * 66 + "╗") -ForegroundColor Cyan
@@ -28,34 +25,34 @@ function Print-Header {
     Write-Host ""
 }
 
-function Print-Test {
+function Write-HaskiTest {
     param([string]$Name)
     Write-Host "────────────────────────────────────────────────────────────────"
     Write-Host "TEST: $Name" -ForegroundColor Yellow
     Write-Host "────────────────────────────────────────────────────────────────"
 }
 
-function Print-Success {
+function Write-HaskiSuccess {
     param([string]$Message)
     Write-Host "✓ $Message" -ForegroundColor Green
 }
 
-function Print-Failed {
+function Write-HaskiFailure {
     param([string]$Message)
     Write-Host "✗ $Message" -ForegroundColor Red
 }
 
-function Print-Warning {
+function Write-HaskiWarning {
     param([string]$Message)
     Write-Host "⚠ $Message" -ForegroundColor Yellow
 }
 
 # Banner
-Print-Header "Haski Recommender System - API Testing Suite"
+Write-HaskiHeader "Haski Recommender System - API Testing Suite"
 
 # Check tokens
 if ([string]::IsNullOrEmpty($Token)) {
-    Print-Warning "No user token provided"
+    Write-HaskiWarning "No user token provided"
     Write-Host "Usage: .\test_api.ps1 -Token `"YOUR_JWT_TOKEN`" -AdminToken `"ADMIN_JWT_TOKEN`""
     Write-Host ""
     Write-Host "To get tokens:"
@@ -65,13 +62,13 @@ if ([string]::IsNullOrEmpty($Token)) {
     exit 1
 }
 
-Print-Success "User token provided"
+Write-HaskiSuccess "User token provided"
 if ([string]::IsNullOrEmpty($AdminToken)) {
     $AdminToken = $Token
-    Print-Warning "No admin token provided, using user token"
+    Write-HaskiWarning "No admin token provided, using user token"
 }
 else {
-    Print-Success "Admin token provided"
+    Write-HaskiSuccess "Admin token provided"
 }
 
 Write-Host "Base URL: $BaseUrl"
@@ -79,9 +76,9 @@ Write-Host ""
 
 # ===== TEST 1: Generate Recommendation =====
 
-Print-Header "TEST SUITE 1: RECOMMENDATION ENDPOINT"
+Write-HaskiHeader "TEST SUITE 1: RECOMMENDATION ENDPOINT"
 
-Print-Test "POST /api/v1/recommend (Direct Analysis)"
+Write-HaskiTest "POST /api/v1/recommend (Direct Analysis)"
 
 $RecommendData = @{
     method = "direct_analysis"
@@ -117,11 +114,11 @@ try {
     $RecId = $RecResponse.recommendation_id
     
     if ([string]::IsNullOrEmpty($RecId)) {
-        Print-Failed "Could not extract recommendation_id"
+        Write-HaskiFailure "Could not extract recommendation_id"
         $TestsFailed++
     }
     else {
-        Print-Success "Recommendation ID: $RecId"
+        Write-HaskiSuccess "Recommendation ID: $RecId"
         $TestsPassed++
         
         # Verify response structure
@@ -133,35 +130,35 @@ try {
         $RulesCount = $RecResponse.applied_rules.Count
         
         if ($RoutinesCount -gt 0) {
-            Print-Success "Routines: $RoutinesCount"
+            Write-HaskiSuccess "Routines: $RoutinesCount"
             $TestsPassed++
         }
         else {
-            Print-Failed "No routines found"
+            Write-HaskiFailure "No routines found"
             $TestsFailed++
         }
         
         if ($ProductsCount -gt 0) {
-            Print-Success "Products: $ProductsCount"
+            Write-HaskiSuccess "Products: $ProductsCount"
             $TestsPassed++
         }
         else {
-            Print-Failed "No products found"
+            Write-HaskiFailure "No products found"
             $TestsFailed++
         }
         
         if ($RulesCount -gt 0) {
-            Print-Success "Applied Rules: $RulesCount"
+            Write-HaskiSuccess "Applied Rules: $RulesCount"
             $TestsPassed++
         }
         else {
-            Print-Failed "No rules found"
+            Write-HaskiFailure "No rules found"
             $TestsFailed++
         }
     }
 }
 catch {
-    Print-Failed "Error generating recommendation: $($_.Exception.Message)"
+    Write-HaskiFailure "Error generating recommendation: $($_.Exception.Message)"
     $TestsFailed++
 }
 
@@ -169,10 +166,10 @@ Write-Host ""
 
 # ===== TEST 2: Submit Feedback =====
 
-Print-Header "TEST SUITE 2: FEEDBACK ENDPOINT"
+Write-HaskiHeader "TEST SUITE 2: FEEDBACK ENDPOINT"
 
 if (-not [string]::IsNullOrEmpty($RecId)) {
-    Print-Test "POST /api/v1/feedback"
+    Write-HaskiTest "POST /api/v1/feedback"
     
     $FeedbackData = @{
         recommendation_id = $RecId
@@ -201,16 +198,16 @@ if (-not [string]::IsNullOrEmpty($RecId)) {
         $FeedbackResponse | ConvertTo-Json | Write-Host
         
         if ($null -ne $FeedbackResponse.feedback_id) {
-            Print-Success "Feedback submitted (ID: $($FeedbackResponse.feedback_id))"
+            Write-HaskiSuccess "Feedback submitted (ID: $($FeedbackResponse.feedback_id))"
             $TestsPassed++
         }
         else {
-            Print-Failed "Feedback submission failed"
+            Write-HaskiFailure "Feedback submission failed"
             $TestsFailed++
         }
     }
     catch {
-        Print-Failed "Error submitting feedback: $($_.Exception.Message)"
+        Write-HaskiFailure "Error submitting feedback: $($_.Exception.Message)"
         $TestsFailed++
     }
     
@@ -218,7 +215,7 @@ if (-not [string]::IsNullOrEmpty($RecId)) {
     
     # ===== TEST 3: Get Feedback Stats =====
     
-    Print-Test "GET /api/v1/feedback/{recommendation_id}/stats"
+    Write-HaskiTest "GET /api/v1/feedback/{recommendation_id}/stats"
     
     Write-Host "Request:" -ForegroundColor Yellow
     Write-Host "GET $BaseUrl/api/v1/feedback/$RecId/stats"
@@ -235,30 +232,30 @@ if (-not [string]::IsNullOrEmpty($RecId)) {
         
         if ($null -ne $StatsResponse.avg_helpful_rating) {
             $AvgRating = $StatsResponse.avg_helpful_rating
-            Print-Success "Average rating: $AvgRating"
+            Write-HaskiSuccess "Average rating: $AvgRating"
             $TestsPassed++
         }
         else {
-            Print-Failed "Stats retrieval failed"
+            Write-HaskiFailure "Stats retrieval failed"
             $TestsFailed++
         }
     }
     catch {
-        Print-Failed "Error getting stats: $($_.Exception.Message)"
+        Write-HaskiFailure "Error getting stats: $($_.Exception.Message)"
         $TestsFailed++
     }
 }
 else {
-    Print-Warning "Skipping feedback tests (no recommendation_id)"
+    Write-HaskiWarning "Skipping feedback tests (no recommendation_id)"
 }
 
 Write-Host ""
 
 # ===== TEST 4: Search Products =====
 
-Print-Header "TEST SUITE 3: PRODUCTS ENDPOINT"
+Write-HaskiHeader "TEST SUITE 3: PRODUCTS ENDPOINT"
 
-Print-Test "GET /api/v1/products/search?tag=acne"
+Write-HaskiTest "GET /api/v1/products/search?tag=acne"
 
 Write-Host "Request:" -ForegroundColor Yellow
 Write-Host "GET $BaseUrl/api/v1/products/search?tag=acne"
@@ -276,20 +273,20 @@ try {
     if ($null -ne $SearchResponse.count) {
         $Count = $SearchResponse.count
         if ($Count -gt 0) {
-            Print-Success "Found $Count products"
+            Write-HaskiSuccess "Found $Count products"
             $TestsPassed++
         }
         else {
-            Print-Warning "No products found (database may be empty)"
+            Write-HaskiWarning "No products found (database may be empty)"
         }
     }
     else {
-        Print-Failed "Product search failed"
+        Write-HaskiFailure "Product search failed"
         $TestsFailed++
     }
 }
 catch {
-    Print-Failed "Error searching products: $($_.Exception.Message)"
+    Write-HaskiFailure "Error searching products: $($_.Exception.Message)"
     $TestsFailed++
 }
 
@@ -297,9 +294,9 @@ Write-Host ""
 
 # ===== TEST 5: Admin Endpoint =====
 
-Print-Header "TEST SUITE 4: ADMIN ENDPOINTS"
+Write-HaskiHeader "TEST SUITE 4: ADMIN ENDPOINTS"
 
-Print-Test "POST /admin/reload-rules"
+Write-HaskiTest "POST /admin/reload-rules"
 
 Write-Host "Request:" -ForegroundColor Yellow
 Write-Host "POST $BaseUrl/admin/reload-rules"
@@ -318,21 +315,21 @@ try {
     if ($null -ne $ReloadResponse.status) {
         if ($ReloadResponse.status -eq "success") {
             $RulesCount = $ReloadResponse.rules_loaded
-            Print-Success "Rules reloaded: $RulesCount rules"
+            Write-HaskiSuccess "Rules reloaded: $RulesCount rules"
             $TestsPassed++
         }
         else {
-            Print-Failed "Rule reload failed: $($ReloadResponse.status)"
+            Write-HaskiFailure "Rule reload failed: $($ReloadResponse.status)"
             $TestsFailed++
         }
     }
     else {
-        Print-Failed "Admin endpoint error"
+        Write-HaskiFailure "Admin endpoint error"
         $TestsFailed++
     }
 }
 catch {
-    Print-Failed "Error reloading rules: $($_.Exception.Message)"
+    Write-HaskiFailure "Error reloading rules: $($_.Exception.Message)"
     $TestsFailed++
 }
 
@@ -340,7 +337,7 @@ Write-Host ""
 
 # ===== SUMMARY =====
 
-Print-Header "TEST SUMMARY"
+Write-HaskiHeader "TEST SUMMARY"
 
 Write-Host "Tests Passed: " -NoNewline
 Write-Host $TestsPassed -ForegroundColor Green

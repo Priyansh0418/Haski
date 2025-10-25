@@ -15,6 +15,7 @@ Features:
 """
 
 import argparse
+import importlib
 import json
 import logging
 import time
@@ -242,9 +243,9 @@ class ONNXInference:
     def __init__(self, model_path: str):
         """Initialize ONNX inference."""
         try:
-            import onnxruntime as rt
-        except ImportError:
-            raise ImportError("onnxruntime not installed. Install with: pip install onnxruntime")
+            rt = importlib.import_module("onnxruntime")
+        except ImportError as exc:
+            raise ImportError("onnxruntime not installed. Install with: pip install onnxruntime") from exc
         
         logger.info(f"Loading ONNX model from {model_path}...")
         self.session = rt.InferenceSession(model_path)
@@ -319,12 +320,12 @@ class TFLiteInference:
     def __init__(self, model_path: str):
         """Initialize TFLite inference."""
         try:
-            import tensorflow as tf
-        except ImportError:
-            raise ImportError("tensorflow not installed. Install with: pip install tensorflow")
+            self._tf = importlib.import_module("tensorflow")
+        except ImportError as exc:
+            raise ImportError("tensorflow not installed. Install with: pip install tensorflow") from exc
         
         logger.info(f"Loading TFLite model from {model_path}...")
-        self.interpreter = tf.lite.Interpreter(model_path=model_path)
+        self.interpreter = self._tf.lite.Interpreter(model_path=model_path)
         self.interpreter.allocate_tensors()
         
         # Get input/output details
