@@ -31,11 +31,9 @@ body {
 }
 
 *:focus-visible {
-  outline: none;
-  ring: 2px;
-  ring-offset: 2px;
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
   border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
 }
 
 a {
