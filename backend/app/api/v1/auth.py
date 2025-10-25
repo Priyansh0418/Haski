@@ -3,6 +3,7 @@ from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
+from pydantic import BaseModel, EmailStr
 
 from ...schemas.pydantic_schemas import UserCreate, Token
 from ...core import security
@@ -12,10 +13,11 @@ from ...models.db_models import User
 router = APIRouter()
 
 
-class LoginRequest(UserCreate):
-    # reuse UserCreate fields but make email optional and accept username+password
-    password: str
+class LoginRequest(BaseModel):
+    """Login request model - accepts email or username"""
+    email: Optional[EmailStr] = None
     username: Optional[str] = None
+    password: str
 
 
 @router.post("/signup", response_model=Token)

@@ -12,21 +12,22 @@ Modules:
 - rules: YAML-based recommendation rules
 
 Usage:
-    from backend.app.recommender import models, schemas
-    from backend.app.recommender.engine import RecommendationEngine
+    from .models import Product, RuleLog, RecommendationRecord, RecommendationFeedback
+    from .schemas import RecommendationRequest, RecommendationResponse
+    from .engine import RecommendationEngine
     
     engine = RecommendationEngine()
     recommendation = engine.generate(analysis_id=5, user_id=3)
 """
 
-from backend.app.recommender.models import (
+from .models import (
     Product,
     RuleLog,
     RecommendationRecord,
     RecommendationFeedback
 )
 
-from backend.app.recommender.schemas import (
+from .schemas import (
     RecommendationRequest,
     RecommendationResponse,
     FeedbackRequest,

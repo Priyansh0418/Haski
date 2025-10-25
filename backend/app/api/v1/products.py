@@ -23,11 +23,11 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from sqlalchemy import or_, func
 
-from backend.app.db.session import get_db
-from backend.app.core.security import get_current_user
-from backend.app.models.db_models import User
-from backend.app.recommender.models import Product
-from backend.app.recommender.schemas import ProductCreate
+from ...db.session import get_db
+from ...core.security import get_current_user
+from ...models.db_models import User
+from ...recommender.models import Product
+from ...recommender.schemas import ProductCreate
 
 logger = logging.getLogger(__name__)
 router = APIRouter()

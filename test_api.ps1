@@ -14,9 +14,11 @@ param(
 # Test counters
 $TestsPassed = 0
 $TestsFailed = 0
+$LastError = ""
 
 # Helper function to show headers
 function Write-HaskiHeader {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseApprovedVerbs", "", Justification="Header is a suitable verb for context.")]
     param([string]$Title)
     Write-Host ""
     Write-Host ("╔" + "═" * 66 + "╗") -ForegroundColor Cyan
@@ -26,6 +28,7 @@ function Write-HaskiHeader {
 }
 
 function Write-HaskiTest {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseApprovedVerbs", "", Justification="Test is a suitable verb for context.")]
     param([string]$Name)
     Write-Host "────────────────────────────────────────────────────────────────"
     Write-Host "TEST: $Name" -ForegroundColor Yellow
@@ -33,16 +36,19 @@ function Write-HaskiTest {
 }
 
 function Write-HaskiSuccess {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseApprovedVerbs", "", Justification="Success is a suitable verb for context.")]
     param([string]$Message)
     Write-Host "✓ $Message" -ForegroundColor Green
 }
 
 function Write-HaskiFailure {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseApprovedVerbs", "", Justification="Failure is a suitable verb for context.")]
     param([string]$Message)
     Write-Host "✗ $Message" -ForegroundColor Red
 }
 
 function Write-HaskiWarning {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseApprovedVerbs", "", Justification="Warning is a suitable verb for context.")]
     param([string]$Message)
     Write-Host "⚠ $Message" -ForegroundColor Yellow
 }

@@ -1,0 +1,147 @@
+/\*\*
+
+- TOAST SYSTEM USAGE GUIDE
+-
+- The Toast system provides lightweight notifications throughout the app.
+- It's context-based and automatically integrated into the root App component.
+-
+- ===== BASIC USAGE =====
+-
+- In any component, import and use the hook:
+-
+- import { useToast } from "../context/ToastContext";
+-
+- export default function MyComponent() {
+-     const { success, error, info, warning } = useToast();
+-
+-     const handleSave = async () => {
+-       try {
+-         await api.saveData({ ... });
+-         success("✅ Data saved successfully!");
+-       } catch (err) {
+-         error("Failed to save data. Please try again.");
+-       }
+-     };
+-
+-     return <button onClick={handleSave}>Save</button>;
+- }
+-
+- ===== API REFERENCE =====
+-
+- The useToast() hook returns these methods:
+-
+- 1.  success(message: string, duration?: number)
+-      - Shows a green success notification
+-      - Default duration: 4000ms
+-      Example: toast.success("User created!");
+-
+- 2.  error(message: string, duration?: number)
+-      - Shows a red error notification
+-      - Default duration: 4000ms
+-      Example: toast.error("Something went wrong!");
+-
+- 3.  info(message: string, duration?: number)
+-      - Shows a blue info notification
+-      - Default duration: 4000ms
+-      Example: toast.info("Processing...");
+-
+- 4.  warning(message: string, duration?: number)
+-      - Shows a yellow warning notification
+-      - Default duration: 4000ms
+-      Example: toast.warning("Are you sure?");
+-
+- 5.  addToast(message: string, type: 'success' | 'error' | 'info' | 'warning', duration?: number)
+-      - Manual toast creation with full control
+-      Example: toast.addToast("Custom", "success", 5000);
+-
+- ===== FEATURES =====
+-
+- ✅ Auto-dismiss with configurable duration (0 = never dismiss)
+- ✅ Manual dismiss with close button
+- ✅ Type-based styling (success, error, info, warning)
+- ✅ Stack multiple toasts
+- ✅ Smooth animations (fade-in, slide-in)
+- ✅ Fully responsive
+- ✅ Dark mode support
+- ✅ No external dependencies (lightweight)
+-
+- ===== REAL WORLD EXAMPLES =====
+-
+- Example 1: Form Submission
+-
+- const { success, error } = useToast();
+-
+- const handleSubmit = async (data) => {
+-     try {
+-       const response = await api.submitForm(data);
+-       success("Form submitted successfully!");
+-       navigate("/next-page");
+-     } catch (err) {
+-       error(err.message || "Failed to submit form");
+-     }
+- };
+-
+- Example 2: Delete Confirmation
+-
+- const { warning, error, success } = useToast();
+-
+- const handleDelete = async (id) => {
+-     const confirmed = window.confirm("Delete this item?");
+-     if (!confirmed) {
+-       warning("Deletion cancelled");
+-       return;
+-     }
+-
+-     try {
+-       await api.deleteItem(id);
+-       success("Item deleted successfully");
+-     } catch (err) {
+-       error("Failed to delete item");
+-     }
+- };
+-
+- Example 3: Long-running Operation
+-
+- const { info, success, error } = useToast();
+-
+- const handleUpload = async (file) => {
+-     const toastId = info("Uploading...", 0); // 0 = manual dismiss
+-     try {
+-       await api.uploadFile(file);
+-       success("Upload complete!");
+-     } catch (err) {
+-       error("Upload failed");
+-     }
+- };
+-
+- ===== IMPLEMENTATION DETAILS =====
+-
+- Location:
+- - Context: /frontend/src/context/ToastContext.tsx
+- - Component: /frontend/src/components/ToastContainer.tsx
+- - Routes using Toast: All components within App
+-
+- Architecture:
+- - ToastContext provides state and methods
+- - ToastProvider wraps the entire app in App.tsx
+- - ToastContainer renders toasts in fixed position (bottom-right)
+- - useToast() hook for accessing toast methods anywhere
+-
+- Styling:
+- - Success: Green (#22c55e / bg-green-500)
+- - Error: Red (#ef4444 / bg-red-500)
+- - Warning: Yellow (#eab308 / bg-yellow-500)
+- - Info: Blue (#3b82f6 / bg-blue-500)
+- - All with smooth animations and responsive design
+-
+- ===== NOTES =====
+-
+- - Toast must be called within a component inside ToastProvider
+- - Duration in milliseconds (1000ms = 1 second)
+- - Use 0 for duration to show toast indefinitely (manual dismiss only)
+- - Each toast has a unique ID generated from timestamp + random
+- - Messages support any text (consider line breaks in long messages)
+- - Close button always available for manual dismissal
+- \*/
+
+export {};

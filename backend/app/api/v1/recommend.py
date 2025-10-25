@@ -15,12 +15,12 @@ from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from backend.app.db.session import get_db
-from backend.app.core.security import get_current_user
-from backend.app.models.db_models import Analysis, Profile, User
-from backend.app.recommender.engine import RuleEngine, AnalysisValidator
-from backend.app.recommender.models import Product, RuleLog, RecommendationRecord
-from backend.app.recommender.schemas import RecommendationRequest
+from ...db.session import get_db
+from ...core.security import get_current_user
+from ...models.db_models import Analysis, Profile, User
+from ...recommender.engine import RuleEngine, AnalysisValidator
+from ...recommender.models import Product, RuleLog, RecommendationRecord
+from ...recommender.schemas import RecommendationRequest
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
