@@ -13,14 +13,30 @@ import logging
 from typing import Optional, Dict, Any, List
 from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
 
 from ...db.session import get_db
-from ...core.security import get_current_user
+from ...core.security import get_current_user, decode_access_token
 from ...models.db_models import Analysis, Profile, User
 from ...recommender.engine import RuleEngine, AnalysisValidator
 from ...recommender.models import Product, RuleLog, RecommendationRecord
 from ...recommender.schemas import RecommendationRequest
+
+security = HTTPBearer(auto_error=False)
+
+async def get_optional_user(
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(security),
+) -> Optional[int]:
+    """Optional authentication - returns user ID if token provided, None otherwise."""
+    if credentials is None:
+        return None
+    try:
+        payload = decode_access_token(credentials.credentials)
+        user_id: str = payload.get("sub")
+        return int(user_id) if user_id else None
+    except Exception:
+        return None
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -43,7 +59,7 @@ class RecommendationResponse:
 def generate_recommendation(
     request: RecommendationRequest,
     db: Session = Depends(get_db),
-    user_id: int = Depends(get_current_user)
+    user_id: Optional[int] = Depends(get_optional_user)
 ):
     """
     Generate personalized skincare/haircare recommendations.
