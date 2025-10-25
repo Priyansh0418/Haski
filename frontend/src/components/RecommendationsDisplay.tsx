@@ -3,6 +3,9 @@ interface Routine {
   description?: string;
   steps?: string[];
   frequency?: string;
+  step?: string;
+  routine_text?: string;
+  source_rules?: string[];
 }
 
 interface Product {
@@ -21,6 +24,9 @@ interface DietSuggestion {
   benefits?: string;
   frequency?: string;
   reason?: string;
+  action?: string;
+  items?: string[];
+  source_rules?: string[];
 }
 
 interface RecommendationsData {
@@ -86,13 +92,18 @@ export default function RecommendationsDisplay({
                 key={idx}
                 className="border-l-4 border-blue-500 bg-blue-50 rounded-lg p-4 hover:shadow-md transition"
               >
-                <h4 className="font-semibold text-blue-900 text-lg">
-                  {routine.name || `Routine ${idx + 1}`}
+                <h4 className="font-semibold text-blue-900 text-lg capitalize">
+                  {routine.name || routine.step || `Routine ${idx + 1}`}
                 </h4>
                 {routine.frequency && (
                   <p className="text-sm text-blue-700 mt-1">
                     <span className="font-medium">Frequency:</span>{" "}
                     {routine.frequency}
+                  </p>
+                )}
+                {routine.routine_text && (
+                  <p className="text-sm text-gray-700 mt-2 leading-relaxed">
+                    {routine.routine_text}
                   </p>
                 )}
                 {routine.description && (
@@ -113,6 +124,12 @@ export default function RecommendationsDisplay({
                       ))}
                     </ol>
                   </div>
+                )}
+                {routine.source_rules && routine.source_rules.length > 0 && (
+                  <p className="text-xs text-gray-500 mt-3 pt-3 border-t border-blue-200">
+                    <span className="font-medium">Based on:</span>{" "}
+                    {routine.source_rules.join(", ")}
+                  </p>
                 )}
               </div>
             ))}
@@ -200,31 +217,63 @@ export default function RecommendationsDisplay({
                 key={idx}
                 className="border-l-4 border-orange-500 bg-orange-50 rounded-lg p-4 hover:shadow-md transition"
               >
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-orange-900 text-lg">
-                      {diet_item.food || `Food Suggestion ${idx + 1}`}
+                {/* Handle new format with action and items */}
+                {diet_item.action && diet_item.items ? (
+                  <>
+                    <h4 className="font-semibold text-orange-900 text-lg capitalize">
+                      {diet_item.action}
                     </h4>
-                    {diet_item.frequency && (
-                      <p className="text-sm text-orange-700 mt-1">
-                        <span className="font-medium">Frequency:</span>{" "}
-                        {diet_item.frequency}
-                      </p>
-                    )}
-                    {diet_item.benefits && (
-                      <p className="text-sm text-gray-700 mt-2">
-                        <span className="font-medium">Benefits:</span>{" "}
-                        {diet_item.benefits}
-                      </p>
-                    )}
-                    {diet_item.reason && (
-                      <p className="text-sm text-gray-700 mt-2">
-                        <span className="font-medium">Why:</span>{" "}
-                        {diet_item.reason}
-                      </p>
-                    )}
-                  </div>
-                </div>
+                    <div className="mt-3">
+                      <ul className="space-y-2">
+                        {diet_item.items.map((item, itemIdx) => (
+                          <li
+                            key={itemIdx}
+                            className="text-sm text-gray-700 flex items-start gap-2"
+                          >
+                            <span className="text-orange-500 mt-0.5">•</span>
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </>
+                ) : (
+                  // Handle old format with food, benefits, etc.
+                  <>
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-orange-900 text-lg">
+                          {diet_item.food || `Food Suggestion ${idx + 1}`}
+                        </h4>
+                        {diet_item.frequency && (
+                          <p className="text-sm text-orange-700 mt-1">
+                            <span className="font-medium">Frequency:</span>{" "}
+                            {diet_item.frequency}
+                          </p>
+                        )}
+                        {diet_item.benefits && (
+                          <p className="text-sm text-gray-700 mt-2">
+                            <span className="font-medium">Benefits:</span>{" "}
+                            {diet_item.benefits}
+                          </p>
+                        )}
+                        {diet_item.reason && (
+                          <p className="text-sm text-gray-700 mt-2">
+                            <span className="font-medium">Why:</span>{" "}
+                            {diet_item.reason}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </>
+                )}
+                {diet_item.source_rules &&
+                  diet_item.source_rules.length > 0 && (
+                    <p className="text-xs text-gray-500 mt-3 pt-3 border-t border-orange-200">
+                      <span className="font-medium">Based on:</span>{" "}
+                      {diet_item.source_rules.join(", ")}
+                    </p>
+                  )}
               </div>
             ))}
           </div>

@@ -22,6 +22,7 @@ from ...models.db_models import Analysis, Profile, User
 from ...recommender.engine import RuleEngine, AnalysisValidator
 from ...recommender.models import Product, RuleLog, RecommendationRecord
 from ...recommender.schemas import RecommendationRequest
+from .profile import get_demo_user
 
 security = HTTPBearer(auto_error=False)
 
@@ -107,6 +108,11 @@ def generate_recommendation(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Recommender engine not available"
         )
+    
+    # Use demo user if no authenticated user
+    if user_id is None:
+        demo_user = get_demo_user(db)
+        user_id = demo_user.id
     
     try:
         # Load analysis and profile data

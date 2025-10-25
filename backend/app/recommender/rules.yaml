@@ -397,3 +397,45 @@ rules:
     escalation: "If severe blistering, severe swelling, or signs of infection develop, contact dermatologist"
     avoid_if:
       - none
+
+  # Rule 10: Basic Skin Care - Normal/Dry Skin
+  - id: r010
+    name: "Basic Skin Care - Normal to Dry Skin"
+    description: "General skincare routine for normal or dry skin types without specific concerns"
+    priority: 10
+    conditions:
+      - skin_type:
+          - normal
+          - dry
+    actions:
+      recommend_products_external_ids:
+        - cerave_cleanser_001 # Hydrating Cleanser
+        - hadalabo_toner_001 # Hydrating Toner
+        - vanicream_moisturizer_001 # Moisturizer
+      recommend_products_tags:
+        - hydrating
+        - gentle
+        - moisturizing
+        - cleanser
+      routine:
+        - morning: "Gentle cleanser (lukewarm water) → Hydrating toner → Moisturizer → Sunscreen SPF 30+"
+        - evening: "Gentle cleanser → Hydrating toner → Moisturizer"
+        - weekly: "Hydrating sheet mask (1-2x per week) for extra hydration"
+      diet_recommendations:
+        - increase:
+            - "water intake (6-8 glasses daily)"
+            - "healthy fats (avocados, olive oil, fatty fish)"
+            - "vitamin-rich foods (fruits and vegetables)"
+            - "foods with omega-3s (improve skin hydration)"
+        - limit:
+            - "excessive caffeine (can be dehydrating)"
+            - "processed foods"
+            - "excess sugar"
+      warnings:
+        - "Use lukewarm water only - hot water can dry out skin"
+        - "Apply moisturizer to damp skin for better absorption"
+        - "Sunscreen is essential even on cloudy days"
+        - "Results visible in 2-3 weeks of consistent use"
+    escalation: none
+    avoid_if:
+      - none

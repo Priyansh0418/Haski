@@ -121,16 +121,25 @@ def analyze_photo(image: UploadFile = File(...), db: Session = Depends(get_db)):
     class_name = analysis_output.get("class_name", "unknown")
     confidence = analysis_output.get("confidence", 0.0)
     
+    # Valid hair types and skin types/conditions
+    VALID_HAIR_TYPES = {'straight', 'wavy', 'curly', 'coily'}
+    VALID_SKIN_TYPES = {'oily', 'dry', 'combination', 'sensitive', 'normal', 'very_dry'}
+    
+    # Determine if class_name is a hair type or a skin condition
+    # Treat unknown/unrecognized values as conditions, not as skin_type or hair_type
+    is_hair_type = class_name in VALID_HAIR_TYPES
+    is_skin_type = class_name in VALID_SKIN_TYPES
+    
     analysis = Analysis(
         user_id=user_id,
         photo_id=photo.id,
-        skin_type=class_name,  # PyTorch model outputs class_name
-        hair_type=class_name,  # Can be either skin or hair type
-        conditions=[class_name] if class_name else [],
+        skin_type=class_name if is_skin_type else None,  # Only set if valid skin type
+        hair_type=class_name if is_hair_type else None,  # Only set if valid hair type
+        conditions=[class_name] if class_name and not (is_skin_type or is_hair_type) else [],
         confidence_scores={
-            "skin_type": confidence,
-            "hair_type": confidence,
-            "conditions": [confidence] if class_name else []
+            "skin_type": confidence if is_skin_type else 0,
+            "hair_type": confidence if is_hair_type else 0,
+            "conditions": [confidence] if class_name and not (is_skin_type or is_hair_type) else []
         },
     )
 
@@ -139,14 +148,20 @@ def analyze_photo(image: UploadFile = File(...), db: Session = Depends(get_db)):
     db.refresh(analysis)
 
     # Return business-friendly format
+    response_confidence_scores = {}
+    if analysis.skin_type:
+        response_confidence_scores[analysis.skin_type] = confidence
+    if analysis.hair_type:
+        response_confidence_scores[analysis.hair_type] = confidence
+    if analysis.conditions:
+        for condition in analysis.conditions:
+            response_confidence_scores[condition] = confidence
+    
     response = {
         "skin_type": analysis.skin_type,
         "hair_type": analysis.hair_type,
         "conditions_detected": analysis.conditions,
-        "confidence_scores": {
-            analysis.skin_type: confidence,
-            analysis.hair_type: confidence,
-        },
+        "confidence_scores": response_confidence_scores,
         "model_version": "v1-skinhair-classifier",
         # Metadata
         "analysis_id": analysis.id,
