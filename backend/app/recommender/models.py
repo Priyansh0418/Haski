@@ -174,8 +174,8 @@ class RecommendationRecord(Base):
     id = Column(Integer, primary_key=True, index=True)
     
     # Foreign Keys
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
-    analysis_id = Column(Integer, ForeignKey("analyses.id"), nullable=False, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True, index=True)
+    analysis_id = Column(Integer, ForeignKey("analyses.id"), nullable=True, index=True)
     
     # Recommendation Tracking
     recommendation_id = Column(String(100), nullable=False, unique=True, index=True)

@@ -55,7 +55,7 @@ class RecommendationResponse:
     pass
 
 
-@router.post("/recommend", status_code=status.HTTP_201_CREATED)
+@router.post("", status_code=status.HTTP_201_CREATED)
 def generate_recommendation(
     request: RecommendationRequest,
     db: Session = Depends(get_db),
@@ -130,7 +130,9 @@ def generate_recommendation(
             )
         
         # Apply recommendation rules
+        logger.info(f"Applying rules with analysis: {analysis_data}, profile: {profile_data}")
         recommendation, applied_rules = ENGINE.apply_rules(analysis_data, profile_data)
+        logger.info(f"Rules applied: {applied_rules}")
         
         # Get product details for recommended products
         recommended_products = _get_product_details(
@@ -167,10 +169,10 @@ def generate_recommendation(
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error generating recommendation: {e}", exc_info=True)
+        logger.error(f"Error generating recommendation: {str(e)}", exc_info=True)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to generate recommendation"
+            detail=f"Failed to generate recommendation: {str(e)}"
         )
 
 
@@ -226,22 +228,38 @@ def _load_user_data(
         analysis_id = None
     
     # Load profile data
-    profile = db.query(Profile).filter(Profile.user_id == user_id).first()
+    profile = db.query(Profile).filter(Profile.user_id == user_id).first() if user_id else None
     
-    profile_data = {
-        "age": profile.age if profile else request.age,
-        "pregnancy_status": _parse_pregnancy_status(
-            profile.lifestyle if profile else request.pregnancy_status
-        ),
-        "breastfeeding_status": _parse_breastfeeding_status(
-            profile.lifestyle if profile else request.pregnancy_status
-        ),
-        "allergies": _parse_allergies(
-            profile.allergies if profile else None,
-            request.allergies
-        ),
-        "skin_sensitivity": request.skin_sensitivity or "normal",
-    }
+    profile_data = {}
+    
+    # Only include age if it's present and valid
+    age = profile.age if profile else request.age
+    if age is not None and age >= 0:
+        profile_data["age"] = age
+    
+    # Only include other fields if they have values
+    pregnancy_status = _parse_pregnancy_status(
+        profile.lifestyle if profile else request.pregnancy_status
+    ) if profile or request.pregnancy_status else None
+    if pregnancy_status is not None:
+        profile_data["pregnancy_status"] = pregnancy_status
+    
+    breastfeeding_status = _parse_breastfeeding_status(
+        profile.lifestyle if profile else request.pregnancy_status
+    ) if profile or request.pregnancy_status else None
+    if breastfeeding_status is not None:
+        profile_data["breastfeeding_status"] = breastfeeding_status
+    
+    allergies = _parse_allergies(
+        profile.allergies if profile else None,
+        request.allergies
+    )
+    if allergies:
+        profile_data["allergies"] = allergies
+    
+    skin_sensitivity = request.skin_sensitivity or "normal"
+    if skin_sensitivity:
+        profile_data["skin_sensitivity"] = skin_sensitivity
     
     # Use analysis_id from request or from loaded analysis
     if hasattr(request, 'analysis_id') and request.analysis_id:

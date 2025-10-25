@@ -184,15 +184,17 @@ class RuleEngine:
         # Evaluate each rule
         for rule in sorted_rules:
             rule_id = rule.get('id')
+            logger.info(f"Checking rule {rule_id}")
             
             # Check if rule matches conditions
             if self._matches_conditions(rule, analysis, profile):
+                logger.info(f"Rule {rule_id} conditions matched!")
                 # Check contraindications
                 if self._check_contraindications(rule, profile):
                     logger.info(f"Rule {rule_id} skipped due to contraindications")
                     continue
                 
-                logger.info(f"Rule {rule_id} matched")
+                logger.info(f"Rule {rule_id} matched and applying")
                 matched_rules.append(rule_id)
                 
                 # Apply rule's actions
@@ -231,14 +233,18 @@ class RuleEngine:
         Returns:
             True if all conditions match, False otherwise
         """
+        rule_id = rule.get('id', 'unknown')
         conditions = rule.get('conditions', [])
+        logger.info(f"Rule {rule_id}: Checking {len(conditions)} conditions")
         
         for condition in conditions:
             # Each condition is a dict with key=field, value=criterion
             for field, criterion in condition.items():
                 if not self._evaluate_condition(field, criterion, analysis, profile):
+                    logger.info(f"Rule {rule_id}: Condition failed - {field}={criterion}")
                     return False
         
+        logger.info(f"Rule {rule_id}: All conditions matched")
         return True
     
     def _evaluate_condition(
@@ -263,9 +269,17 @@ class RuleEngine:
         # Combine analysis + profile for lookup (profile takes precedence)
         user_data = {**analysis, **profile}
         
-        # Handle "contains" conditions (all items must be in user's list)
+        # Handle "contains" conditions (ANY item in criterion should be in user's list)
         if field.endswith('_contains'):
             base_field = field.replace('_contains', '')
+            
+            # Field mapping: "conditions" in rules maps to "conditions_detected" in data
+            field_mapping = {
+                "conditions": "conditions_detected",
+                "hair_condition": "hair_condition_detected"
+            }
+            base_field = field_mapping.get(base_field, base_field)
+            
             user_value = user_data.get(base_field, [])
             
             if not isinstance(user_value, list):
@@ -273,11 +287,16 @@ class RuleEngine:
             if not isinstance(criterion, list):
                 criterion = [criterion]
             
-            # All criterion items must be in user_value
+            logger.info(f"  {field}: user_value={user_value}, criterion={criterion}")
+            
+            # AT LEAST ONE criterion item must be in user_value (OR logic)
             for item in criterion:
-                if item not in user_value:
-                    return False
-            return True
+                if item in user_value:
+                    logger.info(f"  {field}: Found matching item '{item}' in {user_value}")
+                    return True
+            
+            logger.info(f"  {field}: No matching items from {criterion} in {user_value}")
+            return False
         
         # Handle range conditions
         if field.endswith('_range'):
@@ -285,30 +304,40 @@ class RuleEngine:
             user_value = user_data.get(base_field)
             
             if user_value is None:
+                logger.debug(f"  {field}: user_value is None")
                 return False
             
             if not isinstance(criterion, (list, tuple)) or len(criterion) != 2:
                 return False
             
             min_val, max_val = criterion
-            return min_val <= user_value <= max_val
+            result = min_val <= user_value <= max_val
+            logger.debug(f"  {field}: {user_value} in [{min_val}, {max_val}] = {result}")
+            return result
         
         # Handle exact match conditions
         user_value = user_data.get(field)
         
         if user_value is None:
+            logger.debug(f"  {field}: user_value is None")
             return False
         
         # Single value criterion
         if isinstance(criterion, str):
-            return user_value == criterion
+            result = user_value == criterion
+            logger.debug(f"  {field}: '{user_value}' == '{criterion}' = {result}")
+            return result
         
         # Multiple options criterion (OR logic)
         if isinstance(criterion, list):
-            return user_value in criterion
+            result = user_value in criterion
+            logger.debug(f"  {field}: '{user_value}' in {criterion} = {result}")
+            return result
         
         # Direct comparison
-        return user_value == criterion
+        result = user_value == criterion
+        logger.debug(f"  {field}: '{user_value}' == {criterion} = {result}")
+        return result
     
     def _check_contraindications(
         self,
@@ -411,7 +440,17 @@ class RuleEngine:
                 existing[0]['source_rules'].append(rule_id)
         
         # Extract routines
-        routine_dict = actions.get('routine', {})
+        routine_data = actions.get('routine', {})
+        
+        # Convert list of single-key dicts to dict if needed
+        if isinstance(routine_data, list):
+            routine_dict = {}
+            for item in routine_data:
+                if isinstance(item, dict):
+                    routine_dict.update(item)
+        else:
+            routine_dict = routine_data
+        
         for step_key, routine_text in routine_dict.items():
             # Check if step already exists
             existing = [r for r in recommendation['routines'] if r['step'] == step_key]
@@ -427,7 +466,17 @@ class RuleEngine:
                 existing[0]['source_rules'].append(rule_id)
         
         # Extract diet recommendations
-        diet_rec = actions.get('diet_recommendations', {})
+        diet_data = actions.get('diet_recommendations', {})
+        
+        # Convert list of single-key dicts to dict if needed
+        if isinstance(diet_data, list):
+            diet_rec = {}
+            for item in diet_data:
+                if isinstance(item, dict):
+                    diet_rec.update(item)
+        else:
+            diet_rec = diet_data
+        
         for action_type in ['increase', 'limit']:
             items = diet_rec.get(action_type, [])
             if items:
